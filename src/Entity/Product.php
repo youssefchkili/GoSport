@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -45,8 +47,16 @@ class Product
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category_id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'product_id')]
-    private ?WishList $wishList_id = null;
+    /**
+     * @var Collection<int, wishList>
+     */
+    #[ORM\ManyToMany(targetEntity: wishList::class, inversedBy: 'products')]
+    private Collection $wishlist;
+
+    public function __construct()
+    {
+        $this->wishlist = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -181,6 +191,30 @@ class Product
     public function setWishListId(?WishList $wishList_id): static
     {
         $this->wishList_id = $wishList_id;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, wishList>
+     */
+    public function getWishlist(): Collection
+    {
+        return $this->wishlist;
+    }
+
+    public function addWishlist(wishList $wishlist): static
+    {
+        if (!$this->wishlist->contains($wishlist)) {
+            $this->wishlist->add($wishlist);
+        }
+
+        return $this;
+    }
+
+    public function removeWishlist(wishList $wishlist): static
+    {
+        $this->wishlist->removeElement($wishlist);
 
         return $this;
     }
