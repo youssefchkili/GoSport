@@ -23,9 +23,6 @@ class ProductImage
     #[ORM\Column(nullable: true)]
     private ?bool $is_primary = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $created_at = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -63,18 +60,6 @@ class ProductImage
     public function setIsPrimary(?bool $is_primary): static
     {
         $this->is_primary = $is_primary;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(?\DateTimeImmutable $created_at): static
-    {
-        $this->created_at = $created_at;
 
         return $this;
     }
