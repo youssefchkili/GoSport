@@ -12,31 +12,34 @@ class ProductFixture extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
+
         $faker = \Faker\Factory::create();
-        $product = new Product();
-        $product->setName($faker->word);
-        $product->setSlug($faker->name);
-        $product->setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
-        $product->setPrice(50);
-        $product->setDiscountPercent(0.5);
-        $product->setStockQuantity($faker->numberBetween(1, 100));
-        
-        $category = new Category();
-        $category->setName($faker->word);
-        $category->setSlug($faker->name);
-        $category->setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
-        $manager->persist($category);
+        for ($i = 0; $i < 10; $i++) {
+            $product = new Product();
+            $product->setName($faker->word);
+            $product->setSlug($faker->name);
+            $product->setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+            $product->setPrice(56.00);
+            $product->setDiscountPercent(0.5);
+            $product->setStockQuantity($faker->numberBetween(1, 100));
 
-        $product->setCategoryId($category);
-        $manager->persist($product);
+            $category = new Category();
+            $category->setName($faker->word);
+            $category->setSlug($faker->name);
+            $category->setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+            $manager->persist($category);
 
-        $productImage = new ProductImage();
-        $productImage->setProductId($product);
-        $productImage->setImagePath("https://example.com/image.jpg");
-        $productImage->setIsPrimary(true);
+            $product->setCategoryId($category);
+            $manager->persist($product);
 
-        $manager->persist($productImage);
+            $productImage = new ProductImage();
+            $productImage->setProductId($product);
+            $productImage->setImagePath("https://example.com/image.jpg");
+            $productImage->setIsPrimary(true);
 
-        $manager->flush();
+            $manager->persist($productImage);
+            $manager->flush();
+        }
+
     }
 }

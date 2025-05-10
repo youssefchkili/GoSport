@@ -7,7 +7,8 @@
 {% if products is empty %}
     <h1>No products available</h1>
 {% else %}
-    <h1>All Products</h1>
+    <div class="text-center"><h1>All Products</h1></div>
+    <br><br>
     <div class="container">
         <div class="row">
             {% for product in products %}
