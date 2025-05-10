@@ -21,3 +21,20 @@ body {
 #sidebar{
     width: 20%;
 }
+#price-slider .noUi-connect {
+    background: rgb(190, 0, 47);
+}
+
+#price-slider .noUi-handle {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  top: -7px;
+  background: white;
+  border: 2px solid #dc3545;
+  box-shadow: none;
+}
+#price-slider .noUi-handle::before,
+#price-slider .noUi-handle::after {
+  display: none;
+}
