@@ -14,10 +14,15 @@ final class ProductsController extends AbstractController
     {   
         $doctrine = $manager->getManager();
         $productRepository = $doctrine->getRepository('App\Entity\Product');
+        $categoryRepository = $doctrine->getRepository('App\Entity\Category');
         $products = $productRepository->findAll();
+        $categories = $categoryRepository->findAll();
         return $this->render('products/index.html.twig', [
             'controller_name' => 'ProductsController',
             'products' => $products,
+            'categories' => $categories,
+            'minPrice' => 21,
+            'maxPrice' => 896,
         ]);
     }
 }
