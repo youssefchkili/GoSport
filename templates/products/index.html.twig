@@ -2,8 +2,54 @@
 
 {% block title %}All Products{% endblock %}
 
-{% block body %}
+{% block stylesheets %}
+    <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" rel="stylesheet">
+{% endblock %}
+{% block importmap %}
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
+{% endblock %}
 
+    {% block sidebarBody %}
+        <div class="mb-3">
+            <button class="btn btn-outline-danger" type="button" data-bs-toggle="collapse" data-bs-target="#categoriesCollapse" aria-expanded="false" aria-controls="categoriesCollapse">
+                Categories
+            </button>
+
+            <div class="collapse mt-2" id="categoriesCollapse">
+                <div class="p-3">
+                    {% if categories is defined %}
+                        {% for category in categories %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="categoryCheckbox{{ category.id }}" value="{{ category.id }}" name="{{ category.id }}" checked>
+                                <label class="form-check-label" for="categoryCheckbox{{ category.id }}">{{ category.name }}</label>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container my-4">
+            <label for="price-slider" class="form-label">Price Range</label>
+            <br>
+            <br>
+            <br>
+            <div id="price-slider"></div>
+            <div class="mt-3">
+                <span>Min: <span id="min-price"></span>DT</span> &nbsp;-&nbsp;
+                <span>Max: <span id="max-price"></span>DT</span>
+            </div>
+        </div>
+        <a href="/products" style="position: absolute; bottom: 10px; right: 10px;">
+            <button class="btn btn-outline-danger">
+                Apply
+            </button>
+        </a>
+
+    {% endblock %}
+
+{% block body %}
 {% if products is empty %}
     <h1>No products available</h1>
 {% else %}
@@ -25,4 +71,30 @@
         </div>
     </div>
 {% endif %}
+
+<script>
+  const priceSlider = document.getElementById('price-slider');
+  noUiSlider.create(priceSlider, {
+    start: [{{ minPrice }}, {{ maxPrice }}],
+    connect: true,
+    range: {
+      'min': {{ minPrice }},
+      'max': {{ maxPrice }}
+    },
+    step: 1,
+    tooltips: true,
+    format: {
+      to: value => Math.round(value),
+      from: value => Number(value)
+    }
+  });
+
+  const minPrice = document.getElementById('min-price');
+  const maxPrice = document.getElementById('max-price');
+
+  priceSlider.noUiSlider.on('update', (values) => {
+    minPrice.textContent = values[0];
+    maxPrice.textContent = values[1];
+  });
+</script>
 {% endblock %}
