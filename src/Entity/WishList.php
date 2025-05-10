@@ -62,28 +62,6 @@ class WishList
         return $this->product_id;
     }
 
-    public function addProductId(Product $productId): static
-    {
-        if (!$this->product_id->contains($productId)) {
-            $this->product_id->add($productId);
-            $productId->setWishListId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProductId(Product $productId): static
-    {
-        if ($this->product_id->removeElement($productId)) {
-            // set the owning side to null (unless already changed)
-            if ($productId->getWishListId() === $this) {
-                $productId->setWishListId(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Product>
      */
