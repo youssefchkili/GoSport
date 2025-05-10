@@ -1,0 +1,27 @@
+{% extends 'coolBase.html.twig' %}
+
+{% block title %}All Products{% endblock %}
+
+{% block body %}
+
+{% if products is empty %}
+    <h1>No products available</h1>
+{% else %}
+    <h1>All Products</h1>
+    <div class="container">
+        <div class="row">
+            {% for product in products %}
+                <div class="alert alert-danger col-md-3">
+                    {{product.name}}
+                    <br>
+                    {{product.description}}
+                    <br>
+                    {{product.price}}
+                    <br>
+                    {{product.discountPercent}}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

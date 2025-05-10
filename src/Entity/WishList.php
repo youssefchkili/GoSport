@@ -25,9 +25,16 @@ class WishList
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'wishList_id')]
     private Collection $product_id;
 
+    /**
+     * @var Collection<int, Product>
+     */
+    #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'wishlist')]
+    private Collection $products;
+
     public function __construct()
     {
         $this->product_id = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -55,23 +62,28 @@ class WishList
         return $this->product_id;
     }
 
-    public function addProductId(Product $productId): static
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
     {
-        if (!$this->product_id->contains($productId)) {
-            $this->product_id->add($productId);
-            $productId->setWishListId($this);
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): static
+    {
+        if (!$this->products->contains($product)) {
+            $this->products->add($product);
+            $product->addWishlist($this);
         }
 
         return $this;
     }
 
-    public function removeProductId(Product $productId): static
+    public function removeProduct(Product $product): static
     {
-        if ($this->product_id->removeElement($productId)) {
-            // set the owning side to null (unless already changed)
-            if ($productId->getWishListId() === $this) {
-                $productId->setWishListId(null);
-            }
+        if ($this->products->removeElement($product)) {
+            $product->removeWishlist($this);
         }
 
         return $this;
