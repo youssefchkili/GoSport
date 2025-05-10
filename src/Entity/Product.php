@@ -26,31 +26,22 @@ class Product
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    private ?string $price = null;
+    private ?float $price = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, nullable: true)]
-    private ?string $discount_percent = null;
+    private ?float $discount_percent = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $stock_quantity = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?array $options = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $created_at = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updated_at = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category_id = null;
 
     /**
-     * @var Collection<int, wishList>
+     * @var Collection<int, WishList>
      */
-    #[ORM\ManyToMany(targetEntity: wishList::class, inversedBy: 'products')]
+    #[ORM\ManyToMany(targetEntity: WishList::class, inversedBy: 'products')]
     private Collection $wishlist;
 
     public function __construct()
@@ -99,24 +90,24 @@ class Product
         return $this;
     }
 
-    public function getPrice(): ?string
+    public function getPrice(): ?float
     {
         return $this->price;
     }
 
-    public function setPrice(string $price): static
+    public function setPrice(float $price): static
     {
         $this->price = $price;
 
         return $this;
     }
 
-    public function getDiscountPercent(): ?string
+    public function getDiscountPercent(): ?float
     {
         return $this->discount_percent;
     }
 
-    public function setDiscountPercent(?string $discount_percent): static
+    public function setDiscountPercent(?float $discount_percent): static
     {
         $this->discount_percent = $discount_percent;
 
@@ -135,42 +126,6 @@ class Product
         return $this;
     }
 
-    public function getOptions(): ?array
-    {
-        return $this->options;
-    }
-
-    public function setOptions(?array $options): static
-    {
-        $this->options = $options;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(?\DateTimeImmutable $created_at): static
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): static
-    {
-        $this->updated_at = $updated_at;
-
-        return $this;
-    }
-
     public function getCategoryId(): ?Category
     {
         return $this->category_id;
@@ -179,18 +134,6 @@ class Product
     public function setCategoryId(?Category $category_id): static
     {
         $this->category_id = $category_id;
-
-        return $this;
-    }
-
-    public function getWishListId(): ?WishList
-    {
-        return $this->wishList_id;
-    }
-
-    public function setWishListId(?WishList $wishList_id): static
-    {
-        $this->wishList_id = $wishList_id;
 
         return $this;
     }
