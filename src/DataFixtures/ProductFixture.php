@@ -31,7 +31,7 @@ class ProductFixture extends Fixture
         $manager->persist($product);
 
         $productImage = new ProductImage();
-        $productImage->setProductId($product);
+        $productImage->setProduct($product);
         $productImage->setImagePath("https://example.com/image.jpg");
         $productImage->setIsPrimary(true);
 

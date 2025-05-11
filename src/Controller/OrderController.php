@@ -20,6 +20,24 @@ final class OrderController extends AbstractController
     private OrderRepository $orderRepository;
     private EntityManager $entityManager;
 
+    private array $countries = [
+        'US' => 'United States',
+        'CA' => 'Canada',
+        'UK' => 'United Kingdom',
+        'DE' => 'Germany',
+        'FR' => 'France',
+        'IT' => 'Italy',
+        'ES' => 'Spain',
+        'JP' => 'Japan',
+        'AU' => 'Australia',
+        'NZ' => 'New Zealand',
+        'CN' => 'China',
+        'IN' => 'India',
+        'BR' => 'Brazil',
+        'MX' => 'Mexico',
+        // Add more countries as needed
+    ];
+
     public function __construct(private ManagerRegistry $doctrine)
     {
         $this->entityManager = $doctrine->getManager();
@@ -36,7 +54,8 @@ final class OrderController extends AbstractController
 
         // Compute totals
         $subtotal = 0;
-        foreach ($cart->getCartItems() as $item) {
+        $cartItems = $cart->getCartItems();
+        foreach ($cartItems as $item) {
             $subtotal += $item->getProductID()->getPrice() * $item->getQuantity();
         }
 
@@ -58,15 +77,10 @@ final class OrderController extends AbstractController
 
 
 
-
-
-
-
-
         $this->entityManager->persist($order);
 
 
-        foreach ($cart->getCartItems() as $cartItem) {
+        foreach ($cartItems as $cartItem) {
             $orderItem = new OrderItem();
             $orderItem->setOrderId($order);
             $orderItem->setProductId($cartItem->getProductID());
@@ -79,6 +93,14 @@ final class OrderController extends AbstractController
 
         return $this->render('order/success.html.twig' , [
             'order' => $order,
+            'cartItems' => $cartItems,
+            'countries' => $this->countries,
+            'subtotal' => $subtotal,
+            'discount' => $discount,
+            'tax' => $tax,
+            'shipping' => $shipping,
+            'total' => $total,
+
         ]);
 
 

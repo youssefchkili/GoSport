@@ -44,11 +44,28 @@ class Product
     #[ORM\ManyToMany(targetEntity: WishList::class, inversedBy: 'products')]
     private Collection $wishlist;
 
+    /**
+     * @var Collection<int, ProductImage>
+     */
+    #[ORM\OneToMany(targetEntity: ProductImage::class, mappedBy: 'product', cascade: ['persist', 'remove'])]
+    private Collection $images;
     public function __construct()
     {
         $this->wishlist = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
+
+
+
+
+    /**
+     * @return Collection<int, ProductImage>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
     public function getId(): ?int
     {
         return $this->id;
