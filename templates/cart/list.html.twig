@@ -1,34 +1,115 @@
-{% extends '/cart/index.html.twig' %}
+{% extends 'coolbase.html.twig' %}
+
 {% block body %}
-    <h2>My Cart</h2>
+    <div class="max-w-6xl mx-auto p-4 font-sans">
+        <div class="flex flex-col md:flex-row gap-8">
+            <!-- Left side - Cart items -->
+            <div class="w-full md:w-2/3">
+                <h1 class="text-2xl font-bold mb-6">Your Cart</h1>
 
-    {% if cartItems is empty %}
-        <p>Your cart is empty.</p>
-    {% else %}
-        <table>
-            <thead>
-            <tr>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Total</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for item in cartItems %}
-                <tr>
-                    <td>{{ item.productId.name }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>{{ item.productId.price }} €</td>
-                    <td>{{ item.productId.price * item.quantity }} €</td>
-                    <td><a href="{{ path('cart_delete', {product_id: item.productId.id}) }}">X</a></td>
+                {% if cartItems is empty %}
+                    <p class="text-gray-600">Your cart is empty.</p>
+                {% else %}
+                    <div class="mb-4 pb-2 border-b border-gray-200 grid grid-cols-12 gap-4">
+                        <div class="col-span-6 text-sm uppercase text-gray-500">Product</div>
+                        <div class="col-span-2 text-sm uppercase text-gray-500 text-center">Quantity</div>
+                        <div class="col-span-3 text-sm uppercase text-gray-500 text-right">Price</div>
+                        <div class="col-span-1"></div>
+                    </div>
 
-                </tr>s
-            {% endfor %}
-            </tbody>
-        </table>
+                    {% for item in cartItems %}
+                        <div class="py-4 border-b border-gray-200 grid grid-cols-12 gap-4 items-center">
+                            <div class="col-span-6 flex items-center gap-4">
+                                <div class="w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
 
-        <h3>Total : {{ total }} €</h3>
-        <a href="{{ path('cart_checkout')}}">Checkout</a>
-    {% endif %}
+                                    {% set firstImage = item.productId.images|first %}
+                                    {% if firstImage %}
+                                        <img src="{{ asset('uploads/products/' ~ firstImage.path) }}" alt="{{ item.productId.name }}" class="w-full h-full object-cover" />
+                                    {% else %}
+                                        <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm">
+                                            No image
+                                        </div>
+                                    {% endif %}
+
+                                </div>
+                                <div>
+                                    <h3 class="font-medium">{{ item.productId.name }}</h3>
+                                    <p class="text-gray-500 text-sm">{{ item.productId.description|slice(0, 40) ~ '...' }}</p>
+                                </div>
+                            </div>
+
+                            <div class="col-span-2 text-center">
+                                {{ item.quantity }}
+                            </div>
+
+                            <div class="col-span-3 text-right font-medium">
+                                €{{ (item.productId.price * item.quantity)|number_format(2, '.', ',') }}
+                            </div>
+
+                            <div class="col-span-1 text-right">
+                                <a href="{{ path('cart_delete', { product_id: item.productId.id }) }}" class="text-gray-400 hover:text-red-600">
+                                    ✕
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                {% if cartItems is not empty %}
+                    <div class="mt-8">
+                        <form method="post" action="#">
+                            <div class="relative">
+                                <input type="text" name="coupon" placeholder="Enter coupon code"
+                                       class="w-full md:w-72 py-3 px-4 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <button type="submit"
+                                        class="mt-2 md:mt-0 md:absolute md:right-0 md:top-0 md:bottom-0 bg-gray-900 text-white rounded-md px-6 py-3 font-medium md:rounded-l-none">
+                                    Apply coupon
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Right side - Cart total -->
+            {% if cartItems is not empty %}
+                <div class="w-full md:w-1/3">
+                    <div class="bg-gray-900 text-white p-6 rounded-lg">
+                        <h2 class="text-2xl font-bold mb-6">Cart total</h2>
+
+                        <div class="space-y-4">
+                            <div class="flex justify-between pb-4 border-b border-gray-700">
+                                <span>Subtotal</span>
+                                <span>€{{ total|number_format(2, '.', ',') }}</span>
+                            </div>
+
+                            <div class="flex justify-between pb-4 border-b border-gray-700">
+                                <span>Tax</span>
+                                <span>€0.00</span>
+                            </div>
+
+                            <div class="flex justify-between pb-4 border-b border-gray-700">
+                                <div>
+                                    <div>Shipping in EU</div>
+                                    <div class="text-sm text-gray-400 mt-1">We only charge shipping over 2kg</div>
+                                </div>
+                                <span>€19.00</span>
+                            </div>
+
+                            <div class="flex justify-between pt-2 font-bold">
+                                <span>Total</span>
+                                <span>€{{ (total + 19)|number_format(2, '.', ',') }}</span>
+                            </div>
+                        </div>
+
+                        <a href="{{ path('cart_checkout') }}">
+                            <button class="w-full bg-white text-gray-900 rounded-md py-4 font-medium mt-6 hover:bg-gray-100 transition">
+                                Continue to Payment
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}
