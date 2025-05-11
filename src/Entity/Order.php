@@ -50,7 +50,7 @@ class Order
     private ?int $billing_address_id = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Adress $shipping_address_id = null;
 
     #[ORM\OneToOne(mappedBy: 'order_id', cascade: ['persist', 'remove'])]
