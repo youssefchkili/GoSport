@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ProductsController extends AbstractController
 {
     #[Route('/products', name: 'app_products')]
-    public function RawProducts(ManagerRegistry $manager): Response
+    public function RawProducts(ManagerRegistry $manager, Request $request): Response
     {   
         $doctrine = $manager->getManager();
         $productRepository = $doctrine->getRepository('App\Entity\Product');
@@ -25,6 +25,8 @@ final class ProductsController extends AbstractController
             'categories' => $categories,
             'minPrice' => $priceRange[0]['minPrice'],
             'maxPrice' => $priceRange[0]['maxPrice'],
+            'totalPages' => is_countable($products) ? ceil(count($products) / 20) : 0,
+            'currentPage' => $request->get('page') == null ? 1 : $request->get('page'),
         ]);
     }
 
@@ -38,12 +40,15 @@ final class ProductsController extends AbstractController
         $categories = $categoryRepository->findAll();
         $categoriesAllowed = [];
         foreach ($categories as $category) {
-            if ($request->get('categoryCheckbox'.$category->getId()) != null) {
+            if ($request->get('min-price') == null || $request->get('categoryCheckbox'.$category->getId()) != null) {
                 $categoriesAllowed[] = $category->getId();
             }
         }
-        $products = $productRepository->findByFilters($request->get('keyWord'), $request->get('min-price'), $request->get('max-price'), $categoriesAllowed);
-        $priceRange = $productRepository->getPriceRange($request->get('keyWord'));
+        $products = $productRepository->findAll();
+        if ($request->get('min-price') != null) {
+            $products = $productRepository->findByFilters($request->get('keyWord'), $request->get('min-price'), $request->get('max-price'), $categoriesAllowed);
+        }
+        $priceRange = $productRepository->getPriceRange();
 
         return $this->render('products/index.html.twig', [
             'controller_name' => 'ProductsController',
@@ -52,9 +57,11 @@ final class ProductsController extends AbstractController
             'minPrice' => $priceRange[0]['minPrice'],
             'maxPrice' => $priceRange[0]['maxPrice'],
             'keyWord' => $request->get('keyWord'),
-            'minPriceInput' => $request->get('min-price'),
-            'maxPriceInput' => $request->get('max-price'),
+            'minPriceInput' => $request->get('min-price') == null ? $priceRange[0]['minPrice'] : $request->get('min-price'),
+            'maxPriceInput' => $request->get('max-price') == null ? $priceRange[0]['maxPrice'] : $request->get('max-price'),
             'categoriesAllowed' => $categoriesAllowed,
+            'totalPages' => is_countable($products) ? ceil(count($products) / 20) : 0,
+            'currentPage' => $request->get('page') == null ? 1 : $request->get('page'),
         ]);
     }
 }

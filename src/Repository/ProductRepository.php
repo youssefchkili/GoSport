@@ -33,12 +33,10 @@ class ProductRepository extends ServiceEntityRepository
     /**
      * @return Float[]
      */
-    public function getPriceRange($keyWord = ""): array
+    public function getPriceRange(): array
     {
         return $this->createQueryBuilder('p')
             ->select(' min( p.price ) as minPrice, max( p.price ) as maxPrice')
-            ->andWhere('p.name like :val or p.slug like :val or p.description like :val')
-            ->setParameter('val', '%'.$keyWord.'%')
             ->getQuery()
             ->getScalarResult()
         ;
