@@ -28,20 +28,33 @@ final class ProductsController extends AbstractController
         ]);
     }
 
-    #[Route('/products/byKeyWord', name: 'app_products_byKeyWord')]
-    public function ProductsByKeyWord(ManagerRegistry $manager, Request $request): Response
+    #[Route('/products/byFilters', name: 'app_products_byFilters')]
+    public function ProductsByFilters(ManagerRegistry $manager, Request $request): Response
     {   
         $doctrine = $manager->getManager();
         $productRepository = $doctrine->getRepository('App\Entity\Product');
         $categoryRepository = $doctrine->getRepository('App\Entity\Category');
-        $products = $productRepository->findByKeyWord($request->get('keyWord'));
+
         $categories = $categoryRepository->findAll();
+        $categoriesAllowed = [];
+        foreach ($categories as $category) {
+            if ($request->get('categoryCheckbox'.$category->getId()) != null) {
+                $categoriesAllowed[] = $category->getId();
+            }
+        }
+        $products = $productRepository->findByFilters($request->get('keyWord'), $request->get('min-price'), $request->get('max-price'), $categoriesAllowed);
+        $priceRange = $productRepository->getPriceRange($request->get('keyWord'));
+
         return $this->render('products/index.html.twig', [
             'controller_name' => 'ProductsController',
             'products' => $products,
             'categories' => $categories,
-            'minPrice' => 21,
-            'maxPrice' => 896,
+            'minPrice' => $priceRange[0]['minPrice'],
+            'maxPrice' => $priceRange[0]['maxPrice'],
+            'keyWord' => $request->get('keyWord'),
+            'minPriceInput' => $request->get('min-price'),
+            'maxPriceInput' => $request->get('max-price'),
+            'categoriesAllowed' => $categoriesAllowed,
         ]);
     }
 }
