@@ -16,10 +16,12 @@
         {% endblock %}
     </head>
     <body>
+        {% block topannouncement%}{% endblock %}
+        
         <nav class="navbar container-fluid" >
             <div class="row w-100">
                 <div class="col-2 container-fluid">
-                    <a class="navbar-brand fw-bold" href="/products">
+                    <a class="navbar-brand fw-bold" href="/">
                     <img src="{{ asset('images/logo.png') }}" width="40" height="40">
                     GoSport
                     </a>
