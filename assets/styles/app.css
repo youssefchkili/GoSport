@@ -22,6 +22,50 @@ body {
     padding-left: 4px;
     padding-right: 4px;
 }
+
+.big-badge{
+    position: absolute;
+    color : white;
+    background-color: rgb(221, 0, 77);
+    border-radius: 20px;
+    width: fit-content;
+    min-width: 40px;
+    height: 40px;
+    top: 2%;
+    right: -2%;
+    font-size: 25px;
+    padding: 0;
+    margin:0;
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    rotate: 30deg;
+    font: bold 20px Arial, sans-serif;
+}
+
 #sidebar{
     width: 20%;
+}
+#price-slider .noUi-connect {
+    background: rgb(190, 0, 47);
+}
+
+#price-slider .noUi-handle {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  top: -7px;
+  background: white;
+  border: 2px solid #dc3545;
+  box-shadow: none;
+}
+#price-slider .noUi-handle::before,
+#price-slider .noUi-handle::after {
+  display: none;
+}
+.heart:hover {
+    color: red;
 }

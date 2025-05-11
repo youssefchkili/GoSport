@@ -25,10 +25,10 @@ class Product
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[ORM\Column(type: Types::FLOAT, precision: 10, scale: 2)]
     private ?float $price = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, nullable: true)]
+    #[ORM\Column(type: Types::FLOAT, precision: 5, scale: 2, nullable: true)]
     private ?float $discount_percent = null;
 
     #[ORM\Column(nullable: true)]

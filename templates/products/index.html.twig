@@ -2,26 +2,138 @@
 
 {% block title %}All Products{% endblock %}
 
+{% block stylesheets %}
+    <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" rel="stylesheet">
+{% endblock %}
+{% block importmap %}
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
+{% endblock %}
+
+    {% block sidebarBody %}
+        <div class="mb-3">
+            <button class="btn btn-outline-danger" type="button" data-bs-toggle="collapse" data-bs-target="#categoriesCollapse" aria-expanded="false" aria-controls="categoriesCollapse">
+                Categories
+            </button>
+
+            <div class="collapse mt-2" id="categoriesCollapse">
+                <div class="p-3">
+                    {% if categories is defined %}
+                        {% for category in categories %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="categoryCheckbox{{ category.id }}" value="{{ category.id }}" name="{{ category.id }}" checked>
+                                <label class="form-check-label" for="categoryCheckbox{{ category.id }}">{{ category.name }}</label>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container my-4">
+            <label for="price-slider" class="form-label">Price Range</label>
+            <br>
+            <br>
+            <br>
+            <div id="price-slider"></div>
+            <div class="mt-3">
+                <span>Min: <span id="min-price"></span>DT</span> &nbsp;-&nbsp;
+                <span>Max: <span id="max-price"></span>DT</span>
+            </div>
+        </div>
+        <a href="/products" style="position: absolute; bottom: 10px; right: 10px;">
+            <button class="btn btn-outline-danger" id="apply-btn">
+                Apply
+            </button>
+        </a>
+
+    {% endblock %}
+
 {% block body %}
 
-{% if products is empty %}
-    <h1>No products available</h1>
-{% else %}
-    <h1>All Products</h1>
-    <div class="container">
-        <div class="row">
-            {% for product in products %}
-                <div class="alert alert-danger col-md-3">
-                    {{product.name}}
-                    <br>
-                    {{product.description}}
-                    <br>
-                    {{product.price}}
-                    <br>
-                    {{product.discountPercent}}
-                </div>
-            {% endfor %}
+    {% if products is empty %}
+        <br>
+        <a href="/products" class="text-white text-center d-block">No matching results...</a>
+    {% else %}
+        <div class="container">
+            <div class="row">
+                {% for product in products %}
+                    <div class="col-md-3">
+                        <a href="#" class="text-decoration-none">
+                            <div class="card mb-4 p-3 position-relative">
+                                <img src="https://i1.sndcdn.com/artworks-x8zI2HVC2pnkK7F5-4xKLyA-t1080x1080.jpg" class="card-img-top">
+                                {% if product.discountpercent != 0 %}
+                                    <div class="big-badge">
+                                        {{ product.discountpercent }}% off
+                                    </div>
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ product.name }}</h5>
+                                    <h6 style="color:gray" class="p-2">{{ product.slug }}</h6>
+                                </div>
+                                <div class="position-absolute bottom-0 end-0 p-3">
+                                    {% if product.discountpercent == 0 %}
+                                        <h4>
+                                            {{ product.price }} DT
+                                        </h4>
+                                    {% else %}
+                                        <h4 style="display: inline-block; margin-right: 10px;">
+                                            {{ product.price * (100-product.discountpercent)/100 }} DT
+                                        </h4>
+                                        <h4 class="text-decoration-line-through" style="display: inline-block;color:RGB(255,102,102);">
+                                            {{ product.price }}DT
+                                        </h4>
+                                    {% endif %}
+                                </div>
+                                <br>
+                                <div class="position-absolute bottom-0 start-0 p-3">
+                                    <button class="btn text-danger heart" type="button" style="border: 0;font-size: 25px;">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
-    </div>
-{% endif %}
+    {% endif %}
+
+    <script>
+    const priceSlider = document.getElementById('price-slider');
+
+    let min = {{ minPrice }};
+    let max = {{ maxPrice }};
+    
+    if (sessionStorage.getItem("minPrice") !== null && sessionStorage.getItem("maxPrice") !== null) {
+        min = parseInt(sessionStorage.getItem("minPrice"));
+        max = parseInt(sessionStorage.getItem("maxPrice"));
+    }
+    noUiSlider.create(priceSlider,{
+            start: [min, max],
+            connect: true,
+            range: {
+            'min': {{ minPrice }},
+            'max':{{ maxPrice }}
+            },
+        step: 1,
+        tooltips: true,
+        format: {
+        to: value => Math.round(value),
+        from: value => Number(value)
+        }
+    });
+
+    const minPrice = document.getElementById('min-price');
+    const maxPrice = document.getElementById('max-price');
+
+    priceSlider.noUiSlider.on('update', (values) => {
+        minPrice.textContent = values[0];
+        maxPrice.textContent = values[1];
+    });
+    document.getElementById('apply-btn').addEventListener('click', () => {
+        sessionStorage.setItem("minPrice", priceSlider.noUiSlider.get()[0]);
+        sessionStorage.setItem("maxPrice", priceSlider.noUiSlider.get()[1]);
+    });
+    </script>
 {% endblock %}
