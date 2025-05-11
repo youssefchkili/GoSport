@@ -31,13 +31,14 @@ class ProductFixture extends Fixture
 
             $product->setCategoryId($category);
             $manager->persist($product);
-
+/*
             $productImage = new ProductImage();
             $productImage->setProductId($product);
             $productImage->setImagePath("../../public/images/products/bestPlayerRightNow.jpg");
             $productImage->setIsPrimary(true);
 
             $manager->persist($productImage);
+            */
             $manager->flush();
         }
 
