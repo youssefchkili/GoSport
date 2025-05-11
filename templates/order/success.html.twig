@@ -1,197 +1,154 @@
 {% extends 'coolbase.html.twig' %}
 
 {% block body %}
-    <div class="max-w-6xl mx-auto p-4 font-sans">
-        <h1 class="text-2xl font-bold mb-8">Checkout</h1>
+    <div class="bg-gray-50 min-h-screen py-8 px-4">
+        <div class="max-w-3xl mx-auto">
+            {# Breadcrumb #}
+            <nav class="flex items-center mb-8 text-sm text-gray-500">
+                <div class="flex items-center">
+                    <span class="bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs mr-1">1</span>
+                    <span>Cart</span>
+                </div>
+                <div class="mx-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="flex items-center">
+                    <span class="bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs mr-1">2</span>
+                    <span>Personal Information</span>
+                </div>
+                <div class="mx-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="flex items-center">
+                    <span class="bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs mr-1">3</span>
+                    <span>Shipping Address</span>
+                </div>
+                <div class="mx-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="flex items-center">
+                    <span class="bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs mr-1">4</span>
+                    <span>Payment Method</span>
+                </div>
+                <div class="mx-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="flex items-center">
+                    <span class="bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs mr-1">5</span>
+                    <span class="font-medium text-gray-800">Confirmation</span>
+                </div>
+            </nav>
 
-        <div class="flex flex-col md:flex-row gap-8">
-            <!-- Left side - Customer Information -->
-            <div class="w-full md:w-2/3">
-                <div class="mb-8">
-                    <h2 class="text-lg font-medium mb-4">Contact Information</h2>
-                    <div class="mb-4">
-                        <label for="email" class="block text-sm text-gray-600 mb-1">Email address</label>
-                        <input type="email" id="email" name="email" class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            {# Order Confirmation Card #}
+            <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+                <div class="text-center mb-8">
+                    <div class="flex justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
                     </div>
+                    <h1 class="text-2xl font-bold text-gray-800 mb-1">We received your order!</h1>
+                    <p class="text-gray-600">Your order #{{ order.id }} is completed and ready to ship</p>
                 </div>
 
-                <div class="mb-8">
-                    <h2 class="text-lg font-medium mb-4">Shipping Information</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label for="first_name" class="block text-sm text-gray-600 mb-1">First name</label>
-                            <input type="text" id="first_name" name="first_name" class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div>
-                            <label for="last_name" class="block text-sm text-gray-600 mb-1">Last name</label>
-                            <input type="text" id="last_name" name="last_name" class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="phone" class="block text-sm text-gray-600 mb-1">Phone number</label>
-                        <input type="tel" id="phone" name="phone" class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="address_line1" class="block text-sm text-gray-600 mb-1">Address line 1</label>
-                        <input type="text" id="address_line1" name="address_line1" class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="address_line2" class="block text-sm text-gray-600 mb-1">Address line 2</label>
-                        <input type="text" id="address_line2" name="address_line2" class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label for="country" class="block text-sm text-gray-600 mb-1">Country</label>
-                            <div class="relative">
-                                <select id="country" name="country" class="appearance-none w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="US">United States</option>
-                                    {% for country in countries %}
-                                        <option >{{ country }}</option>
-                                    {% endfor %}
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <label for="city" class="block text-sm text-gray-600 mb-1">City</label>
-                            <input type="text" id="city" name="city" class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="state" class="block text-sm text-gray-600 mb-1">State</label>
-                            <input type="text" id="state" name="state" class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div>
-                            <label for="postal_code" class="block text-sm text-gray-600 mb-1">Postal code</label>
-                            <input type="text" id="postal_code" name="postal_code" class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                    </div>
+                <div class="flex justify-end mb-6">
+                    <a href="{{ path('order_invoice', {'id': order.id}) }}" class="bg-gray-100 text-gray-800 px-4 py-2 rounded-md text-sm font-medium">
+                        View invoice
+                    </a>
                 </div>
 
-                <div class="mb-8">
-                    <h2 class="text-lg font-medium mb-4">Payment</h2>
-
-                    <div class="space-y-4">
-                        <!-- Credit Card Option -->
-                        <div class="border border-gray-200 rounded-md p-4 relative">
-                            <div class="flex items-center">
-                                <input type="radio" id="payment_cc" name="payment_method" value="cc" class="h-4 w-4 text-blue-600" checked>
-                                <label for="payment_cc" class="ml-3 font-medium">Credit Card</label>
-                            </div>
-                            <div class="ml-7 mt-1 text-sm text-gray-500">Visa, Mastercard, American Express</div>
-
-                            <div id="cc_details" class="ml-7 mt-4 space-y-4">
-                                <div>
-                                    <label for="card_number" class="block text-sm text-gray-600 mb-1">Card number</label>
-                                    <input type="text" id="card_number" name="card_number" placeholder="XXXX XXXX XXXX XXXX" class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                </div>
-
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label for="card_name" class="block text-sm text-gray-600 mb-1">Name on the card</label>
-                                        <input type="text" id="card_name" name="card_name" placeholder="ex: John Doe" class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    </div>
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label for="expiry_date" class="block text-sm text-gray-600 mb-1">Expiry date</label>
-                                            <input type="text" id="expiry_date" name="expiry_date" placeholder="MM/YYYY" class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                        </div>
-                                        <div>
-                                            <label for="cvv" class="block text-sm text-gray-600 mb-1">CSV</label>
-                                            <input type="text" id="cvv" name="cvv" placeholder="XXX" class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                <div class="grid md:grid-cols-2 gap-8 border-t pt-6">
+                    {# Shipping Address #}
+                    <div>
+                        <h2 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-4">
+                            SHIPPING ADDRESS
+                        </h2>
+                        <div class="text-gray-800">
+                            <p class="font-medium">{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</p>
+                            <p>{{ order.shippingAddress.addressLine1 }}</p>
+                            {% if order.shippingAddress.addressLine2 %}
+                                <p>{{ order.shippingAddress.addressLine2 }}</p>
+                            {% endif %}
+                            <p>{{ order.shippingAddress.city }}, {{ order.shippingAddress.state }} {{ order.shippingAddress.postalCode }}</p>
+                            <p>{{ order.shippingAddress.country }}</p>
                         </div>
+                    </div>
 
-                        <!-- PayPal Option -->
-                        <div class="border border-gray-200 rounded-md p-4 relative">
-                            <div class="flex items-center">
-                                <input type="radio" id="payment_paypal" name="payment_method" value="paypal" class="h-4 w-4 text-blue-600">
-                                <label for="payment_paypal" class="ml-3 font-medium">PayPal</label>
-                            </div>
-                            <div class="ml-7 mt-1 text-sm text-gray-500">One click PayPal payment</div>
-                        </div>
-
-                        <!-- Cryptocurrency Option -->
-                        <div class="border border-gray-200 rounded-md p-4 relative">
-                            <div class="flex items-center">
-                                <input type="radio" id="payment_crypto" name="payment_method" value="crypto" class="h-4 w-4 text-blue-600">
-                                <label for="payment_crypto" class="ml-3 font-medium">Cryptocurrency</label>
-                            </div>
-                            <div class="ml-7 mt-1 text-sm text-gray-500">Bitcoin, Ethereum</div>
+                    {# Payment Info #}
+                    <div>
+                        <h2 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-4">
+                            PAYMENT INFO
+                        </h2>
+                        <div class="text-gray-800">
+                            <p class="font-medium">{{ order.paymentMethod.type }}</p>
+                            {% if order.paymentMethod.type == 'Credit Card' %}
+                                <p>{{ order.paymentMethod.cardType }}</p>
+                                <p>**** {{ order.paymentMethod.lastFour }}</p>
+                            {% elseif order.paymentMethod.type == 'PayPal' %}
+                                <p>{{ order.paymentMethod.email }}</p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Right side - Order Summary -->
-            <div class="w-full md:w-1/3">
-                <div class="bg-gray-50 p-6 rounded-lg">
-                    <h2 class="text-lg font-medium mb-4">Order details</h2>
+            {# Order Items #}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <h2 class="text-xs font-medium text-gray-500 uppercase tracking-wider p-6 border-b">
+                    ORDER ITEMS
+                </h2>
 
-                    {% if cartItems is not empty %}
-                        {% for item in cartItems %}
-                            <div class="flex justify-between items-center py-4 border-b border-gray-200">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 bg-gray-100 rounded-md overflow-hidden">
-                                        {% set firstImage = item.productId.images|first %}
-                                        {% if firstImage %}
-                                            <img src="{{ asset('uploads/products/' ~ firstImage.path) }}" alt="{{ item.productId.name }}" class="w-full h-full object-cover" />
-                                        {% else %}
-                                            <div class="w-full h-full bg-gray-200"></div>
-                                        {% endif %}
-                                    </div>
-                                    <div>
-                                        <div class="font-medium">{{ item.productId.name }}</div>
-
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <span class="font-medium">€{{ item.productId.price|number_format(2, '.', ',') }}</span>
-
-                                </div>
+                {% for item in order.items %}
+                    <div class="border-b p-6">
+                        <div class="flex items-center">
+                            <div class="w-16 h-16 bg-gray-100 rounded-md flex items-center justify-center mr-4">
+                                {% set firstImage = item.product.images|first %}
+                                {% if firstImage %}
+                                    <img src="{{ asset('uploads/products/' ~ firstImage.path) }}" alt="{{ item.product.name }}" class="w-12 h-12 object-contain" />
+                                {% else %}
+                                    <div class="w-12 h-12 bg-gray-200"></div>
+                                {% endif %}
                             </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="py-4 text-center text-gray-500">
-                            Your cart is empty
-                        </div>
-                    {% endif %}
-
-                    <div class="mt-4 space-y-2">
-                        <div class="flex justify-between text-gray-600">
-                            <span>Subtotal</span>
-                            <span>€{{ subtotal|number_format(2, '.', ',') }}</span>
-                        </div>
-                        <div class="flex justify-between text-gray-600">
-                            <span>Tax</span>
-                            <span>€{{ tax|number_format(2, '.', ',') }}</span>
-                        </div>
-                        <div class="flex justify-between text-gray-600">
-                            <span>Shipping</span>
-                            <span>€{{ shipping|number_format(2, '.', ',') }}</span>
-                        </div>
-                        <div class="flex justify-between font-bold text-lg pt-2 border-t border-gray-200">
-                            <span>Total</span>
-                            <span>€{{ total|number_format(2, '.', ',') }}</span>
+                            <div class="flex-1">
+                                <h3 class="font-medium text-gray-800">{{ item.product.name }}</h3>
+                                <p class="text-gray-500 text-sm">{{ item.variant }}</p>
+                            </div>
+                            <div class="font-medium text-gray-800">€{{ item.price|number_format(2, '.', ',') }}</div>
                         </div>
                     </div>
+                {% endfor %}
 
-                    <button type="submit" form="checkout_form" class="w-full bg-gray-900 text-white rounded-md py-4 font-medium mt-6 hover:bg-black transition">
-                        Confirm payment
-                    </button>
+                {# Total #}
+                <div class="p-6">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-gray-600">Subtotal</span>
+                        <span class="font-medium text-gray-800">€{{ order.subtotal|number_format(2, '.', ',') }}</span>
+                    </div>
+                    {% if order.tax > 0 %}
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-600">Tax</span>
+                            <span class="font-medium text-gray-800">€{{ order.tax|number_format(2, '.', ',') }}</span>
+                        </div>
+                    {% endif %}
+                    {% if order.shipping > 0 %}
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-600">Shipping</span>
+                            <span class="font-medium text-gray-800">€{{ order.shipping|number_format(2, '.', ',') }}</span>
+                        </div>
+                    {% endif %}
+                    <div class="flex justify-between pt-2 border-t mt-4">
+                        <span class="font-medium text-gray-800">Total</span>
+                        <span class="font-medium text-gray-800">€{{ order.total|number_format(2, '.', ',') }}</span>
+                    </div>
                 </div>
             </div>
         </div>

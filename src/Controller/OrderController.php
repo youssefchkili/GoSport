@@ -78,6 +78,7 @@ final class OrderController extends AbstractController
 
 
         $this->entityManager->persist($order);
+        $this->entityManager->flush();
 
 
         foreach ($cartItems as $cartItem) {
@@ -89,10 +90,11 @@ final class OrderController extends AbstractController
 
             $this->entityManager->persist($orderItem);
         }
-         $this->addFlash("success", "Order placed successfully");
+        $this->addFlash("success", "Order placed successfully");
 
-        return $this->render('order/success.html.twig' , [
+        return $this->render('order/checkout.html.twig' , [
             'order' => $order,
+            'id' => $order->getId(),
             'cartItems' => $cartItems,
             'countries' => $this->countries,
             'subtotal' => $subtotal,
@@ -114,6 +116,40 @@ final class OrderController extends AbstractController
         $orders = $this->orderRepository->findBy(['user_id' => $this->getUser()]);
         return $this->render('order/list.html.twig' , [
             'orders' => $orders,
+        ]);
+    }
+
+    #[Route('/success/{id}', name: 'checkout_success')]
+    public function success(int $id, CartRepository $cartRepository): Response
+    {
+
+        $order = $this->orderRepository->find($id);
+
+        if (!$order) {
+            $this->addFlash('error', 'Order not found.');
+            return $this->redirectToRoute('order_list');
+        }
+
+
+        $orderItems = $order->getOrderItems();
+
+
+        $cart = $cartRepository->find(1);
+        if ($cart) {
+            foreach ($cart->getCartItems() as $cartItem) {
+                $this->entityManager->remove($cartItem);
+            }
+            $this->entityManager->flush();
+        }
+
+        return $this->render('order/success.html.twig', [
+            'order' => $order,
+            'orderItems' => $orderItems,
+            'subtotal' => $order->getSubtotal(),
+            'discount' => $order->getDiscount(),
+            'tax' => $order->getTax(),
+            'shipping' => $order->getShipping(),
+            'total' => $order->getTotal(),
         ]);
     }
 
