@@ -6,6 +6,7 @@ use App\Entity\Product;
 use App\Form\ProductForm;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,10 +16,32 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ProductController extends AbstractController
 {
     #[Route(name: 'app_product_index', methods: ['GET'])]
-    public function index(ProductRepository $productRepository): Response
-    {
+    public function index(
+        ProductRepository $productRepository,
+        Request $request,
+        PaginatorInterface $paginator
+    ): Response {
+        // Number of products per page
+        $perPage = 6;
+
+        // Get the current page from the request, default to 1 if not set
+        $currentPage = $request->query->getInt('page', 1);
+
+        // Create a query builder to get all products
+        $queryBuilder = $productRepository->createQueryBuilder('p')
+            ->orderBy('p.id', 'ASC');
+
+        // Paginate the results
+        $pagination = $paginator->paginate(
+            $queryBuilder,
+            $currentPage,
+            $perPage
+        );
+
         return $this->render('product/index.html.twig', [
-            'products' => $productRepository->findAll(),
+            'products' => $pagination,
+            'currentPage' => $currentPage,
+            'totalPages' => ceil($pagination->getTotalItemCount() / $perPage)
         ]);
     }
 
@@ -78,4 +101,7 @@ final class ProductController extends AbstractController
 
         return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
+
 }

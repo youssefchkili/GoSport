@@ -2,43 +2,90 @@
 {% block title %}Product index{% endblock %}
 
 {% block body %}
-    <h1>Product index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Slug</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Discount_percent</th>
-                <th>Stock_quantity</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    <<div class="d-flex flex-column align-items-center gap-3 mb-4">
+    <h1>Product Index</h1>
+    <a href="{{ path('app_product_new') }}" class="btn btn-outline-secondary">Add New</a>
+</div>
+    <div class="container">
         {% for product in products %}
-            <tr>
-                <td>{{ product.id }}</td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.slug }}</td>
-                <td>{{ product.description }}</td>
-                <td>{{ product.price }}</td>
-                <td>{{ product.discountPercent }}</td>
-                <td>{{ product.stockQuantity }}</td>
-                <td>
-                    <a href="{{ path('app_product_show', {'id': product.id}) }}">show</a>
-                    <a href="{{ path('app_product_edit', {'id': product.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 
-    <a href="{{ path('app_product_new') }}">Create new</a>
+            {% if loop.index0 % 6 == 0 %}
+                <div class="row mb-4">
+            {% endif %}
+
+            <div class="col-md-4 col-sm-4 col-6 text-center">
+                <div class="card h-100">
+                    <img src="/images/products/bestPlayerRightNow.jpg"  class="card-img-top" alt="{{ product.name }}">
+                    <div class="card-body">
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <th>Name: {{ product.name }}</th>
+                                <th>Slug: {{ product.slug }}</th>
+
+                            </tr>
+                            <tr>
+                                <th>Category: {{ product.getCategoryId().getName() }}</th>
+                                <th>Price: ${{ product.price }}</th>
+                            </tr>
+                            <tr>
+                                <th>Discount: {{ product.discountPercent*100 }}%</th>
+                                <th>In Stock:{{ product.stockQuantity }}</th>
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+                        <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-outline-secondary">show</a>
+                        <a href="{{ path('app_product_edit', {'id': product.id}) }}" class="btn btn-outline-secondary">edit</a>
+                    </div>
+                </div>
+            </div>
+
+
+            {% if loop.index % 6 == 0 or loop.last %}
+                </div>
+            {% endif %}
+        {% else %}
+
+            <div class="alert alert-warning" role="alert">
+                no products found
+            </div>
+
+        {% endfor %}
+    </div>
+
+
+        {# Pagination Navigation #}
+        {% if products|length > 0 %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if currentPage > 1 %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('app_product_index', {'page': currentPage - 1}) }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% for page in 1..totalPages %}
+                        <li class="page-item {% if page == currentPage %}active{% endif %}">
+                            <a class="page-link" href="{{ path('app_product_index', {'page': page}) }}">{{ page }}</a>
+                        </li>
+                    {% endfor %}
+
+                    {% if currentPage < totalPages %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('app_product_index', {'page': currentPage + 1}) }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+
+
 {% endblock %}
+
+
