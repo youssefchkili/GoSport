@@ -17,7 +17,7 @@ class ProductRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Product[] Returns an array of Product objects
+     * @return Product[]
      */
     public function findByKeyWord($keyWord): array
     {
@@ -31,12 +31,14 @@ class ProductRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Float[] Returns an array of Product objects
+     * @return Float[]
      */
-    public function getPriceRange(): array
+    public function getPriceRange($keyWord = ""): array
     {
         return $this->createQueryBuilder('p')
             ->select(' min( p.price ) as minPrice, max( p.price ) as maxPrice')
+            ->andWhere('p.name like :val or p.slug like :val or p.description like :val')
+            ->setParameter('val', '%'.$keyWord.'%')
             ->getQuery()
             ->getScalarResult()
         ;
@@ -48,6 +50,26 @@ class ProductRepository extends ServiceEntityRepository
     public function findAll(): array
     {
         return $this->createQueryBuilder('p')
+            ->orderBy('p.price', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return Product[] Returns an array of Product objects
+     */
+    public function findByFilters($keyWord, $minPrice, $maxPrice, $categoriesAllowed): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.name like :val or p.slug like :val or p.description like :val')
+            ->andWhere('p.price*(100-p.discount_percent)/100 >= :minPrice')
+            ->andWhere('p.price*(100-p.discount_percent)/100 <= :maxPrice')
+            ->andWhere('p.category_id IN (:categoriesAllowed)')
+            ->setParameter('val', '%'.$keyWord.'%')
+            ->setParameter('minPrice', $minPrice)
+            ->setParameter('maxPrice', $maxPrice)
+            ->setParameter('categoriesAllowed', $categoriesAllowed)
             ->orderBy('p.price', 'ASC')
             ->getQuery()
             ->getResult()
