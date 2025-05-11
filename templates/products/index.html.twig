@@ -59,7 +59,7 @@
     {% else %}
         <div class="container">
             <div class="row">
-                {% for product in products %}
+                {% for product in products|slice((currentPage-1)*20, 20) %}
                     <div class="col-md-3">
                         <a href="#" class="text-decoration-none">
                             <div class="card mb-4 p-3 position-relative">
@@ -101,43 +101,71 @@
         </div>
     {% endif %}
 
+    {% if products|length > 0 %}
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if currentPage > 1 %}
+                    <li class="page-item">
+                        <a class="page-link text-danger" href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': currentPage - 1})) }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for page in 1..totalPages %}
+                    <li class="page-item">
+                        <a class="page-link text-danger{% if page == currentPage %} bg-danger text-white{% endif %}" href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': page})) }}">{{ page }}</a>
+                    </li>
+                {% endfor %}
+
+                {% if currentPage < totalPages %}
+                    <li class="page-item">
+                        <a class="page-link text-danger" href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': currentPage + 1})) }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+
     <script>
-    const priceSlider = document.getElementById('price-slider');
+        const priceSlider = document.getElementById('price-slider');
 
-    let min = {{ minPrice }};
-    let max = {{ maxPrice }};
-    {% if minPriceInput is defined %}
-        min = {{ minPriceInput }};
-    {% endif %}
-    {% if maxPriceInput is defined %}
-        max = {{ maxPriceInput }};
-    {% endif %}
-    
-    noUiSlider.create(priceSlider,{
-            start: [min, max],
-            connect: true,
-            range: {
-            'min': {{ minPrice }},
-            'max':{{ maxPrice }}
-            },
-        step: 1,
-        tooltips: true,
-        format: {
-        to: value => Math.floor(value),
-        from: value => Math.ceil(value)
-        }
-    });
+        let min = {{ minPrice }};
+        let max = {{ maxPrice }};
+        {% if minPriceInput is defined %}
+            min = {{ minPriceInput }};
+        {% endif %}
+        {% if maxPriceInput is defined %}
+            max = {{ maxPriceInput }};
+        {% endif %}
+        
+        noUiSlider.create(priceSlider,{
+                start: [min, max],
+                connect: true,
+                range: {
+                'min': {{ minPrice }},
+                'max':{{ maxPrice }}
+                },
+            step: 1,
+            tooltips: true,
+            format: {
+            to: value => Math.floor(value),
+            from: value => Math.ceil(value)
+            }
+        });
 
-    const minPrice = document.getElementById('min-price');
-    const maxPrice = document.getElementById('max-price');
-    const minPriceInput = document.getElementById('min-price-input');
-    const maxPriceInput = document.getElementById('max-price-input');
+        const minPrice = document.getElementById('min-price');
+        const maxPrice = document.getElementById('max-price');
+        const minPriceInput = document.getElementById('min-price-input');
+        const maxPriceInput = document.getElementById('max-price-input');
 
-    priceSlider.noUiSlider.on('update', (values) => {
-        minPrice.textContent = values[0];
-        maxPrice.textContent = values[1];
-        minPriceInput.value = values[0];
-        maxPriceInput.value = values[1];
-    });
+        priceSlider.noUiSlider.on('update', (values) => {
+            minPrice.textContent = values[0];
+            maxPrice.textContent = values[1];
+            minPriceInput.value = values[0];
+            maxPriceInput.value = values[1];
+        });
     </script>
 {% endblock %}
