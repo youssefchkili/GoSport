@@ -20,13 +20,13 @@ class CartItem
     #[ORM\Column(nullable: true)]
     private ?array $selected_options = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(name: 'product_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private ?Product $product = null;
+    #[ORM\ManyToOne(targetEntity: Product::class)]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    private ?Product $product_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'cartItems')]
-    #[ORM\JoinColumn(name: 'cart_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private ?Cart $cart = null;
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Cart $cart_id = null;
 
     public function getId(): ?int
     {
@@ -61,26 +61,26 @@ class CartItem
         return $this;
     }
 
-    public function getProduct(): ?Product
+    public function getProductId(): ?Product
     {
-        return $this->product;
+        return $this->product_id;
     }
 
-    public function setProductId(?Product $product): static
+    public function setProductId(?Product $product_id): static
     {
-        $this->product = $product;
+        $this->product_id = $product_id;
 
         return $this;
     }
 
-    public function getCart(): ?Cart
+    public function getCartId(): ?Cart
     {
-        return $this->cart;
+        return $this->cart_id;
     }
 
-    public function setCart(?Cart $cart): static
+    public function setCartId(?Cart $cart_id): static
     {
-        $this->cart = $cart;
+        $this->cart_id = $cart_id;
 
         return $this;
     }
