@@ -68,7 +68,7 @@
                     </a>
                 {% endif %}
             </div>
-
+            {% block wishlistBag %}
             <div class="col-3 h-100 d-flex justify-content-center">
                 <a class="w-100 h-100 d-flex justify-content-center" href="/products">
                     <i class="bi bi-bag position-relative" style="font-size: 25px;">
@@ -80,10 +80,9 @@
                             {% endif %}
                         </div>
                     </i>
-                    </span>
                 </a>
-
             </div>
+            {% endblock %}
 
         </div>
     </div>

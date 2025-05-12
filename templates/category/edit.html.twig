@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Category{% endblock %}
+{% block titleEmoji %}{% endblock %}
+{% block body %}
+    <div class="text-center mb-4">
+        <h1 class="display-4">edit category</h1>
+    </div>
+
+
+    {{ include('category/_form.html.twig', {'button_label': 'Update'}) }}
+    <div class="container">
+        <a href="{{ path('app_category_index') }}" class="btn btn-secondary">back to list</a>
+    </div>
+
+{% endblock %}

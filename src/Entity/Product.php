@@ -35,7 +35,7 @@ class Product
     private ?int $stock_quantity = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: TRUE, onDelete: 'SET NULL')]
     private ?Category $category_id = null;
 
     /**
