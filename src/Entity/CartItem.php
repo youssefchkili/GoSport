@@ -20,7 +20,8 @@ class CartItem
     #[ORM\Column(nullable: true)]
     private ?array $selected_options = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: Product::class)]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Product $product_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'cartItems')]
