@@ -23,9 +23,9 @@ final class Version20250511215521 extends AbstractMigration
         $this->addSql(<<<'SQL'
             ALTER TABLE `order` CHANGE shipping_address_id_id shipping_address_id_id INT DEFAULT NULL
         SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE product_image DROP FOREIGN KEY FK_64617F03DE18E50B
-        SQL);
+        //$this->addSql(<<<'SQL'
+          //  ALTER TABLE product_image DROP FOREIGN KEY FK_64617F03DE18E50B
+        //SQL);
         $this->addSql(<<<'SQL'
             DROP INDEX IDX_64617F03DE18E50B ON product_image
         SQL);

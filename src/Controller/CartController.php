@@ -25,10 +25,13 @@ final class CartController extends AbstractController
     #[Route('/list', name: 'cart_list')]
     public function list(): Response
     {
+        $user = $this->getUser();
 
+        if (!$user) {
+            throw $this->createAccessDeniedException('You must be logged in to add items to the cart.');
+        }
 
-
-        $cart = $this->cartRepository->find(1);
+        $cart = $this->cartRepository->findOneBy(['user' => $user]);
 
         if (!$cart) {
             $this->addFlash('info', 'Your cart is empty.');
@@ -41,7 +44,7 @@ final class CartController extends AbstractController
         $cartItems = $cart->getCartItems();
         $total = 0;
         foreach ($cartItems as $item) {
-            $product = $item->getProductID();
+            $product = $item->getProduct();
             if ($product) {
                 $total += $product->getPrice() * $item->getQuantity();
             }
@@ -58,8 +61,21 @@ final class CartController extends AbstractController
     #[Route('/add/{product_id}', name: 'cart_add')]
     public function add($product_id, ProductRepository $productRepository): Response
     {
+        $user = $this->getUser();
 
-        $cart = $this->cartRepository->find(1);
+        if (!$user) {
+            throw $this->createAccessDeniedException('You must be logged in to add items to the cart.');
+        }
+
+        $cart = $this->cartRepository->findOneBy(['user' => $user]);
+
+
+        if (!$cart) {
+            $cart = new Cart();
+            $cart->setUser($user);
+            $this->entityManager->persist($cart);
+            $this->entityManager->flush();
+        }
 
         $product = $productRepository->find($product_id);
 
@@ -67,14 +83,14 @@ final class CartController extends AbstractController
             throw $this->createNotFoundException('Product not found.');
         }
 
-        $existingItem = $this->entityManager->getRepository(CartItem::class)->findOneBy(['cart_id' => $cart->getId(), 'product_id' => $product_id]);
+        $existingItem = $this->entityManager->getRepository(CartItem::class)->findOneBy(['cart' => $cart, 'product' => $product]);
         if($existingItem) {
            $existingItem->setQuantity($existingItem->getQuantity() + 1);
 
         }else{
             $cartItem = new CartItem();
-            $cartItem->setProductID($product);
-            $cartItem->setCartId($cart);
+            $cartItem->setProduct($product);
+            $cartItem->setCart($cart);
             $cartItem->setQuantity(1);
             $this->entityManager->persist($cartItem);
         }
