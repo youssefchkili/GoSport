@@ -61,7 +61,7 @@
             <div class="row">
                 {% for product in products|slice((currentPage-1)*20, 20) %}
                     <div class="col-md-3">
-                        <a href="#" class="text-decoration-none">
+                        <a href="/products/{{ product.id }}" class="text-decoration-none">
                             <div class="card mb-4 p-3 position-relative">
                                 <img src="https://i1.sndcdn.com/artworks-x8zI2HVC2pnkK7F5-4xKLyA-t1080x1080.jpg" class="card-img-top">
                                 {% if product.discountpercent != 0 %}
@@ -151,8 +151,8 @@
             step: 1,
             tooltips: true,
             format: {
-            to: value => Math.floor(value),
-            from: value => Math.ceil(value)
+            to: value => parseFloat(value).toFixed(2),
+            from: value => parseFloat(value).toFixed(2)
             }
         });
 
