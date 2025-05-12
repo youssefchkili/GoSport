@@ -52,7 +52,8 @@
     {% endblock %}
 
 {% block body %}
-
+    {% block productCrud %}
+    {% endblock %}
     {% if products is empty %}
         <br>
         <a href="/products" class="text-white text-center d-block">No matching results...</a>
@@ -66,7 +67,7 @@
                                 <img src="https://i1.sndcdn.com/artworks-x8zI2HVC2pnkK7F5-4xKLyA-t1080x1080.jpg" class="card-img-top">
                                 {% if product.discountpercent != 0 %}
                                     <div class="big-badge">
-                                        {{ product.discountpercent }}% off
+                                        {{ product.discountpercent*100 }}% off
                                     </div>
                                 {% endif %}
                                 <div class="card-body">
@@ -80,19 +81,23 @@
                                         </h4>
                                     {% else %}
                                         <h4 style="display: inline-block; margin-right: 10px;">
-                                            {{ product.price * (100-product.discountpercent)/100 }} DT
+                                            {{ product.price * product.discountpercent}} DT
                                         </h4>
                                         <h4 class="text-decoration-line-through" style="display: inline-block;color:RGB(255,102,102);">
                                             {{ product.price }}DT
                                         </h4>
                                     {% endif %}
+                                    {% block crudButtons %}
+                                    {%  endblock %}
                                 </div>
                                 <br>
+                                {% block wishlistHeart %}
                                 <div class="position-absolute bottom-0 start-0 p-3">
                                     <button class="btn text-danger heart" type="button" style="border: 0;font-size: 25px;">
                                         <i class="bi bi-heart"></i>
                                     </button>
                                 </div>
+                                {% endblock %}
                             </div>
                         </a>
                     </div>
