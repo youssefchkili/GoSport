@@ -1,0 +1,88 @@
+{% extends 'coolBase.html.twig' %}
+
+{% block title %}GoSport: Wishlist{% endblock %}
+
+{% block stylesheets %}
+    <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" rel="stylesheet">
+{% endblock %}
+{% block importmap %}
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
+{% endblock %}
+
+{% block sidebarButton %}
+{% endblock %}
+
+{% block wishlistBag %}
+    {{ parent() }}
+{% endblock %}
+{% block body %}
+    <h1 class="text-center">Your Wishlist...</h1>
+    <br>
+    {% if products is empty %}
+        <h1 class="text-center">
+            ...is empty.
+            <br>
+            <br><a href="/products">Start</a> adding products to your wishlist!
+            <br>
+            We will notify you when they are available <br>or when a discount is available!
+        </h1>
+    {% else %}
+
+    <div class="container-fluid m-4 pt-2 d-flex justify-content-center">
+            <table class="table table-striped" style="max-width: 80%;">
+            <thead>
+                <tr class="sticky-top">
+                    <th scope="col">Product</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Stock Status</th>
+                    <th scope="col">Action</th>
+                    <th scope="col">Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr style="font-size: 1.2em;">
+                    <td style="text-align: left;">
+                    <div class="pt-3 pb-3" style="display: flex; align-items: center; gap: 10px;">
+                        <img src="{% for image in product.images %}
+                                {% if image.isPrimary %}
+                                {{ image.imagePath }}
+                                {% endif %}
+                             {% endfor %}" 
+                             alt="{{ product.name }}" class="img-fluid" style="max-height: 7em; border-radius: 10%;">
+                        <div>
+                            <h1 style="margin: 0;">{{ product.name|capitalize }}</h1>
+                            <h2 class="text-muted" style="margin: 0;">{{ product.slug }}</h2>
+                        </div>
+                    </div>
+                    </td>
+                    <td>{{ (product.price * (100 - product.discountpercent) / 100)|round(2) }}DT</td>
+                    <td>
+                        {% if product.stockQuantity > 0 %}
+                            <span class="text-success">In Stock</span>
+                        {% else %}
+                            <span class="text-danger">Out of Stock</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if not product.stockQuantity > 0 %}
+                            <a href="/products/{{ product.id }}" class="btn btn-danger btn-sm" style="font-size: 1.05em;">
+                                Add to Cart
+                                <i class="bi bi-bag"></i>
+                            </a>
+                        {% else %}
+                            <a href="/products/{{ product.id }}" class="btn btn-dark btn-sm" style="font-size: 1.05em;">View Details</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="/products/{{ product.id }}">
+                            <i class="bi bi-trash text-black" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 5px red)';this.style.color='red'" onmouseout="this.style.filter='none';this.style.color='black'"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+{% endblock %}

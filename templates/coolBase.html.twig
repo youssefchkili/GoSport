@@ -137,10 +137,12 @@
             GoSport
         </a>
 
+        {% block sidebarButton %}
         <!-- Sidebar Toggle Button (visible on larger screens) -->
         <button class="sidebar-toggle d-none d-lg-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
             <i class="bi bi-list"></i>
         </button>
+        {% endblock %}
 
         <!-- Search Form -->
         <div class="search-container flex-grow-1 mx-lg-4">
@@ -159,7 +161,7 @@
                 {% if app.user %}
                     <div class="dropdown">
                         <a class="nav-link text-decoration-none" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <div class="nav-icon">
+                            <div class="nav-icon text-black">
                                 <i class="bi bi-person-circle"></i>
                             </div>
                             <div class="nav-link-text">Account</div>
@@ -172,7 +174,7 @@
                     </div>
                 {% else %}
                     <a class="nav-link text-decoration-none" href="{{ path('app_login') }}">
-                        <div class="nav-icon">
+                        <div class="nav-icon text-black">
                             <i class="bi bi-person-circle"></i>
                         </div>
                         <div class="nav-link-text">Sign In</div>
@@ -183,7 +185,7 @@
             <!-- Shopping Cart -->
             <div class="nav-item text-center">
                 <a class="nav-link text-decoration-none" href="/products">
-                    <div class="nav-icon cart-icon">
+                    <div class="nav-icon cart-icon text-black">
                         <i class="bi bi-bag"></i>
                         <span class="cart-badge">
                             {% if app.session.get('user') is not null and app.session.get('cartItemsCount') is defined %}
@@ -196,6 +198,17 @@
                     <div class="nav-link-text">Cart</div>
                 </a>
             </div>
+
+            <!-- wishlist -->
+            <div class="pl-4 nav-item text-center">
+                <a class="nav-link text-decoration-none" href="/wishlist">
+                    <div class="nav-icon cart-icon text-danger">
+                        <i class="bi bi-heart-fill" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 5px red)'" onmouseout="this.style.filter='none'"></i>
+                    </div>
+                    <div class="nav-link-text">Wishlist</div>
+                </a>
+            </div>
+
         </div>
     </div>
 </nav>

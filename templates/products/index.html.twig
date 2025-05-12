@@ -1,6 +1,6 @@
 {% extends 'coolBase.html.twig' %}
 
-{% block title %}All Products{% endblock %}
+{% block title %}GoSport: All Products{% endblock %}
 
 {% block stylesheets %}
     <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" rel="stylesheet">
@@ -107,7 +107,7 @@
                                 {% block wishlistHeart %}
                                 <div class="position-absolute bottom-0 start-0 p-3">
                                     <button class="btn text-danger heart" type="button" style="border: 0;font-size: 25px;">
-                                        <i class="bi bi-heart"></i>
+                                        <i class="bi bi-heart" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 20px red)';" onmouseout="this.style.filter='none';"></i>
                                     </button>
                                 </div>
                                 {% endblock %}

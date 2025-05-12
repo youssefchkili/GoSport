@@ -34,6 +34,9 @@ final class ProductsController extends AbstractController
     #[Route('/products/byFilters', name: 'app_products_byFilters')]
     public function ProductsByFilters(ManagerRegistry $manager, Request $request): Response
     {   
+        if ($request->get('min-price') == null) {
+            return $this->ProductsByKeyWord($manager, $request);
+        }
         $doctrine = $manager->getManager();
         $productRepository = $doctrine->getRepository('App\Entity\Product');
         $categoryRepository = $doctrine->getRepository('App\Entity\Category');
@@ -64,6 +67,38 @@ final class ProductsController extends AbstractController
             'totalPages' => is_countable($products) ? ceil(count($products) / 20) : 0,
             'currentPage' => $request->get('page') == null ? 1 : $request->get('page'),
         ]);
+        
+    }
+
+    #[Route('/products/byKeyWord', name: 'app_products_byKeyWord')]
+    public function ProductsByKeyWord(ManagerRegistry $manager, Request $request): Response
+    {   
+        $doctrine = $manager->getManager();
+        $productRepository = $doctrine->getRepository('App\Entity\Product');
+        $categoryRepository = $doctrine->getRepository('App\Entity\Category');
+
+        $categories = $categoryRepository->findAll();
+        $categoriesAllowed = [];
+        foreach ($categories as $category) {
+            $categoriesAllowed[] = $category->getId();
+        }
+
+        $priceRange = $productRepository->getPriceRange();
+        $products = $productRepository->findByFilters($request->get('keyWord'), $priceRange[0]['minPrice'], $priceRange[0]['maxPrice'], $categoriesAllowed);
+
+        return $this->render('products/index.html.twig', [
+            'controller_name' => 'ProductsController',
+            'products' => $products,
+            'categories' => $categories,
+            'minPrice' => $priceRange[0]['minPrice'],
+            'maxPrice' => $priceRange[0]['maxPrice'],
+            'keyWord' => $request->get('keyWord'),
+            'minPriceInput' => $priceRange[0]['minPrice'],
+            'maxPriceInput' => $priceRange[0]['maxPrice'],
+            'categoriesAllowed' => $categoriesAllowed,
+            'totalPages' => is_countable($products) ? ceil(count($products) / 20) : 0,
+            'currentPage' => $request->get('page') == null ? 1 : $request->get('page'),
+        ]);
     }
 
     #[Route('/products/{product}', name: 'app_product_single')]
@@ -71,7 +106,6 @@ final class ProductsController extends AbstractController
     {   
         $doctrine = $manager->getManager();
         $productRepository = $doctrine->getRepository('App\Entity\Product');
-        $categoryRepository = $doctrine->getRepository('App\Entity\Category');
 
         $products = $productRepository->findByCategory($product->getCategoryId()->getId());
 
