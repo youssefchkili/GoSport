@@ -36,7 +36,7 @@ class ProductRepository extends ServiceEntityRepository
     public function getPriceRange(): array
     {
         return $this->createQueryBuilder('p')
-            ->select(' min( p.price ) as minPrice, max( p.price ) as maxPrice')
+            ->select(' min( p.price*(100-p.discount_percent)/100 ) as minPrice, max( p.price*(100-p.discount_percent)/100 ) as maxPrice')
             ->getQuery()
             ->getScalarResult()
         ;

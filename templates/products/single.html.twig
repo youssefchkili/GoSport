@@ -1,0 +1,56 @@
+{% extends 'coolBase.html.twig' %}
+
+{% block title %}All Products{% endblock %}
+
+{% block stylesheets %}
+    <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" rel="stylesheet">
+{% endblock %}
+{% block importmap %}
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
+{% endblock %}
+
+    {% block sidebarBody %}
+        <div class="mb-3">
+            <button class="btn btn-outline-danger" type="button" data-bs-toggle="collapse" data-bs-target="#categoriesCollapse" aria-expanded="false" aria-controls="categoriesCollapse">
+                Categories
+            </button>
+
+            <div class="collapse mt-2" id="categoriesCollapse">
+                <div class="p-3">
+                    {% if categories is defined %}
+                        {% for category in categories %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="categoryCheckbox{{ category.id }}" value="{{ category.id }}" {% if categoriesAllowed is not defined or category.id in categoriesAllowed %} checked {% endif %}>
+                                <label class="form-check-label" for="categoryCheckbox{{ category.id }}">{{ category.name }}</label>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container my-4">
+            <label for="price-slider" class="form-label">Price Range</label>
+            <br>
+            <br>
+            <br>
+            <div id="price-slider"></div>
+            <div class="mt-3">
+                <span>Min: <span id="min-price"></span>DT</span> &nbsp;-&nbsp;
+                <input type="hidden" id="min-price-input" name="min-price">
+                <span>Max: <span id="max-price" name="max-price"></span>DT</span>
+                <input type="hidden" id="max-price-input" name="max-price">
+            </div>
+        </div>
+        <a href="/products" style="position: absolute; bottom: 10px; right: 10px;">
+            <button class="btn btn-outline-danger" id="apply-btn" type="submit">
+                Apply
+            </button>
+        </a>
+
+    {% endblock %}
+
+{% block body %}
+    hello {{ product.name }}
+{% endblock %}
