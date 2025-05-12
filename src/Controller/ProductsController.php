@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Product;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,6 +63,19 @@ final class ProductsController extends AbstractController
             'categoriesAllowed' => $categoriesAllowed,
             'totalPages' => is_countable($products) ? ceil(count($products) / 20) : 0,
             'currentPage' => $request->get('page') == null ? 1 : $request->get('page'),
+        ]);
+    }
+
+    #[Route('/products/{product}', name: 'app_product_single')]
+    public function singleProduct(Product $product, ManagerRegistry $manager): Response
+    {   
+        $doctrine = $manager->getManager();
+        $productRepository = $doctrine->getRepository('App\Entity\Product');
+        $categoryRepository = $doctrine->getRepository('App\Entity\Category');
+
+        return $this->render('products/single.html.twig', [
+            'controller_name' => 'ProductsController',
+            'product' => $product,
         ]);
     }
 }
