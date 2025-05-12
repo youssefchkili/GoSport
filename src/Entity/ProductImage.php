@@ -28,7 +28,6 @@ class ProductImage
     private ?Product $product = null;
 */
 
-
     public function getProduct(): ?Product
     {
         return $this->product;
