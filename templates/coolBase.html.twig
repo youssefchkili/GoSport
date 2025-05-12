@@ -40,7 +40,6 @@
 
         <div class="col-2 container-fluid d-flex justify-content-left ">
 
-
             <div class="col-9 h-100 d-flex justify-content-left align-items-center">
 
                 {% if app.user %}
@@ -53,31 +52,6 @@
                            data-bs-toggle="dropdown"
                            aria-expanded="false">
                             <i class="bi bi-person-circle " style="font-size: 25px;"></i>
-
-                        <a class="w-100 h-100 d-flex justify-content-left align-items-center text-decoration-none" href="/products">
-                            <i class="bi bi-person-circle" style="font-size: 25px;"></i>
-                            &nbsp;
-                            {% if app.session.get('user') is not null %}
-                                {{ app.session.get('user').username }}
-                            {% else %}
-                                sign in
-                            {% endif %}
-                        </a>
-                    </div>
-                    {% block wishlistBag %}
-                    <div class="col-3 h-100 d-flex justify-content-center">
-                        <a class="w-100 h-100 d-flex justify-content-center" href="/products">
-                            <i class="bi bi-bag position-relative" style="font-size: 25px;">
-                                <div class="badge">
-                                    {% if app.session.get('user') is not null and app.session.get('cartItemsCount') is defined %}
-                                        {{ app.session.get('cartItemsCount') }}
-                                    {% else %}
-                                        0
-                                    {% endif %}
-                                </div>
-                            </i>
-
-
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="{{ path('app_profile') }}"><i class="bi bi-person-badge me-2"></i>Profile</a></li>
@@ -85,7 +59,6 @@
                             <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
                         </ul>
                     </div>
-
                 {% else %}
                     <!-- Link for non-logged in users -->
                     <a class="w-100 h-100 d-flex justify-content-left align-items-center text-decoration-none" href="{{ path('app_login') }}">
@@ -94,10 +67,6 @@
                         sign in
                     </a>
                 {% endif %}
-
-                    {% endblock %}
-                </div>
-
             </div>
 
             <div class="col-3 h-100 d-flex justify-content-center">
@@ -142,15 +111,3 @@
 {% block body %}{% endblock %}
 </body>
 </html>
-
-
-        {% block body %}
-            {# i added this just to have a good title for the product crud #}
-            {% block productCrud %}
-            {% endblock %}
-        {% endblock %}
-
-        </form>
-    </body>
-</html>
-
