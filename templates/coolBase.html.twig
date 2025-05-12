@@ -100,24 +100,10 @@
 
             </div>
 
-            <div class="col-3 h-100 d-flex justify-content-center">
-                <a class="w-100 h-100 d-flex justify-content-center" href="/products">
-                    <i class="bi bi-bag position-relative" style="font-size: 25px;">
-                        <div class="badge">
-                            {% if app.session.get('user') is not null and app.session.get('cartItemsCount') is defined %}
-                                {{ app.session.get('cartItemsCount') }}
-                            {% else %}
-                                0
-                            {% endif %}
-                        </div>
-                    </i>
-                    </span>
-                </a>
 
-            </div>
 
         </div>
-    </div>
+
 </nav>
 
 <button class="btn" style="font-size: 25px; margin-left:10px" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
@@ -140,18 +126,15 @@
 </div>
 
 
-
+{% block body %}
+    {# i added this just to have a good title for the product crud #}
+    {% block productCrud %}
+    {% endblock %}
+{% endblock %}
 </body>
 </html>
 
         
-        {% block body %}
-            {# i added this just to have a good title for the product crud #}
-            {% block productCrud %}
-            {% endblock %}
-        {% endblock %}
-        
-        </form>
-    </body>
-</html>
+
+
 
