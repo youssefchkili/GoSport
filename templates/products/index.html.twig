@@ -67,7 +67,7 @@
                                 <img src="https://i1.sndcdn.com/artworks-x8zI2HVC2pnkK7F5-4xKLyA-t1080x1080.jpg" class="card-img-top">
                                 {% if product.discountpercent != 0 %}
                                     <div class="big-badge">
-                                        {{ product.discountpercent*100 }}% off
+                                        {{ product.discountpercent }}% off
                                     </div>
                                 {% endif %}
                                 <div class="card-body">
@@ -81,7 +81,7 @@
                                         </h4>
                                     {% else %}
                                         <h4 style="display: inline-block; margin-right: 10px;">
-                                            {{ product.price * product.discountpercent}} DT
+                                            {{ product.price * (100-product.discountpercent)/100}} DT
                                         </h4>
                                         <h4 class="text-decoration-line-through" style="display: inline-block;color:RGB(255,102,102);">
                                             {{ product.price }}DT
