@@ -121,8 +121,10 @@
 <body>
 {% block stickyBanner %} {% endblock %}
 
+<form method="get" action="/products/byFilters" class="search-form d-flex w-100">
+
 <!-- Main Navigation -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top w-100">
     <div class="container">
         <!-- Sidebar Toggle Button -->
         <button class="sidebar-toggle d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
@@ -142,14 +144,12 @@
 
         <!-- Search Form -->
         <div class="search-container flex-grow-1 mx-lg-4">
-            <form method="get" action="/products/byFilters" class="search-form d-flex">
-                <div class="input-group">
-                    <input class="form-control" type="search" placeholder="Search for sports equipment..." aria-label="Search" name="keyWord" value="{{keyWord is defined ? keyWord}}">
-                    <button class="btn btn-danger" type="submit">
-                        <i class="bi bi-search"></i>
-                    </button>
-                </div>
-            </form>
+            <div class="input-group">
+                <input class="form-control" type="search" placeholder="Search for sports equipment..." aria-label="Search" name="keyWord" value="{{keyWord is defined ? keyWord}}">
+                <button class="btn btn-danger" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
         </div>
 
         <!-- Navigation Icons -->
@@ -214,6 +214,8 @@
         {% endblock %}
     </div>
 </div>
+
+</form>
 
 {% block body %}{% endblock %}
 </body>
