@@ -27,7 +27,7 @@ final class ProductController extends AbstractController
         $priceRange = $productRepository->getPriceRange();
         $categories = $categoryRepository->findAll();
         return $this->render('product/index.html.twig', [
-            'controller_name' => 'ProductsController',
+            'controller_name' => 'ProductController',
             'products' => $products,
             'categories' => $categories,
             'minPrice' => $priceRange[0]['minPrice'],
@@ -57,7 +57,7 @@ final class ProductController extends AbstractController
         $priceRange = $productRepository->getPriceRange();
 
         return $this->render('product/index.html.twig', [
-            'controller_name' => 'ProductsController',
+            'controller_name' => 'ProductController',
             'products' => $products,
             'categories' => $categories,
             'minPrice' => $priceRange[0]['minPrice'],
@@ -74,12 +74,12 @@ final class ProductController extends AbstractController
 
 
     #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, CategoryRepository $categoryRepository): Response
     {
         $product = new Product();
         $form = $this->createForm(ProductForm::class, $product);
         $form->handleRequest($request);
-
+        $Categories= $categoryRepository->findAll();
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($product);
             $entityManager->flush();
@@ -90,6 +90,7 @@ final class ProductController extends AbstractController
         return $this->render('product/new.html.twig', [
             'product' => $product,
             'form' => $form,
+
         ]);
     }
 

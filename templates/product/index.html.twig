@@ -2,10 +2,24 @@
 {% block productCrud %}
     <div class="d-flex flex-column align-items-center gap-3 mb-4">
         <h1 class="display-3">Product Index</h1>
-        <a href="{{ path('app_product_new') }}" class="btn btn-outline-secondary">Add New</a>
+        {% if categories is empty %}
+            <div class="alert alert-danger" role="alert">
+                create a category first!
+            </div>
+        {% else %}
+            <a href="{{ path('app_product_new') }}" class="btn btn-outline-secondary">Add New</a>
+        {% endif %}
     </div>
 {% endblock %}
 {% block wishlistBag %}
+{% endblock %}
+
+{% block applyFilters %}
+    <a href="/product" style="position: absolute; bottom: 10px; right: 10px;">
+        <button class="btn btn-outline-danger" id="apply-btn" type="submit">
+            Apply
+        </button>
+    </a>
 {% endblock %}
 
 {% block crudButtons %}
@@ -14,6 +28,9 @@
 {% endblock %}
 {% block wishlistHeart %}
 
+{% endblock %}
+{% block empty %}
+    <a href="/product" class="text-white text-center d-block">No matching results...</a>
 {% endblock %}
 
 

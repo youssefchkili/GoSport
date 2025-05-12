@@ -43,23 +43,28 @@
                 <input type="hidden" id="max-price-input" name="max-price">
             </div>
         </div>
+        {% block applyFilters %}
         <a href="/products" style="position: absolute; bottom: 10px; right: 10px;">
             <button class="btn btn-outline-danger" id="apply-btn" type="submit">
                 Apply
             </button>
         </a>
+        {% endblock %}
 
     {% endblock %}
-
+{% block wishlistBag %}
+    {{ parent() }}
+{% endblock %}
 {% block body %}
 
     {% block productCrud %}
     {% endblock %}
-    {% block wishlistBag %}
-    {% endblock %}
+
     {% if products is empty %}
         <br>
+        {% block empty %}
         <a href="/products" class="text-white text-center d-block">No matching results...</a>
+        {% endblock %}
     {% else %}
         <div class="container">
             <div class="row">
