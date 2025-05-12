@@ -22,10 +22,11 @@ class ProductImage
 
     #[ORM\Column(nullable: true)]
     private ?bool $is_primary = null;
-
+/*
     #[ORM\ManyToOne(inversedBy: 'images')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Product $product = null;
+*/
 
 
     public function getProduct(): ?Product
