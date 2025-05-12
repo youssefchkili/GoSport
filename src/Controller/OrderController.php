@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Order;
 use App\Entity\OrderItem;
+use App\Entity\Adress;
 use App\Entity\Cart;
 use App\Repository\CartRepository;
 use App\Repository\OrderRepository;
@@ -46,7 +47,14 @@ final class OrderController extends AbstractController
     #[Route('/checkout', name: 'cart_checkout')]
     public function checkout(CartRepository $cartRepository ): Response
     {
-        $cart = $cartRepository->find(1);
+        $user = $this->getUser();
+
+        if (!$user) {
+            throw $this->createAccessDeniedException('You must be logged in to add items to the cart.');
+        }
+
+        $cart = $cartRepository->findOneBy(['user' => $user]);
+
         if (!$cart || count($cart->getCartItems()) === 0) {
             $this->addFlash('warning', 'Your cart is empty.');
             return $this->redirectToRoute('cart_list');
@@ -56,7 +64,7 @@ final class OrderController extends AbstractController
         $subtotal = 0;
         $cartItems = $cart->getCartItems();
         foreach ($cartItems as $item) {
-            $subtotal += $item->getProductID()->getPrice() * $item->getQuantity();
+            $subtotal += $item->getProduct()->getPrice() * $item->getQuantity();
         }
 
         $discount = 0; // apply logic later if coupons exist
@@ -78,21 +86,23 @@ final class OrderController extends AbstractController
 
 
         $this->entityManager->persist($order);
+        $this->entityManager->flush();
 
 
         foreach ($cartItems as $cartItem) {
             $orderItem = new OrderItem();
             $orderItem->setOrderId($order);
-            $orderItem->setProductId($cartItem->getProductID());
+            $orderItem->setProductId($cartItem->getProduct());
             $orderItem->setQuantity($cartItem->getQuantity());
-            $orderItem->setUnitPrice($cartItem->getProductID()->getPrice());
+            $orderItem->setUnitPrice($cartItem->getProduct()->getPrice());
 
             $this->entityManager->persist($orderItem);
         }
-         $this->addFlash("success", "Order placed successfully");
+        $this->addFlash("success", "Order placed successfully");
 
-        return $this->render('order/success.html.twig' , [
+        return $this->render('order/checkout.html.twig' , [
             'order' => $order,
+            'id' => $order->getId(),
             'cartItems' => $cartItems,
             'countries' => $this->countries,
             'subtotal' => $subtotal,
@@ -111,9 +121,55 @@ final class OrderController extends AbstractController
     #[Route('/my_orders', name: 'order_list')]
     public function list(): Response
     {
-        $orders = $this->orderRepository->findBy(['user_id' => $this->getUser()]);
+        $orders = $this->orderRepository->findBy(['user' => $this->getUser()]);
         return $this->render('order/list.html.twig' , [
             'orders' => $orders,
+        ]);
+    }
+
+    #[Route('/success/{id}', name: 'checkout_success')]
+    public function success(int $id, CartRepository $cartRepository): Response
+    {
+
+        $order = $this->orderRepository->find($id);
+
+        if (!$order) {
+            $this->addFlash('error', 'Order not found.');
+            return $this->redirectToRoute('order_list');
+        }
+
+
+        $orderItems = $order->getOrderItems();
+
+
+        $user = $this->getUser();
+
+        if (!$user) {
+            throw $this->createAccessDeniedException('You must be logged in to add items to the cart.');
+        }
+
+
+
+        $cart = $cartRepository->findOneBy(['user' => $user]);
+
+        if ($cart) {
+            foreach ($cart->getCartItems() as $cartItem) {
+                $this->entityManager->remove($cartItem);
+            }
+            $this->entityManager->flush();
+        }
+        $adress = $user->getAdress();
+        $order->setShippingAddressId($adress);
+
+
+        return $this->render('order/success.html.twig', [
+            'order' => $order,
+            'orderItems' => $orderItems,
+            'subtotal' => $order->getSubtotal(),
+            'discount' => $order->getDiscount(),
+            'tax' => $order->getTax(),
+            'shipping' => $order->getShipping(),
+            'total' => $order->getTotal(),
         ]);
     }
 

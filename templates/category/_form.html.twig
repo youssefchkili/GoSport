@@ -1,0 +1,15 @@
+<div class="container my-3">
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+        {{ form_start(form) }}
+            <div class="mb-3">
+            {{ form_widget(form) }}
+            </div>
+                <button class="btn btn-primary">
+                    {{ button_label|default('Save') }}
+                </button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>

@@ -13,6 +13,10 @@ class ProductImage
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\ManyToOne(targetEntity: Product::class)]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    private ?Product $product = null;
+
     #[ORM\Column(length: 255)]
     private ?string $image_path = null;
 

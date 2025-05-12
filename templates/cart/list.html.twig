@@ -22,9 +22,9 @@
                             <div class="col-span-6 flex items-center gap-4">
                                 <div class="w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
 
-                                    {% set firstImage = item.productId.images|first %}
+                                    {% set firstImage = item.product.images|first %}
                                     {% if firstImage %}
-                                        <img src="{{ asset('uploads/products/' ~ firstImage.path) }}" alt="{{ item.productId.name }}" class="w-full h-full object-cover" />
+                                        <img src="{{ asset('uploads/products/' ~ firstImage.path) }}" alt="{{ item.product.name }}" class="w-full h-full object-cover" />
                                     {% else %}
                                         <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm">
                                             No image
@@ -33,8 +33,8 @@
 
                                 </div>
                                 <div>
-                                    <h3 class="font-medium">{{ item.productId.name }}</h3>
-                                    <p class="text-gray-500 text-sm">{{ item.productId.description|slice(0, 40) ~ '...' }}</p>
+                                    <h3 class="font-medium">{{ item.product.name }}</h3>
+                                    <p class="text-gray-500 text-sm">{{ item.product.description|slice(0, 40) ~ '...' }}</p>
                                 </div>
                             </div>
 
@@ -43,11 +43,11 @@
                             </div>
 
                             <div class="col-span-3 text-right font-medium">
-                                €{{ (item.productId.price * item.quantity)|number_format(2, '.', ',') }}
+                                €{{ (item.product.price * item.quantity)|number_format(2, '.', ',') }}
                             </div>
 
                             <div class="col-span-1 text-right">
-                                <a href="{{ path('cart_delete', { product_id: item.productId.id }) }}" class="text-gray-400 hover:text-red-600">
+                                <a href="{{ path('cart_delete', { product_id: item.product.id }) }}" class="text-gray-400 hover:text-red-600">
                                     ✕
                                 </a>
                             </div>
