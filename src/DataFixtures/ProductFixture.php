@@ -26,39 +26,38 @@ class ProductFixture extends Fixture
     {
         $faker = \Faker\Factory::create();
 
-        for ($i = 0; $i < 5; $i++) {
-            // Adresse
-            $adress = new Adress();
-            $adress->setStreet($faker->streetAddress());
-            $adress->setCity($faker->city());
-            $adress->setState($faker->state());
-            $adress->setCountry($faker->country());
-            $adress->setPostalCode((int) $faker->postcode());
-            $adress->setIsDefault(true);
-            $adress->setCreatedAt(new \DateTimeImmutable());
+        // Adresse
+        $adress = new Adress();
+        $adress->setStreet($faker->streetAddress());
+        $adress->setCity($faker->city());
+        $adress->setState($faker->state());
+        $adress->setCountry($faker->country());
+        $adress->setPostalCode((int) $faker->postcode());
+        $adress->setIsDefault(true);
+        $adress->setCreatedAt(new \DateTimeImmutable());
 
-            $manager->persist($adress);
+        $manager->persist($adress);
 
-            // Utilisateur
-            $user = new User();
-            $user->setUuid(Uuid::uuid4()->toString());
-            $user->setEmail($faker->unique()->safeEmail());
-            $user->setFirstName($faker->firstName());
-            $user->setLastName($faker->lastName());
-            $user->setPhone($faker->phoneNumber());
-            $user->setIsActive(true);
-            $user->setCreatedAt(new \DateTimeImmutable());
-            $user->setAdress($adress);
+        // Utilisateur
+        $user = new User();
+        $user->setUuid(Uuid::uuid4()->toString());
+        $user->setEmail($faker->unique()->safeEmail());
+        $user->setFirstName($faker->firstName());
+        $user->setLastName($faker->lastName());
+        $user->setPhone($faker->phoneNumber());
+        $user->setIsActive(true);
+        $user->setCreatedAt(new \DateTimeImmutable());
+        $user->setAdress($adress);
 
-            // Mot de passe haché
-            $hashedPassword = $this->passwordHasher->hashPassword($user, 'password');
-            $user->setPassword($hashedPassword);
+        // Mot de passe haché
+        $hashedPassword = $this->passwordHasher->hashPassword($user, 'password');
+        $user->setPassword($hashedPassword);
 
-            $manager->persist($user);
-        }
+        $manager->persist($user);
+
 
         $cart = new Cart();
-        $cart->setUserId($user); // Attention : méthode = setUserId() dans ta classe
+        $cart->setUser($user); // Attention : méthode = setUserId() dans ta classe
         $manager->persist($cart);
 
 
@@ -94,6 +93,7 @@ class ProductFixture extends Fixture
             $manager->flush();
             echo "Product ID: " . $product->getId() . " - Name: " . $product->getName() . PHP_EOL;
         }
+        echo "cart ID: " . $cart->getId() . PHP_EOL;
 
     }
 }

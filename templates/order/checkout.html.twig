@@ -146,20 +146,20 @@
                             <div class="flex justify-between items-center py-4 border-b border-gray-200">
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 bg-gray-100 rounded-md overflow-hidden">
-                                        {% set firstImage = item.productId.images|first %}
+                                        {% set firstImage = item.product.images|first %}
                                         {% if firstImage %}
-                                            <img src="{{ asset('uploads/products/' ~ firstImage.path) }}" alt="{{ item.productId.name }}" class="w-full h-full object-cover" />
+                                            <img src="{{ asset('uploads/products/' ~ firstImage.path) }}" alt="{{ item.product.name }}" class="w-full h-full object-cover" />
                                         {% else %}
                                             <div class="w-full h-full bg-gray-200"></div>
                                         {% endif %}
                                     </div>
                                     <div>
-                                        <div class="font-medium">{{ item.productId.name }}</div>
+                                        <div class="font-medium">{{ item.product.name }}</div>
 
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <span class="font-medium">€{{ item.productId.price|number_format(2, '.', ',') }}</span>
+                                    <span class="font-medium">€{{ item.product.price|number_format(2, '.', ',') }}</span>
 
                                 </div>
                             </div>

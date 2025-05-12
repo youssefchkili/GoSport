@@ -34,15 +34,6 @@
                 </div>
                 <div class="flex items-center">
                     <span class="bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs mr-1">4</span>
-                    <span>Payment Method</span>
-                </div>
-                <div class="mx-2">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                    </svg>
-                </div>
-                <div class="flex items-center">
-                    <span class="bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs mr-1">5</span>
                     <span class="font-medium text-gray-800">Confirmation</span>
                 </div>
             </nav>
@@ -60,12 +51,6 @@
                     <p class="text-gray-600">Your order #{{ order.id }} is completed and ready to ship</p>
                 </div>
 
-                <div class="flex justify-end mb-6">
-                    <a href="{{ path('order_invoice', {'id': order.id}) }}" class="bg-gray-100 text-gray-800 px-4 py-2 rounded-md text-sm font-medium">
-                        View invoice
-                    </a>
-                </div>
-
                 <div class="grid md:grid-cols-2 gap-8 border-t pt-6">
                     {# Shipping Address #}
                     <div>
@@ -73,31 +58,12 @@
                             SHIPPING ADDRESS
                         </h2>
                         <div class="text-gray-800">
-                            <p class="font-medium">{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</p>
-                            <p>{{ order.shippingAddress.addressLine1 }}</p>
-                            {% if order.shippingAddress.addressLine2 %}
-                                <p>{{ order.shippingAddress.addressLine2 }}</p>
-                            {% endif %}
-                            <p>{{ order.shippingAddress.city }}, {{ order.shippingAddress.state }} {{ order.shippingAddress.postalCode }}</p>
-                            <p>{{ order.shippingAddress.country }}</p>
+                            <p class="font-medium">{{ order.shippingAddressId.street }}</p>
+                            <p>{{ order.shippingAddressId.city }}, {{ order.shippingAddressId.state }} {{ order.shippingAddressId.postalCode }}</p>
+                            <p>{{ order.shippingAddressId.country }}</p>
                         </div>
                     </div>
 
-                    {# Payment Info #}
-                    <div>
-                        <h2 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-4">
-                            PAYMENT INFO
-                        </h2>
-                        <div class="text-gray-800">
-                            <p class="font-medium">{{ order.paymentMethod.type }}</p>
-                            {% if order.paymentMethod.type == 'Credit Card' %}
-                                <p>{{ order.paymentMethod.cardType }}</p>
-                                <p>**** {{ order.paymentMethod.lastFour }}</p>
-                            {% elseif order.paymentMethod.type == 'PayPal' %}
-                                <p>{{ order.paymentMethod.email }}</p>
-                            {% endif %}
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -107,22 +73,21 @@
                     ORDER ITEMS
                 </h2>
 
-                {% for item in order.items %}
+                {% for item in order.orderItems %}
                     <div class="border-b p-6">
                         <div class="flex items-center">
                             <div class="w-16 h-16 bg-gray-100 rounded-md flex items-center justify-center mr-4">
-                                {% set firstImage = item.product.images|first %}
-                                {% if firstImage %}
-                                    <img src="{{ asset('uploads/products/' ~ firstImage.path) }}" alt="{{ item.product.name }}" class="w-12 h-12 object-contain" />
+                                {% if item.product %}
+                                    <img src="{{ asset('uploads/products/' ~ item.product.imagePath) }}" alt="{{ item.product.name }}" class="w-12 h-12 object-contain" />
                                 {% else %}
                                     <div class="w-12 h-12 bg-gray-200"></div>
                                 {% endif %}
                             </div>
                             <div class="flex-1">
-                                <h3 class="font-medium text-gray-800">{{ item.product.name }}</h3>
-                                <p class="text-gray-500 text-sm">{{ item.variant }}</p>
+                                <h3 class="font-medium text-gray-800">{{ item.productName }}</h3>
+                                <p class="text-gray-500 text-sm">Quantity: {{ item.quantity }}</p>
                             </div>
-                            <div class="font-medium text-gray-800">€{{ item.price|number_format(2, '.', ',') }}</div>
+                            <div class="font-medium text-gray-800">€{{ item.unitPrice|number_format(2, '.', ',') }}</div>
                         </div>
                     </div>
                 {% endfor %}

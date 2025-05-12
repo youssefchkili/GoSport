@@ -22,11 +22,11 @@ class CartItem
 
     #[ORM\ManyToOne(targetEntity: Product::class)]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    private ?Product $product_id = null;
+    private ?Product $product = null;
 
     #[ORM\ManyToOne(inversedBy: 'cartItems')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Cart $cart_id = null;
+    private ?Cart $cart = null;
 
     public function getId(): ?int
     {
@@ -61,26 +61,26 @@ class CartItem
         return $this;
     }
 
-    public function getProductId(): ?Product
+    public function getProduct(): ?Product
     {
-        return $this->product_id;
+        return $this->product;
     }
 
-    public function setProductId(?Product $product_id): static
+    public function setProduct(?Product $product): static
     {
-        $this->product_id = $product_id;
+        $this->product = $product;
 
         return $this;
     }
 
-    public function getCartId(): ?Cart
+    public function getCart(): ?Cart
     {
-        return $this->cart_id;
+        return $this->cart;
     }
 
-    public function setCartId(?Cart $cart_id): static
+    public function setCart(?Cart $cart): static
     {
-        $this->cart_id = $cart_id;
+        $this->cart = $cart;
 
         return $this;
     }
