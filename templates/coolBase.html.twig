@@ -49,7 +49,7 @@
                             {% endif %}
                         </a>
                     </div>
-
+                    {% block wishlistBag %}
                     <div class="col-3 h-100 d-flex justify-content-center">
                         <a class="w-100 h-100 d-flex justify-content-center" href="/products">
                             <i class="bi bi-bag position-relative" style="font-size: 25px;">
@@ -61,11 +61,11 @@
                                     {% endif %}
                                 </div>
                             </i>
-                        </span>
+
                         </a>
                         
                     </div>
-
+                    {% endblock %}
                 </div>
             </div>
         </nav>
@@ -90,7 +90,11 @@
         </div>
 
         
-        {% block body %}{% endblock %}
+        {% block body %}
+            {# i added this just to have a good title for the product crud #}
+            {% block productCrud %}
+            {% endblock %}
+        {% endblock %}
         
         </form>
     </body>
