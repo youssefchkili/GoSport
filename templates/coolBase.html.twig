@@ -2,12 +2,115 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}GoSport{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+    <style>
+        :root {
+            --primary-color: #dc3545;
+            --primary-hover: #bb2d3b;
+            --dark-text: #212529;
+            --light-text: #f8f9fa;
+        }
+
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 0.75rem 1rem;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            color: var(--dark-text);
+            transition: all 0.2s ease;
+        }
+
+        .navbar-brand:hover {
+            color: var(--primary-color);
+        }
+
+        .navbar-brand img {
+            margin-right: 8px;
+        }
+
+        .search-form .form-control {
+            border-radius: 50px 0 0 50px;
+            border: 1px solid #dee2e6;
+            padding-left: 1rem;
+        }
+
+        .search-form .btn {
+            border-radius: 0 50px 50px 0;
+            padding: 0.375rem 1rem;
+        }
+
+        .nav-icon {
+            font-size: 1.5rem;
+            color: var(--dark-text);
+            transition: all 0.2s ease;
+        }
+
+        .nav-icon:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link-text {
+            font-size: 0.9rem;
+            margin-top: -5px;
+        }
+
+        .cart-icon {
+            position: relative;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-toggle {
+            background-color: transparent;
+            border: none;
+            color: var(--dark-text);
+            font-size: 1.5rem;
+            padding: 0.5rem;
+            margin-left: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-toggle:hover {
+            color: var(--primary-color);
+        }
+
+        .dropdown-item i {
+            width: 20px;
+        }
+
+        @media (max-width: 992px) {
+            .navbar-nav {
+                flex-direction: row;
+            }
+
+            .nav-item {
+                margin: 0 10px;
+            }
+        }
+    </style>
     {% block stylesheets %}
     {% endblock %}
 
@@ -17,20 +120,31 @@
 </head>
 <body>
 {% block stickyBanner %} {% endblock %}
-<nav class="navbar container-fluid" >
-    <div class="row w-100">
-        <div class="col-2 container-fluid">
-            <a class="navbar-brand fw-bold" href="/">
-                <img src="{{ asset('images/logo.png') }}" width="40" height="40">
-                GoSport
-            </a>
-        </div>
 
-        <div class="container-fluid col-7 d-flex">
-            <!-- Search form now properly isolated -->
-            <form method="get" action="/products/byFilters" class="w-100">
+<!-- Main Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+    <div class="container">
+        <!-- Sidebar Toggle Button -->
+        <button class="sidebar-toggle d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
+            <i class="bi bi-list"></i>
+        </button>
+
+        <!-- Logo and Brand -->
+        <a class="navbar-brand me-4" href="/">
+            <img src="{{ asset('images/logo.png') }}" width="40" height="40" alt="GoSport Logo">
+            GoSport
+        </a>
+
+        <!-- Sidebar Toggle Button (visible on larger screens) -->
+        <button class="sidebar-toggle d-none d-lg-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
+            <i class="bi bi-list"></i>
+        </button>
+
+        <!-- Search Form -->
+        <div class="search-container flex-grow-1 mx-lg-4">
+            <form method="get" action="/products/byFilters" class="search-form d-flex">
                 <div class="input-group">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="keyWord" value="{{keyWord is defined ? keyWord}}" />
+                    <input class="form-control" type="search" placeholder="Search for sports equipment..." aria-label="Search" name="keyWord" value="{{keyWord is defined ? keyWord}}">
                     <button class="btn btn-danger" type="submit">
                         <i class="bi bi-search"></i>
                     </button>
@@ -38,61 +152,55 @@
             </form>
         </div>
 
-        <div class="col-2 container-fluid d-flex justify-content-left ">
-
-            <div class="col-9 h-100 d-flex justify-content-left align-items-center">
-
+        <!-- Navigation Icons -->
+        <div class="ms-auto d-flex align-items-center">
+            <!-- User Account -->
+            <div class="nav-item me-3 text-center">
                 {% if app.user %}
-                    <!-- Dropdown for logged in users -->
-                    <div class="dropdown ">
-                        <a class="w-100 h-100 d-flex justify-content-left align-items-center text-decoration-none dropdown-toggle"
-                           href="#"
-                           id="userDropdown"
-                           role="button"
-                           data-bs-toggle="dropdown"
-                           aria-expanded="false">
-                            <i class="bi bi-person-circle " style="font-size: 25px;"></i>
+                    <div class="dropdown">
+                        <a class="nav-link text-decoration-none" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="nav-icon">
+                                <i class="bi bi-person-circle"></i>
+                            </div>
+                            <div class="nav-link-text">Account</div>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="{{ path('app_profile') }}"><i class="bi bi-person-badge me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_profile') }}"><i class="bi bi-person-badge"></i> Profile</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
                         </ul>
                     </div>
                 {% else %}
-                    <!-- Link for non-logged in users -->
-                    <a class="w-100 h-100 d-flex justify-content-left align-items-center text-decoration-none" href="{{ path('app_login') }}">
-                        <i class="bi bi-person-circle" style="font-size: 25px;"></i>
-                        &nbsp;
-                        sign in
+                    <a class="nav-link text-decoration-none" href="{{ path('app_login') }}">
+                        <div class="nav-icon">
+                            <i class="bi bi-person-circle"></i>
+                        </div>
+                        <div class="nav-link-text">Sign In</div>
                     </a>
                 {% endif %}
             </div>
 
-            <div class="col-3 h-100 d-flex justify-content-center">
-                <a class="w-100 h-100 d-flex justify-content-center" href="/products">
-                    <i class="bi bi-bag position-relative" style="font-size: 25px;">
-                        <div class="badge">
+            <!-- Shopping Cart -->
+            <div class="nav-item text-center">
+                <a class="nav-link text-decoration-none" href="/products">
+                    <div class="nav-icon cart-icon">
+                        <i class="bi bi-bag"></i>
+                        <span class="cart-badge">
                             {% if app.session.get('user') is not null and app.session.get('cartItemsCount') is defined %}
                                 {{ app.session.get('cartItemsCount') }}
                             {% else %}
                                 0
                             {% endif %}
-                        </div>
-                    </i>
-                    </span>
+                        </span>
+                    </div>
+                    <div class="nav-link-text">Cart</div>
                 </a>
-
             </div>
-
         </div>
     </div>
 </nav>
 
-<button class="btn" style="font-size: 25px; margin-left:10px" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
-    ☰
-</button>
-
+<!-- Sidebar Offcanvas -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
     <div class="offcanvas-header">
         {% block sidebarTitle %}
@@ -103,7 +211,6 @@
 
     <div class="offcanvas-body">
         {% block sidebarBody %}
-
         {% endblock %}
     </div>
 </div>
