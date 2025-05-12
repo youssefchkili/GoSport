@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Category index{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-column align-items-center gap-3 mb-4">
+        <h1 class="display-4">Category index</h1>
+        <a href="{{ path('app_category_new') }}" class="btn btn-outline-secondary">add new</a>
+    </div>
+    <div class="container my-5">
+    <div class="card shadow-sm">
+    <div class="card-body">
+    <table class="table table-bordered mb-0">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Slug</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for category in categories %}
+            <tr>
+                <td>{{ category.id }}</td>
+                <td>{{ category.name }}</td>
+                <td>{{ category.slug }}</td>
+                <td>{{ category.description }}</td>
+                <td>
+                    <a href="{{ path('app_category_show', {'id': category.id}) }}" class="btn btn-outline-secondary">show</a>
+                    <a href="{{ path('app_category_edit', {'id': category.id}) }}" class="btn btn-outline-secondary">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    </div>
+    </div>
+
+{% endblock %}
