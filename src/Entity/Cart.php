@@ -18,7 +18,7 @@ class Cart
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user_id = null;
+    private ?User $user = null;
 
     /**
      * @var Collection<int, CartItem>
@@ -37,14 +37,14 @@ class Cart
         return $this->id;
     }
 
-    public function getUserId(): ?User
+    public function getUser(): ?User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(User $user_id): static
+    public function setUser(User $user): static
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
 
         return $this;
     }
@@ -61,7 +61,7 @@ class Cart
     {
         if (!$this->cartItems->contains($cartItem)) {
             $this->cartItems->add($cartItem);
-            $cartItem->setCartId($this);
+            $cartItem->setCart($this);
         }
 
         return $this;
@@ -71,8 +71,8 @@ class Cart
     {
         if ($this->cartItems->removeElement($cartItem)) {
             // set the owning side to null (unless already changed)
-            if ($cartItem->getCartId() === $this) {
-                $cartItem->setCartId(null);
+            if ($cartItem->getCart() === $this) {
+                $cartItem->setCart(null);
             }
         }
 

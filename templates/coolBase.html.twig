@@ -53,7 +53,7 @@
                            data-bs-toggle="dropdown"
                            aria-expanded="false">
                             <i class="bi bi-person-circle " style="font-size: 25px;"></i>
-
+                        </a>
                         <a class="w-100 h-100 d-flex justify-content-left align-items-center text-decoration-none" href="/products">
                             <i class="bi bi-person-circle" style="font-size: 25px;"></i>
                             &nbsp;
@@ -85,7 +85,7 @@
                             <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
                         </ul>
                     </div>
-
+                    {% endblock %}
                 {% else %}
                     <!-- Link for non-logged in users -->
                     <a class="w-100 h-100 d-flex justify-content-left align-items-center text-decoration-none" href="{{ path('app_login') }}">
@@ -95,7 +95,7 @@
                     </a>
                 {% endif %}
 
-                    {% endblock %}
+
                 </div>
 
             </div>
@@ -140,7 +140,7 @@
 </div>
 
 
-{% block body %}{% endblock %}
+
 </body>
 </html>
 
