@@ -121,7 +121,7 @@ final class OrderController extends AbstractController
     #[Route('/my_orders', name: 'order_list')]
     public function list(): Response
     {
-        $orders = $this->orderRepository->findBy(['user_id' => $this->getUser()]);
+        $orders = $this->orderRepository->findBy(['user' => $this->getUser()]);
         return $this->render('order/list.html.twig' , [
             'orders' => $orders,
         ]);
