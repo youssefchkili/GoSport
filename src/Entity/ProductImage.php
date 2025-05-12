@@ -13,20 +13,16 @@ class ProductImage
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: "images")]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Product $product = null;
-
     #[ORM\Column(length: 255)]
     private ?string $image_path = null;
 
     #[ORM\Column(nullable: true)]
     private ?bool $is_primary = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    #[ORM\ManyToOne(inversedBy: 'images')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Product $product = null;
+
 
     public function getProduct(): ?Product
     {
@@ -38,6 +34,11 @@ class ProductImage
         $this->product = $product;
 
         return $this;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     public function getImagePath(): ?string

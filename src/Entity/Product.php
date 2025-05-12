@@ -44,9 +44,16 @@ class Product
     #[ORM\ManyToMany(targetEntity: WishList::class, inversedBy: 'products')]
     private Collection $wishlist;
 
+    /**
+     * @var Collection<int, ProductImage>
+     */
+    #[ORM\OneToMany(targetEntity: ProductImage::class, mappedBy: 'product', orphanRemoval: true)]
+    private Collection $images;
+
     public function __construct()
     {
         $this->wishlist = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -158,6 +165,36 @@ class Product
     public function removeWishlist(wishList $wishlist): static
     {
         $this->wishlist->removeElement($wishlist);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, productImage>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(ProductImage $image): static
+    {
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(ProductImage $image): static
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getProduct() === $this) {
+                $image->setProduct(null);
+            }
+        }
 
         return $this;
     }
