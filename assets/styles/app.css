@@ -76,16 +76,11 @@ padding-bottom: 64px !important;
 -webkit-transition-timing-function: linear !important;
 transition-timing-function: linear !important;
 position: relative;
-background: #cd0526;
-color:#cd0526;
 }
 .swiper-pagination-bullet {
-background: #cd0526 !important;
 }
 .swiper-pagination-bullet-active {
 background: #cd0526 !important;
 }
 .swiper-pagination{
-background: #cd0526 !important;
-color:#cd0526 !important;
 }

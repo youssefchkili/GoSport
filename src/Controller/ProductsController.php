@@ -73,9 +73,12 @@ final class ProductsController extends AbstractController
         $productRepository = $doctrine->getRepository('App\Entity\Product');
         $categoryRepository = $doctrine->getRepository('App\Entity\Category');
 
+        $products = $productRepository->findByCategory($product->getCategoryId()->getId());
+
         return $this->render('products/single.html.twig', [
             'controller_name' => 'ProductsController',
             'product' => $product,
+            'products' => $products,
         ]);
     }
 }
