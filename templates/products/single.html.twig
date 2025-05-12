@@ -4,9 +4,17 @@
 
 {% block stylesheets %}
     <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <style>
+        .my-swiper .swiper-pagination-bullet-active {
+        background-color: #dc3545 !important; /* Bootstrap red */
+        }
+    </style>
+
 {% endblock %}
 {% block importmap %}
     <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 {% endblock %}
 
     {% block sidebarBody %}
@@ -54,5 +62,59 @@
 {% endblock %}
 
 {% block body %}
-    hello {{ product.name }}
+    <div class="container pt-5">
+        <div class="row">
+            <div class="col-6 h-100 relative">
+                <div class="swiper vertical-slide-carousel swiper-container relative h-96">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="bg-indigo-50 rounded-2xl h-96 flex justify-center items-center position-relative" style="overflow: hidden;">
+                                <img src=  "{% for image in product.images %}
+                                                {% if image.isPrimary %}
+                                                    {{ image.imagePath }}
+                                                {% endif %}
+                                            {% endfor %}"
+                                class="w-full h-full object-contain absolute top-0 left-0 z-0" style="filter: blur(30px);">
+                                
+                                <img src=  "{% for image in product.images %}
+                                                {% if image.isPrimary %}
+                                                    {{ image.imagePath }}
+                                                {% endif %}
+                                            {% endfor %}"
+                                class="h-full object-contain relative z-10">
+                            </div>
+                        </div>
+                        {% for image in product.images %}
+                            {% if not image.isPrimary %}
+                                <div class="swiper-slide">
+                                    <div class="bg-indigo-50 rounded-2xl h-96 flex justify-center items-center position-relative" style="overflow: hidden;">
+                                        <img src=  "{{ image.imagePath }}" class="w-full h-full object-contain absolute top-0 left-0 z-0" style="filter: blur(30px);">>
+                                        <img src=  "{{ image.imagePath }}" class="h-full object-contain relative z-10">>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="swiper-pagination my-swiper !top-1/3 !translate-y-8"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    var swiper = new Swiper(".vertical-slide-carousel", {
+    loop: true,
+    direction: 'vertical',
+    mousewheelControl: true,
+    mousewheel: {
+    releaseOnEdges: true,
+    },
+    spaceBetween: 30,
+    grabCursor: true,
+    pagination: {
+    el: ".vertical-slide-carousel .swiper-pagination",
+    clickable: true,
+    },
+    });
+</script>
 {% endblock %}
