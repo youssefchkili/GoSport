@@ -46,7 +46,7 @@ class Order
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user_id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $billing_address_id = null;
 
     #[ORM\ManyToOne]
