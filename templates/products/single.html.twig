@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
     <style>
         .my-swiper .swiper-pagination-bullet-active {
-        background-color: #dc3545 !important; /* Bootstrap red */
+        background-color: #dc3545 !important;
         }
     </style>
 
@@ -64,7 +64,7 @@
 {% block body %}
     <div class="container pt-5">
         <div class="row">
-            <div class="col-6 h-100 relative">
+            <div class="col-5 h-100 relative">
                 <div class="swiper vertical-slide-carousel swiper-container relative h-96">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
@@ -74,7 +74,7 @@
                                                     {{ image.imagePath }}
                                                 {% endif %}
                                             {% endfor %}"
-                                class="w-full h-full object-contain absolute top-0 left-0 z-0" style="filter: blur(30px);">
+                                class="w-full h-full object-fill absolute top-0 left-0 z-0" style="filter: blur(30px);">
                                 
                                 <img src=  "{% for image in product.images %}
                                                 {% if image.isPrimary %}
@@ -88,8 +88,8 @@
                             {% if not image.isPrimary %}
                                 <div class="swiper-slide">
                                     <div class="bg-indigo-50 rounded-2xl h-96 flex justify-center items-center position-relative" style="overflow: hidden;">
-                                        <img src=  "{{ image.imagePath }}" class="w-full h-full object-contain absolute top-0 left-0 z-0" style="filter: blur(30px);">>
-                                        <img src=  "{{ image.imagePath }}" class="h-full object-contain relative z-10">>
+                                        <img src=  "{{ image.imagePath }}" class="w-full h-full object-fill absolute top-0 left-0 z-0" style="filter: blur(30px);">
+                                        <img src=  "{{ image.imagePath }}" class="h-full object-contain relative z-10">
                                     </div>
                                 </div>
                             {% endif %}
@@ -98,6 +98,111 @@
                     <div class="swiper-pagination my-swiper !top-1/3 !translate-y-8"></div>
                 </div>
             </div>
+
+            <div class="col-7">
+                <div class="d-flex flex-column h-100">
+                    <div class="d-flex align-items-center">
+                        <h1 class="decoration-bold mb-0" style="font-size: 2.5em;">{{ product.name|capitalize }}</h1>
+                        <div class="p-3">
+                            <button class="btn text-danger heart pl-20" type="button" style="border: 0; font-size: 2.5em;">
+                                <i class="bi bi-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-muted">{{ product.slug }}</p>
+                    <div class="d-flex align-items-center pt-3" style="font-size: 2em;">
+                    {% if product.discountpercent == 0 %}
+                        <h1>
+                            {{ product.price }} DT
+                        </h1>
+                    {% else %}
+                        <h1 style="display: inline-block; margin-right: 10px;">
+                            {{ ( (product.price * (100 - product.discountpercent) / 100) )|number_format(2, '.', '') }} DT
+                        </h1>
+                        <h1 class="text-decoration-line-through" style="display: inline-block;color:RGB(255,102,102);">
+                            {{ product.price }}DT
+                        </h1>
+                    {% endif %}
+                    </div>
+                    <div class="d-flex align-items-center pt-3">
+                        <p class="text-muted">{{ product.description }}</p>
+                    </div>
+                    <h1 class="text-muted">
+                        {% if product.stockQuantity == 0 %}
+                            <span class="text-danger">Out of stock</span>
+                        {% else %}
+                            <span class="text-success">In stock</span>
+                        {% endif %}
+                    </h1>
+                    <div class="d-flex align-items-center pt-3">
+                        <h1 class="text-muted" style="font-size: 1.5em;">Quantity:</h1>
+                        <input type="number" class="form-control mx-3" id="quantity" name="quantity" value="1" min="1" max="{{ product.stockQuantity }}" style="width: 100px;">
+    
+                        <button class="btn btn-danger" id="add-to-cart-btn" type="button" style="font-size: 1.5em;">
+                            <i class="bi bi-bag"></i> Add to Bag
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 my-5">
+                <hr class="border-gray">
+            </div>
+
+            <div class="col-12 mt-5">
+                <h2 class="decoration-bold" style="font-size: 2.5em">Related Products</h2>
+            </div>
+
+            <div class="col-12 my-3">
+            </div>
+            
+            {% for product in products %}
+                <div class="col-md-3">
+                    <a href="/products/{{ product.id }}" class="text-decoration-none">
+                        <div class="card mb-4 p-3 position-relative">
+                            <img src=  "{% for image in product.images %}
+                                            {% if image.isPrimary %}
+                                                {{ image.imagePath }}
+                                            {% endif %}
+                                        {% endfor %}"
+                            class="card-img-top">
+                            {% if product.discountpercent != 0 %}
+                                <div class="big-badge">
+                                    {{ product.discountpercent }}% off
+                                </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.name }}</h5>
+                                <h6 style="color:gray" class="p-2">{{ product.slug }}</h6>
+                            </div>
+                            <div class="position-absolute bottom-0 end-0 p-3">
+                                {% if product.discountpercent == 0 %}
+                                    <h4>
+                                        {{ product.price }} DT
+                                    </h4>
+                                {% else %}
+                                    <h4 style="display: inline-block; margin-right: 10px;">
+                                        {{ ( (product.price * (100 - product.discountpercent) / 100) )|number_format(2, '.', '') }} DT
+                                    </h4>
+                                    <h4 class="text-decoration-line-through" style="display: inline-block;color:RGB(255,102,102);">
+                                        {{ product.price }}DT
+                                    </h4>
+                                {% endif %}
+                                {% block crudButtons %}
+                                {%  endblock %}
+                            </div>
+                            <br>
+                            {% block wishlistHeart %}
+                            <div class="position-absolute bottom-0 start-0 p-3">
+                                <button class="btn text-danger heart" type="button" style="border: 0;font-size: 25px;">
+                                    <i class="bi bi-heart"></i>
+                                </button>
+                            </div>
+                            {% endblock %}
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+
         </div>
     </div>
 
