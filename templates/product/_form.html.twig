@@ -1,19 +1,73 @@
 <div class="container my-3">
     <div class="card shadow-sm">
         <div class="card-body">
-
             {{ form_start(form) }}
 
+
+            {{ form_row(form.name) }}
+            {{ form_row(form.slug) }}
+            {{ form_row(form.description) }}
+            {{ form_row(form.price) }}
+            {{ form_row(form.discount_percent) }}
+            {{ form_row(form.stock_quantity) }}
             <div class="mb-3">
-                {{ form_widget(form) }}
+                {{ form_label(form.category_id) }}
+                {{ form_widget(form.category_id, {'attr': {'class': 'form-control'}}) }}
             </div>
+
+
+            <div class="mb-3 form-check form-switch">
+                {{ form_widget(form.createNewCategory, {'attr': {'class': 'form-check-input'}}) }}
+                {{ form_label(form.createNewCategory, null, {'label_attr': {'class': 'form-check-label'}}) }}
+            </div>
+
+
+            <div id="new-category-fields" class="mb-3 p-3 border rounded" style="display: none;">
+                <h5>New Category Details</h5>
+                <div class="mb-3">
+                    {{ form_label(form.newCategory.name) }}
+                    {{ form_widget(form.newCategory.name, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.newCategory.slug) }}
+                    {{ form_widget(form.newCategory.slug, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.newCategory.description) }}
+                    {{ form_widget(form.newCategory.description, {'attr': {'class': 'form-control', 'rows': 3}}) }}
+                </div>
+            </div>
+
 
             <button type="submit" class="btn btn-primary">
                 {{ button_label|default('Save') }}
             </button>
 
             {{ form_end(form) }}
-
         </div>
     </div>
 </div>
+{% block javascripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkbox = document.querySelector('#{{ form.createNewCategory.vars.id }}');
+        const categoryFields = document.getElementById('new-category-fields');
+        const existingCategory = document.querySelector('#{{ form.category_id.vars.id }}');
+
+        function toggleCategoryFields() {
+            if (checkbox.checked) {
+                categoryFields.style.display = 'block';
+                existingCategory.disabled = true;
+                existingCategory.value = '';
+            } else {
+                categoryFields.style.display = 'none';
+                existingCategory.disabled = false;
+            }
+        }
+
+        checkbox.addEventListener('change', toggleCategoryFields);
+
+        // Initialize on page load
+        toggleCategoryFields();});
+</script>
+{% endblock %}

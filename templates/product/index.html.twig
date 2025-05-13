@@ -2,13 +2,9 @@
 {% block productCrud %}
     <div class="d-flex flex-column align-items-center gap-3 mb-4">
         <h1 class="display-3">Product Index</h1>
-        {% if categories is empty %}
-            <div class="alert alert-danger" role="alert">
-                create a category first!
-            </div>
-        {% else %}
+
             <a href="{{ path('app_product_new') }}" class="btn btn-outline-secondary">Add New</a>
-        {% endif %}
+
     </div>
 {% endblock %}
 {% block wishlistBag %}

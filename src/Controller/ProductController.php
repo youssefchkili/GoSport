@@ -79,8 +79,13 @@ final class ProductController extends AbstractController
         $product = new Product();
         $form = $this->createForm(ProductForm::class, $product);
         $form->handleRequest($request);
-        $Categories= $categoryRepository->findAll();
+
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('createNewCategory')->getData()) {
+                $newCategory = $form->get('newCategory')->getData();
+                $entityManager->persist($newCategory);
+                $product->setCategoryId($newCategory);
+            }
             $entityManager->persist($product);
             $entityManager->flush();
 
@@ -121,9 +126,14 @@ final class ProductController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_product_delete', methods: ['POST'])]
-    public function delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Product $product, EntityManagerInterface $entityManager, ProductRepository $productRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->getPayload()->getString('_token'))) {
+            $ProductWithSameCategoryCount=count($productRepository->findByCategory($product->getCategoryId()->getId()));
+            $category=$product->getCategoryId();
+            if($ProductWithSameCategoryCount==1){
+                $entityManager->remove($category);
+            }
             $entityManager->remove($product);
             $entityManager->flush();
         }
