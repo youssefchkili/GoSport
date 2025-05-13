@@ -35,7 +35,7 @@ class Product
     private ?int $stock_quantity = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: TRUE, onDelete: 'SET NULL')]
+    #[ORM\JoinColumn(nullable: False)]
     private ?Category $category_id = null;
 
     /**
@@ -54,7 +54,7 @@ class Product
     {
         $this->wishlist = new ArrayCollection();
         $this->images = new ArrayCollection();
-        $this->images = new ArrayCollection();
+        //$this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
