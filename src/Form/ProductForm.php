@@ -27,6 +27,7 @@ class ProductForm extends AbstractType
                 'class' => Category::class,
                 'choice_label' => 'name',
                 'label' => 'Category Name',
+
             ])
             ->add('createNewCategory', CheckboxType::class, [
                 'mapped' => false,
@@ -36,6 +37,7 @@ class ProductForm extends AbstractType
             ->add('newCategory', CategoryForm::class, [
             'mapped' => false,
             'label' => false,
+            'required' => false,
             'attr' => [
                 'class' => 'new-category-fields',
                 'style' => 'display: none;'

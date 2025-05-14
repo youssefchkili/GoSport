@@ -114,6 +114,12 @@ final class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('createNewCategory')->getData()) {
+                $newCategory = $form->get('newCategory')->getData();
+                $entityManager->persist($newCategory);
+                $product->setCategoryId($newCategory);
+            }
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
