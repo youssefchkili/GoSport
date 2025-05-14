@@ -20,7 +20,7 @@ class ProductImage
     #[ORM\Column(length: 255)]
     private ?string $image_path = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private ?bool $is_primary = null;
 /*
     #[ORM\ManyToOne(inversedBy: 'images')]
