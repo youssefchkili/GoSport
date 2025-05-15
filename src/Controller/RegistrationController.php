@@ -33,14 +33,19 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $existingUser = $userRepository->findOneBy(['email' => $form->get('email')->getData()]);
 
-
             if ($existingUser) {
-                //email already exists
+                // Email already exists
                 $form->get('email')->addError(new FormError('There is already an account with this email'));
-            }else{
+                
+                // Add this return statement to show the form with errors
+                return $this->render('registration/index.html.twig', [
+                    'registrationForm' => $form->createView(),
+                ]);
+            }
+            
+            try {
                 $user->setUuid(Uuid::v4()->toRfc4122());
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
@@ -56,37 +61,39 @@ class RegistrationController extends AbstractController
                 $user->setIsActive(true);
                 $user->setCreatedAt(new \DateTimeImmutable());
 
-                // Create a default address for the user
+                // Create address using form data
                 $address = new Adress();
-                $address->setStreet('Please update your address');
-                $address->setCity('Default City');
-                $address->setState('Default State');
-                $address->setCountry('Default Country');
-                $address->setPostalCode('00000');
+                $address->setStreet($form->get('street')->getData() ?: 'Please update your address');
+                $address->setCity($form->get('city')->getData() ?: 'Default City');
+                $address->setState($form->get('state')->getData() ?: 'Default State');
+                $address->setCountry($form->get('country')->getData() ?: 'Default Country');
+                $address->setPostalCode($form->get('postalCode')->getData() ?: '00000');
                 $address->setIsDefault(true);
                 $address->setCreatedAt(new \DateTimeImmutable());
                 $address->setUpdatedAt(new \DateTimeImmutable());
 
-                // Persist the address first
+                // Persist entities
                 $entityManager->persist($address);
-
-                // Now set the address on the user
                 $user->setAdress($address);
-
-                // Save the user
                 $entityManager->persist($user);
                 $entityManager->flush();
 
-                // Authenticate the user automatically after registration
+                $this->addFlash('success', 'Account created successfully!');
+                
+                // Authenticate user
                 return $userAuthenticator->authenticateUser(
                     $user,
                     $loginAuthenticator,
                     $request
                 );
+            } catch (\Exception $e) {
+                // Log the error
+                $this->addFlash('error', 'An error occurred during registration: ' . $e->getMessage());
+                
+                return $this->render('registration/index.html.twig', [
+                    'registrationForm' => $form->createView(),
+                ]);
             }
-
-
-
         }
 
         return $this->render('registration/index.html.twig', [
