@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ProductImage{% endblock %}
+
+{% block body %}
+<div class="d-flex flex-column align-items-center gap-3 mb-4">
+    <h1 class="display-3">Product Index</h1>
+</div>
+
+
+    <div class="container">
+        <div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+            <img src="{{ asset(product_image.imagePath) }}"
+                 class="img-fluid rounded shadow"
+                 alt="Product Image"
+                 style="max-height: 80vh; max-width: 100%;">
+        </div>
+
+
+        <div class="container mt-4">
+            <div class="d-flex justify-content-center gap-2">
+                <a href="{{ path('app_product_image_index', {'product': product.id}) }}"
+                   class="btn btn-secondary d-flex align-items-center">
+                    Back to list
+                </a>
+                <div class="btn btn-danger btn-sm">
+                    {{ include('product_image/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,6 +1,6 @@
 {% extends 'coolBase.html.twig' %}
 
-{% block title %}All Products{% endblock %}
+{% block title %}GoSport: All Products{% endblock %}
 
 {% block stylesheets %}
     <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" rel="stylesheet">
@@ -66,7 +66,7 @@
         <a href="/products" class="text-white text-center d-block">No matching results...</a>
         {% endblock %}
     {% else %}
-        <div class="container">
+        <div class="container pt-20">
             <div class="row">
                 {% for product in products|slice((currentPage-1)*20, 20) %}
                     <div class="col-md-3">
@@ -80,7 +80,6 @@
                                 class="card-img-top">
                                 {% if product.discountpercent != 0 %}
                                     <div class="big-badge">
-                                        {{ product.discountpercent }}% off
                                         {{ product.discountpercent }}% off
                                     </div>
                                 {% endif %}
@@ -108,7 +107,7 @@
                                 {% block wishlistHeart %}
                                 <div class="position-absolute bottom-0 start-0 p-3">
                                     <button class="btn text-danger heart" type="button" style="border: 0;font-size: 25px;">
-                                        <i class="bi bi-heart"></i>
+                                        <i class="bi bi-heart" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 20px red)';" onmouseout="this.style.filter='none';"></i>
                                     </button>
                                 </div>
                                 {% endblock %}

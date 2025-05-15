@@ -1,0 +1,10 @@
+<div class="container my-3">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <button class="btn btn-outline-success">{{ button_label|default('Save') }}</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>

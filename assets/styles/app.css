@@ -84,3 +84,7 @@ background: #cd0526 !important;
 }
 .swiper-pagination{
 }
+td, th{
+    vertical-align: middle;
+    text-align: center;
+}
