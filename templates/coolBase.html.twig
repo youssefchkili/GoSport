@@ -121,99 +121,114 @@
 <body>
 {% block stickyBanner %} {% endblock %}
 
-<!-- Main Navigation -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
-    <div class="container">
-        <!-- Sidebar Toggle Button -->
-        <button class="sidebar-toggle d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
-            <i class="bi bi-list"></i>
-        </button>
+<form method="get" action="/products/byFilters" class="search-form d-flex w-100">
 
-        <!-- Logo and Brand -->
-        <a class="navbar-brand me-4" href="/">
-            <img src="{{ asset('images/logo.png') }}" width="40" height="40" alt="GoSport Logo">
-            GoSport
-        </a>
+    <!-- Main Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top w-100">
+        <div class="container">
+            <!-- Sidebar Toggle Button -->
+            <button class="sidebar-toggle d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
+                <i class="bi bi-list"></i>
+            </button>
 
-        <!-- Sidebar Toggle Button (visible on larger screens) -->
-        <button class="sidebar-toggle d-none d-lg-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
-            <i class="bi bi-list"></i>
-        </button>
+            <!-- Logo and Brand -->
+            <a class="navbar-brand me-4" href="/">
+                <img src="{{ asset('images/logo.png') }}" width="40" height="40" alt="GoSport Logo">
+                GoSport
+            </a>
 
-        <!-- Search Form -->
-        <div class="search-container flex-grow-1 mx-lg-4">
-            <form method="get" action="/products/byFilters" class="search-form d-flex">
+            {% block sidebarButton %}
+                <!-- Sidebar Toggle Button (visible on larger screens) -->
+                <button class="sidebar-toggle d-none d-lg-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
+                    <i class="bi bi-list"></i>
+                </button>
+            {% endblock %}
+
+            <!-- Search Form -->
+            <div class="search-container flex-grow-1 mx-lg-4">
                 <div class="input-group">
                     <input class="form-control" type="search" placeholder="Search for sports equipment..." aria-label="Search" name="keyWord" value="{{keyWord is defined ? keyWord}}">
                     <button class="btn btn-danger" type="submit">
                         <i class="bi bi-search"></i>
                     </button>
                 </div>
-            </form>
-        </div>
-
-        <!-- Navigation Icons -->
-        <div class="ms-auto d-flex align-items-center">
-            <!-- User Account -->
-            <div class="nav-item me-3 text-center">
-                {% if app.user %}
-                    <div class="dropdown">
-                        <a class="nav-link text-decoration-none" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <div class="nav-icon">
-                                <i class="bi bi-person-circle"></i>
-                            </div>
-                            <div class="nav-link-text">Account</div>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="{{ path('app_profile') }}"><i class="bi bi-person-badge"></i> Profile</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
-                        </ul>
-                    </div>
-                {% else %}
-                    <a class="nav-link text-decoration-none" href="{{ path('app_login') }}">
-                        <div class="nav-icon">
-                            <i class="bi bi-person-circle"></i>
-                        </div>
-                        <div class="nav-link-text">Sign In</div>
-                    </a>
-                {% endif %}
             </div>
 
-            <!-- Shopping Cart -->
-            <div class="nav-item text-center">
-                <a class="nav-link text-decoration-none" href="{{ path('cart_list') }}">
-                    <div class="nav-icon cart-icon">
-                        <i class="bi bi-bag"></i>
-                        <span class="cart-badge">
+            <!-- Navigation Icons -->
+            <div class="ms-auto d-flex align-items-center">
+                <!-- User Account -->
+                <div class="nav-item me-3 text-center">
+                    {% if app.user %}
+                        <div class="dropdown">
+                            <a class="nav-link text-decoration-none" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="nav-icon text-black">
+                                    <i class="bi bi-person-circle"></i>
+                                </div>
+                                <div class="nav-link-text">Account</div>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="{{ path('app_profile') }}"><i class="bi bi-person-badge"></i> Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a class="nav-link text-decoration-none" href="{{ path('app_login') }}">
+                            <div class="nav-icon text-black">
+                                <i class="bi bi-person-circle"></i>
+                            </div>
+                            <div class="nav-link-text">Sign In</div>
+                        </a>
+                    {% endif %}
+                </div>
+
+                <!-- Shopping Cart -->
+                <div class="nav-item text-center">
+                    <a class="nav-link text-decoration-none" href="/products">
+                        <div class="nav-icon cart-icon text-black">
+                            <i class="bi bi-bag"></i>
+                            <span class="cart-badge">
                             {% if app.session.get('user') is not null and app.session.get('cartItemsCount') is defined %}
                                 {{ app.session.get('cartItemsCount') }}
                             {% else %}
                                 0
                             {% endif %}
                         </span>
-                    </div>
-                    <div class="nav-link-text">Cart</div>
-                </a>
+                        </div>
+                        <div class="nav-link-text">Cart</div>
+                    </a>
+                </div>
+
+                <!-- wishlist -->
+                <div class="pl-4 nav-item text-center">
+                    <a class="nav-link text-decoration-none" href="/wishlist">
+                        <div class="nav-icon cart-icon text-danger">
+                            <i class="bi bi-heart-fill" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 5px red)'" onmouseout="this.style.filter='none'"></i>
+                        </div>
+                        <div class="nav-link-text">Wishlist</div>
+                    </a>
+                </div>
+
             </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<!-- Sidebar Offcanvas -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
-    <div class="offcanvas-header">
-        {% block sidebarTitle %}
-            <h5 class="offcanvas-title" id="sidebarLabel">Filter by</h5>
-        {% endblock %}
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <!-- Sidebar Offcanvas -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
+        <div class="offcanvas-header">
+            {% block sidebarTitle %}
+                <h5 class="offcanvas-title" id="sidebarLabel">Filter by</h5>
+            {% endblock %}
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+
+        <div class="offcanvas-body">
+            {% block sidebarBody %}
+            {% endblock %}
+        </div>
     </div>
 
-    <div class="offcanvas-body">
-        {% block sidebarBody %}
-        {% endblock %}
-    </div>
-</div>
+</form>
 
 {% block body %}{% endblock %}
 </body>
