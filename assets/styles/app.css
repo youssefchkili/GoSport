@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 body {
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(30, 30, 30);
+    color: white;
 }
 .badge{
     position: absolute;
@@ -32,7 +33,7 @@ body {
     min-width: 40px;
     height: 40px;
     top: 2%;
-    right: -2%;
+    right: -5%;
     font-size: 25px;
     padding: 0;
     margin:0;
@@ -58,9 +59,19 @@ body {
   width: 30px;
   height: 30px;
   top: -7px;
-  background: white;
+  background: rgb(30,30,30);
   border: 2px solid #dc3545;
   box-shadow: none;
+}
+
+#price-slider .noUi-tooltip {
+  background: rgb(30,30,30);
+  color: white;
+}
+
+#price-slider .noUi-base {
+    background: rgb(30,30,30);
+    border: 1px solid rgb(30,30,30);
 }
 #price-slider .noUi-handle::before,
 #price-slider .noUi-handle::after {
@@ -87,4 +98,22 @@ background: #cd0526 !important;
 td, th{
     vertical-align: middle;
     text-align: center;
+}
+.costum-card{
+    background-color: rgb(20, 20, 20);
+    color: white;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.costum-card:hover {
+    transform: scale(1.06);
+}
+.costum-card-img{
+    max-height: 20em;
+    object-fit: contain;
+    width: 100%;
+}
+.pagination-knob{
+    border: 1px solid rgb(100, 100, 100);
+    border-radius: 50%;
+    aspect-ratio: 1/1;
 }
