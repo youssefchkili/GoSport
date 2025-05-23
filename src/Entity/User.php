@@ -57,6 +57,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Adress $adress = null;
 
+    #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?WishList $wishlist = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -222,6 +225,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAdress(?Adress $adress): static
     {
         $this->adress = $adress;
+
+        return $this;
+    }
+
+    public function getWishList(): ?WishList
+    {
+        return $this->wishlist;
+    }
+
+    public function setWishList(?WishList $wishlist): static
+    {
+        $this->wishlist = $wishlist;
 
         return $this;
     }

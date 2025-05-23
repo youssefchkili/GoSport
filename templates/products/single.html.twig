@@ -30,27 +30,19 @@
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
                             <div class="bg-indigo-50 rounded-2xl h-96 flex justify-center items-center position-relative" style="overflow: hidden;">
-                                <img src=  "{% if product.images is empty %}
-                                                https://i.imgur.com/EJLFNOwg.jpg
-                                            {% else %}
-                                                {% for image in product.images %}
-                                                    {% if image.isPrimary %}
-                                                        {{ image.imagePath }}
-                                                    {% endif %}
-                                                {% endfor %}
-                                            {% endif %}"
-                                class="w-full h-full object-fill absolute top-0 left-0 z-0" style="filter: blur(30px);">
+                                <img src=  "{% for image in product.images %}
+                                                {% if image.isPrimary %}
+                                                    {{ image.imagePath }}
+                                                {% endif %}
+                                            {% endfor %}"
+                                class="w-full h-full object-fill absolute top-0 left-0 z-0" style="filter: blur(30px);" onerror="this.onerror=null;this.src='https://i.imgur.com/EJLFNOw.jpg';">
                                 
-                                <img src=  "{% if product.images is empty %}
-                                                https://i.imgur.com/EJLFNOwg.jpg
-                                            {% else %}
-                                                {% for image in product.images %}
-                                                    {% if image.isPrimary %}
-                                                        {{ image.imagePath }}
-                                                    {% endif %}
-                                                {% endfor %}
-                                            {% endif %}"
-                                class="h-full object-contain relative z-10">
+                                <img src=  "{% for image in product.images %}
+                                                {% if image.isPrimary %}
+                                                    {{ image.imagePath }}
+                                                {% endif %}
+                                            {% endfor %}"
+                                class="h-full object-contain relative z-10"  onerror="this.onerror=null;this.src='https://i.imgur.com/EJLFNOw.jpg';">
                             </div>
                         </div>
                         {% for image in product.images %}
@@ -128,16 +120,12 @@
                 <div class="col-md-3">
                     <a href="/products/{{ product.id }}" class="text-decoration-none">
                             <div class="card mb-4 p-3 position-relative costum-card">
-                                <img src=  "{% if product.images is empty %}
-                                                https://i.imgur.com/EJLFNOwg.jpg
-                                            {% else %}
-                                                {% for image in product.images %}
-                                                    {% if image.isPrimary %}
-                                                        {{ image.imagePath }}
-                                                    {% endif %}
-                                                {% endfor %}
-                                            {% endif %}"
-                                class="card-img-top costum-card-img">
+                                <img src=  "{% for image in product.images %}
+                                                {% if image.isPrimary %}
+                                                    {{ image.imagePath }}
+                                                {% endif %}
+                                            {% endfor %}"
+                                class="card-img-top costum-card-img" onerror="this.onerror=null;this.src='https://i.imgur.com/EJLFNOw.jpg';">
                                 {% if product.discountpercent != 0 %}
                                     <div class="big-badge">
                                         {{ product.discountpercent }}% off

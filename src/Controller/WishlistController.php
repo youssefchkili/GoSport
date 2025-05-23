@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Product;
+use App\Entity\User;
+use App\Entity\WishList;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class WishlistController extends AbstractController
@@ -17,6 +21,32 @@ final class WishlistController extends AbstractController
         return $this->render('wishlist/index.html.twig', [
             'controller_name' => 'WishlistController',
             'products' => $products,
+        ]);
+        
+    }
+    #[Route('/wishlist/add/{id}', name: 'app_wishlist_add')]
+    public function addToWishlist(Product $product, ManagerRegistry $manager,SessionInterface $session): Response
+    {   
+        
+        $doctrine = $manager->getManager();
+        $user = $this->getUser();
+        if ($user){
+            $wishlist = $user->getWishList();
+            if (!$wishlist) {
+                $wishlist = new WishList();
+                $wishlist->setUserId($this->getUser());
+            }
+            $wishlist->addProduct($product);
+            $doctrine->persist($wishlist);
+            $user->setWishList($wishlist);
+            $product->addWishlist($wishlist);
+            $doctrine->persist($product);
+            $doctrine->persist($user);
+            $doctrine->flush();
+        }
+        dd($product);
+        return $this->render('wishlist/index.html.twig', [
+            'controller_name' => 'WishlistController',
         ]);
         
     }
