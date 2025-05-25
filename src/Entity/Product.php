@@ -54,7 +54,6 @@ class Product
     {
         $this->wishlist = new ArrayCollection();
         $this->images = new ArrayCollection();
-        //$this->images = new ArrayCollection();
     }
 
     public function getId(): ?int

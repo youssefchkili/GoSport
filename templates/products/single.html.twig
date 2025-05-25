@@ -117,6 +117,7 @@
             <div class="col-12 my-3">
             </div>
             
+            {% set products = products|filter(p => p.id != product.id) %}
             {% for product in products %}
                 {{ components.productCard(product) }}
             {% endfor %}
@@ -215,10 +216,11 @@
         .catch(error => console.error('Error:', error));
     });
     {{ components.heartsManager(products) }}
-    //TODO: to include the card loader from the index page :: DONE
-    //TODO: to fix the categories filter
-    //TODO: to not show the current product in the related product
-    //TODO: to pull the right stach of products in the whishlist and put it in dark mode
+    //TODO: include the card loader from the index page :: DONE
+    //TODO: fix the categories filter :: DONE
+    //TODO: not show the current product in the related product :: DONE
+    //TODO: pull the right stach of products in the whishlist and put it in dark mode :: DONE
+    //TODO: when hovering over a categorie in sidebar a box should show up with description
     
 </script>
 {% endblock %}
