@@ -113,11 +113,9 @@
                             <br>
                             {% block wishlistHeart %}
                             <div class="position-absolute bottom-0 start-0 p-2">
-                                <a href="/wishlist/add/{{ product.id }}" class="text-decoration-none">
-                                    <button class="btn text-danger heart" type="button" style="border: 0;font-size: 25px;">
-                                        <i class="bi bi-heart" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 20px red)';" onmouseout="this.style.filter='none';"></i>
-                                    </button>
-                                </a>
+                                <button class="btn text-danger heart" type="button" id="productBtn{{ product.id }}" style="border: 0;font-size: 25px;">
+                                    <i class="bi {% if app.user and product in app.user.wishlist.products %}bi-heart-fill{% else %}bi-heart{% endif %}" id="heart{{ product.id }}" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 20px red)';" onmouseout="this.style.filter='none';"></i>
+                                </button>
                             </div>
                             {% endblock %}
                         </div>
@@ -193,5 +191,30 @@
             minPriceInput.value = values[0];
             maxPriceInput.value = values[1];
         });
+
+        {% for product in products %}
+            document.getElementById("productBtn{{ product.id }}").addEventListener('click', function () {
+                {% if app.user %}
+                    document.getElementById("heart{{ product.id }}").classList.toggle("bi-heart");
+                    document.getElementById("heart{{ product.id }}").classList.toggle("bi-heart-fill");
+                {% endif %}
+                fetch('/wishlist/add/{{ product.id }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: JSON.stringify({ someData: 123 })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        //alert(data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        {% endfor %}
+
     </script>
 {% endblock %}
