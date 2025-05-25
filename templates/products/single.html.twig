@@ -99,7 +99,7 @@
                         <h1 class="text-white" style="font-size: 1.5em;">Quantity:</h1>
                         <input type="number" class="form-control mx-3 bg-dark text-white" id="quantity" name="quantity" value="1" min="1" max="{{ product.stockQuantity }}" style="width: 100px;border:1px solid RGB(100,100,100);">
     
-                        <button class="btn btn-danger" id="add-to-cart-btn" type="button" style="font-size: 1.5em;">
+                        <button class="btn btn-danger" id="addToCartBtn" type="button" style="font-size: 1.5em;">
                             <i class="bi bi-bag"></i> Add to Cart
                         </button>
                     </div>
@@ -187,6 +187,58 @@
     el: ".vertical-slide-carousel .swiper-pagination",
     clickable: true,
     },
+    });
+
+    document.getElementById("addToCartBtn").addEventListener('click', function () {
+        const btn = document.getElementById("addToCartBtn");
+        btn.classList.add("glitter-effect");
+        setTimeout(() => btn.classList.remove("glitter-effect"), 1000);
+
+        // this glitter effect is AI generated because CSS why not
+        if (!document.getElementById('glitter-effect-style')) {
+            const style = document.createElement('style');
+            style.id = 'glitter-effect-style';
+            style.innerHTML = `
+            .glitter-effect {
+                position: relative;
+                overflow: hidden;
+                animation: glitter 1s linear;
+            }
+            .glitter-effect::after {
+                content: '';
+                position: absolute;
+                left: -75%;
+                top: 0;
+                width: 50%;
+                height: 100%;
+                background: linear-gradient(120deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.2) 100%);
+                transform: skewX(-20deg);
+                animation: glitter-move 1s forwards;
+                pointer-events: none;
+            }
+            @keyframes glitter-move {
+                0% { left: -75%; }
+                100% { left: 125%; }
+            }
+            `;
+            document.head.appendChild(style);
+        }
+        //////
+        fetch('/wishlist/check/{{ product.id }}/' + document.getElementById("quantity").value, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                //alert(data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
     });
 </script>
 {% endblock %}

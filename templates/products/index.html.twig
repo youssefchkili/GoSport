@@ -198,13 +198,13 @@
                     document.getElementById("heart{{ product.id }}").classList.toggle("bi-heart");
                     document.getElementById("heart{{ product.id }}").classList.toggle("bi-heart-fill");
                 {% endif %}
-                fetch('/wishlist/add/{{ product.id }}', {
+                fetch('/cart/add/{{ product.id }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest',
                     },
-                    body: JSON.stringify({ someData: 123 })
+                    body: JSON.stringify({})
                 })
                 .then(response => response.json())
                 .then(data => {

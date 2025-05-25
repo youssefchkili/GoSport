@@ -50,4 +50,9 @@ final class WishlistController extends AbstractController
             return new JsonResponse(['success' => true, 'message' => $message]);
         }
     }
+    #[Route('/wishlist/check/{id}/{quantity}', name: 'app_wishlist_check')]
+    public function checkToWishlist(Product $product, $quantity , ManagerRegistry $manager,SessionInterface $session): JsonResponse
+    {   
+        return new JsonResponse(['success' => true, 'message' => $quantity . ' ' . $product->getName() . ' checked to wishlist']);
+    }
 }
