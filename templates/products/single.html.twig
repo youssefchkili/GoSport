@@ -224,7 +224,7 @@
             document.head.appendChild(style);
         }
         //////
-        fetch('/wishlist/check/{{ product.id }}/' + document.getElementById("quantity").value, {
+        fetch('/cart/add/{{ product.id }}/' + document.getElementById("quantity").value, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -240,5 +240,6 @@
         })
         .catch(error => console.error('Error:', error));
     });
+    
 </script>
 {% endblock %}
