@@ -1,4 +1,5 @@
 {% extends 'coolBase.html.twig' %}
+{% import "components/cardMacros.html.twig" as components %}
 
 {% block title %}GoSport: All Products{% endblock %}
 
@@ -10,25 +11,23 @@
 {% endblock %}
 
     {% block sidebarBody %}
-        <div class="mb-3">
-            <button class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#categoriesCollapse" aria-expanded="false" aria-controls="categoriesCollapse">
-                Categories
-            </button>
+        <div class="mb-3 w-80">
+            <button class="btn btn-danger" type="button" onclick="toggleCategories()">Categories</button>
 
-            <div class="collapse mt-2" id="categoriesCollapse">
-                <div class="p-3">
-                    {% if categories is defined %}
-                        {% for category in categories %}
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="categoryCheckbox{{ category.id }}" value="{{ category.id }}" {% if categoriesAllowed is not defined or category.id in categoriesAllowed %} checked {% endif %}>
-                                <label class="form-check-label" for="categoryCheckbox{{ category.id }}">{{ category.name }}</label>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
+            <div class="mt-2 pl-3" id="categoriesBox" style="overflow: hidden; height: 0; transition: height 0.3s ease;">
+                <div id="categoriesContent">
+                    {% for category in categories %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="categoryCheckbox{{ category.id }}" name="categoryCheckbox{{ category.id }}" value="{{ category.id }}"
+                                {% if categoriesAllowed is not defined or category.id in categoriesAllowed %} checked {% endif %}>
+                            <label class="form-check-label" for="categoryCheckbox{{ category.id }}">
+                                {{ category.name }}
+                            </label>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
-
 
         <div class="container my-4" style="width: 90%;">
             <label for="price-slider" class="form-label">Price Range</label>
@@ -44,11 +43,9 @@
             </div>
         </div>
         {% block applyFilters %}
-        <a href="/products" style="position: absolute; bottom: 10px; right: 10px;">
-            <button class="btn btn-danger" id="apply-btn" type="submit">
+            <button class="btn btn-danger" id="apply-btn" type="submit" style="float: right; border-radius: 50px 0 0 50px;">
                 Apply
             </button>
-        </a>
         {% endblock %}
 
     {% endblock %}
@@ -69,57 +66,7 @@
         <div class="container pt-20">
             <div class="row">
                 {% for product in products|slice((currentPage-1)*20, 20) %}
-                    <div class="col-md-3">
-                        <div class="card mb-4 p-3 position-relative costum-card">
-                            <a href="/products/{{ product.id }}" class="text-decoration-none">
-                                <img src=  "{% for image in product.images %}
-                                                {% if image.isPrimary %}
-                                                    {{ image.imagePath }}
-                                                {% endif %}
-                                            {% endfor %}"
-                                class="card-img-top costum-card-img" onerror="this.onerror=null;this.src='https://i.imgur.com/EJLFNOw.jpg';">
-                            </a>
-                            {% if product.discountpercent != 0 %}
-                                <div class="big-badge">
-                                    {{ product.discountpercent }}% off
-                                </div>
-                            {% endif %}
-                            <div class="card-body">
-                                <h3 class="card-title" style="font-size: 1.2em;">{{ product.name }}</h5>
-                                <h4 style="color:gray" class="p-2" style="font-size: 1.2em;">{{ product.slug }}</h6>
-                            </div>
-                            <div class="position-absolute bottom-0 end-0 p-3">
-                                {% if product.stockQuantity == 0 %}
-                                        <h2 style="display: inline-block; margin-right: 10px;color:RGB(255,90,90);font-size: 1.2em;">
-                                            Out Of Stock
-                                        </h2>
-                                {% else %}
-                                    {% if product.discountpercent == 0 %}
-                                        <h2 style="font-size: 1.2em;">
-                                            {{ product.price }} DT
-                                        </h2>
-                                    {% else %}
-                                        <h2 style="display: inline-block; margin-right: 10px;color:RGB(255,102,102);font-size: 1.2em;">
-                                            {{ ( (product.price * (100 - product.discountpercent) / 100) )|number_format(2, '.', '') }} DT
-                                        </h2>
-                                        <h2 class="text-decoration-line-through" style="display: inline-block;color:RGB(150,150,150);font-size: 1.2em;">
-                                            {{ product.price }}DT
-                                        </h2>
-                                    {% endif %}
-                                {% endif %}
-                                {% block crudButtons %}
-                                {%  endblock %}
-                            </div>
-                            <br>
-                            {% block wishlistHeart %}
-                            <div class="position-absolute bottom-0 start-0 p-2">
-                                <button class="btn text-danger heart" type="button" id="productBtn{{ product.id }}" style="border: 0;font-size: 25px;">
-                                    <i class="bi {% if app.user and product in app.user.wishlist.products %}bi-heart-fill{% else %}bi-heart{% endif %}" id="heart{{ product.id }}" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 20px red)';" onmouseout="this.style.filter='none';"></i>
-                                </button>
-                            </div>
-                            {% endblock %}
-                        </div>
-                    </div>
+                    {{ components.productCard(product) }}
                 {% endfor %}
             </div>
         </div>
@@ -192,29 +139,32 @@
             maxPriceInput.value = values[1];
         });
 
-        {% for product in products %}
-            document.getElementById("productBtn{{ product.id }}").addEventListener('click', function () {
-                {% if app.user %}
-                    document.getElementById("heart{{ product.id }}").classList.toggle("bi-heart");
-                    document.getElementById("heart{{ product.id }}").classList.toggle("bi-heart-fill");
-                {% endif %}
-                fetch('/wishlist/add/{{ product.id }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest',
-                    },
-                    body: JSON.stringify({})
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        //alert(data.message);
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            });
-        {% endfor %}
+        let isExpanded = false;
 
+        function toggleCategories() {
+            const box = document.getElementById('categoriesBox');
+            const content = document.getElementById('categoriesContent');
+
+            if (!isExpanded) {
+                const contentHeight = content.offsetHeight;
+                box.style.height = contentHeight + "px";
+
+                // Once expanded, make height auto after transition
+                box.addEventListener("transitionend", function handler() {
+                    box.style.height = "auto";
+                    box.removeEventListener("transitionend", handler);
+                });
+            } else {
+                // Collapse: fix height first, then animate to 0
+                box.style.height = box.offsetHeight + "px"; // Fix current height
+                requestAnimationFrame(() => {
+                    box.style.height = "0";
+                });
+            }
+
+            isExpanded = !isExpanded;
+        }
+        
+        {{ components.heartsManager(products) }}
     </script>
 {% endblock %}
