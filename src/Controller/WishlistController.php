@@ -16,13 +16,11 @@ use Symfony\Component\Routing\Attribute\Route;
 final class WishlistController extends AbstractController
 {
     #[Route('/wishlist', name: 'app_wishlist')]
-    public function wishlist(ManagerRegistry $manager): Response
-    {   $doctrine = $manager->getManager();
-        $productRepository = $doctrine->getRepository('App\Entity\Product');
-        $products = $productRepository->findAll();
+    public function wishlist(): Response
+    {   
         return $this->render('wishlist/index.html.twig', [
             'controller_name' => 'WishlistController',
-            'products' => $products,
+            'products' => $this->getUser()->getWishList()->getProducts(),
         ]);
         
     }
