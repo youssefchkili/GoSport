@@ -198,7 +198,7 @@
                     document.getElementById("heart{{ product.id }}").classList.toggle("bi-heart");
                     document.getElementById("heart{{ product.id }}").classList.toggle("bi-heart-fill");
                 {% endif %}
-                fetch('/cart/add/{{ product.id }}', {
+                fetch('/wishlist/add/{{ product.id }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
