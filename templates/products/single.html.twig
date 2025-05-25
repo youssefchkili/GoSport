@@ -1,4 +1,5 @@
 {% extends 'coolBase.html.twig' %}
+{% import "components/cardMacros.html.twig" as components %}
 
 {% block title %}GoSport: {{ product.name }}{% endblock %}
 
@@ -65,8 +66,8 @@
                     <div class="d-flex align-items-center">
                         <h1 class="decoration-bold mb-0" style="font-size: 2.5em;">{{ product.name|capitalize }}</h1>
                         <div class="p-3">
-                            <button class="btn text-danger heart pl-20" type="button" style="border: 0; font-size: 2.5em;">
-                                <i class="bi bi-heart" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 5px red)'" onmouseout="this.style.filter='none'"></i>
+                            <button class="btn text-danger heart pl-20" id="productBtn" type="button" style="border: 0; font-size: 2.5em;">
+                                <i class="bi {% if app.user and product in app.user.wishlist.products %}bi-heart-fill{% else %}bi-heart{% endif %}" id="heart" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 5px red)'" onmouseout="this.style.filter='none'"></i>
                             </button>
                         </div>
                     </div>
@@ -117,57 +118,7 @@
             </div>
             
             {% for product in products %}
-                <div class="col-md-3">
-                    <a href="/products/{{ product.id }}" class="text-decoration-none">
-                            <div class="card mb-4 p-3 position-relative costum-card">
-                                <img src=  "{% for image in product.images %}
-                                                {% if image.isPrimary %}
-                                                    {{ image.imagePath }}
-                                                {% endif %}
-                                            {% endfor %}"
-                                class="card-img-top costum-card-img" onerror="this.onerror=null;this.src='https://i.imgur.com/EJLFNOw.jpg';">
-                                {% if product.discountpercent != 0 %}
-                                    <div class="big-badge">
-                                        {{ product.discountpercent }}% off
-                                    </div>
-                                {% endif %}
-                                <div class="card-body">
-                                    <h3 class="card-title" style="font-size: 1.2em;">{{ product.name }}</h5>
-                                    <h4 style="color:gray" class="p-2" style="font-size: 1.2em;">{{ product.slug }}</h6>
-                                </div>
-                                <div class="position-absolute bottom-0 end-0 p-3">
-                                    {% if product.stockQuantity == 0 %}
-                                            <h2 style="display: inline-block; margin-right: 10px;color:RGB(255,90,90);font-size: 1.2em;">
-                                                Out Of Stock
-                                            </h2>
-                                    {% else %}
-                                        {% if product.discountpercent == 0 %}
-                                            <h2 style="font-size: 1.2em;">
-                                                {{ product.price }} DT
-                                            </h2>
-                                        {% else %}
-                                            <h2 style="display: inline-block; margin-right: 10px;color:RGB(255,102,102);font-size: 1.2em;">
-                                                {{ ( (product.price * (100 - product.discountpercent) / 100) )|number_format(2, '.', '') }} DT
-                                            </h2>
-                                            <h2 class="text-decoration-line-through" style="display: inline-block;color:RGB(150,150,150);font-size: 1.2em;">
-                                                {{ product.price }}DT
-                                            </h2>
-                                        {% endif %}
-                                    {% endif %}
-                                    {% block crudButtons %}
-                                    {%  endblock %}
-                                </div>
-                                <br>
-                                {% block wishlistHeart %}
-                                <div class="position-absolute bottom-0 start-0 p-2">
-                                    <button class="btn text-danger heart" type="button" style="border: 0;font-size: 25px;">
-                                        <i class="bi bi-heart" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 20px red)';" onmouseout="this.style.filter='none';"></i>
-                                    </button>
-                                </div>
-                                {% endblock %}
-                            </div>
-                        </a>
-                </div>
+                {{ components.productCard(product) }}
             {% endfor %}
 
         </div>
@@ -240,6 +191,34 @@
         })
         .catch(error => console.error('Error:', error));
     });
+
+
+    document.getElementById("productBtn").addEventListener('click', function () {
+        {% if app.user %}
+            document.getElementById("heart").classList.toggle("bi-heart");
+            document.getElementById("heart").classList.toggle("bi-heart-fill");
+        {% endif %}
+        fetch('/wishlist/toggle/{{ product.id }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                //alert(data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+    {{ components.heartsManager(products) }}
+    //TODO: to include the card loader from the index page :: DONE
+    //TODO: to fix the categories filter
+    //TODO: to not show the current product in the related product
+    //TODO: to pull the right stach of products in the whishlist and put it in dark mode
     
 </script>
 {% endblock %}

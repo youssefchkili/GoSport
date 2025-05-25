@@ -26,7 +26,7 @@ final class WishlistController extends AbstractController
         ]);
         
     }
-    #[Route('/wishlist/add/{id}', name: 'app_wishlist_add')]
+    #[Route('/wishlist/toggle/{id}', name: 'app_wishlist_add')]
     public function addToWishlist(Product $product, ManagerRegistry $manager,SessionInterface $session): JsonResponse
     {   
         $doctrine = $manager->getManager();
