@@ -6,7 +6,9 @@ use App\Entity\Product;
 use App\Entity\User;
 use App\Entity\WishList;
 use Doctrine\Persistence\ManagerRegistry;
+use PHPUnit\Util\Json;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -25,29 +27,27 @@ final class WishlistController extends AbstractController
         
     }
     #[Route('/wishlist/add/{id}', name: 'app_wishlist_add')]
-    public function addToWishlist(Product $product, ManagerRegistry $manager,SessionInterface $session): Response
+    public function addToWishlist(Product $product, ManagerRegistry $manager,SessionInterface $session): JsonResponse
     {   
-        
         $doctrine = $manager->getManager();
         $user = $this->getUser();
         if ($user){
             $wishlist = $user->getWishList();
             if (!$wishlist) {
                 $wishlist = new WishList();
-                $wishlist->setUserId($this->getUser());
+                $wishlist->setUserId($user);
+                $doctrine->persist($wishlist);
             }
-            $wishlist->addProduct($product);
+            if ($wishlist->getProducts()->contains($product)) {
+                $wishlist->removeProduct($product);
+                $message = 'Product removed from wishlist';
+            } else {
+                $wishlist->addProduct($product);
+                $message = 'Product added to wishlist';
+            }
             $doctrine->persist($wishlist);
-            $user->setWishList($wishlist);
-            $product->addWishlist($wishlist);
-            $doctrine->persist($product);
-            $doctrine->persist($user);
             $doctrine->flush();
+            return new JsonResponse(['success' => true, 'message' => $message]);
         }
-        dd($product);
-        return $this->render('wishlist/index.html.twig', [
-            'controller_name' => 'WishlistController',
-        ]);
-        
     }
 }
