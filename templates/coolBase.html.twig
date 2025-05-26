@@ -120,6 +120,10 @@
             background-color: rgb(30,30,30);
             color: white;
         }
+        .custom-dropdown-item:hover {
+            background-color: #232a40 !important;
+            opacity: 0.8 !important;
+        }
     </style>
     {% block stylesheets %}
     {% endblock %}
@@ -176,10 +180,10 @@
                             </div>
                             <div class="nav-link-text">Account</div>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="{{ path('app_profile') }}"><i class="bi bi-person-badge"></i> Profile</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                        <ul class="dropdown-menu dropdown-menu-end bg-dark p-0" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item custom-dropdown-item text-white pt-2 pb-1" href="{{ path('app_profile') }}"><i class="bi bi-person-badge"></i> Profile</a></li>
+                            <li><hr class="dropdown-divider m-0"></li>
+                            <li><a class="dropdown-item custom-dropdown-item text-white pt-1 pb-2" href="{{ path('app_logout') }}"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
                         </ul>
                     </div>
                 {% else %}
