@@ -44,12 +44,14 @@
                 <tr style="font-size: 1.2em;">
                     <td style="text-align: left;">
                     <div class="pt-3 pb-3" style="display: flex; align-items: center; gap: 10px;">
-                        <img src="{% for image in product.images %}
-                                {% if image.isPrimary %}
-                                {{ image.imagePath }}
-                                {% endif %}
-                             {% endfor %}" 
-                             onerror="this.onerror=null;this.src='https://i.imgur.com/EJLFNOw.jpg';" class="img-fluid" style="max-height: 7em; border-radius: 10%;">
+                        <a href="/products/{{ product.id }}" class="text-decoration-none">
+                            <img src="{% for image in product.images %}
+                                    {% if image.isPrimary %}
+                                    {{ image.imagePath }}
+                                    {% endif %}
+                                {% endfor %}" 
+                                onerror="this.onerror=null;this.src='https://i.imgur.com/EJLFNOw.jpg';" class="img-fluid" style="max-height: 7em; border-radius: 10%;">
+                        </a>
                         <div>
                             <h1 style="margin: 0;">{{ product.name|capitalize }}</h1>
                             <h2 style="margin: 0; color:RGB(200,200,200);">{{ product.slug }}</h2>
