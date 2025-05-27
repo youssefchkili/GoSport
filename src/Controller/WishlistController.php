@@ -17,16 +17,28 @@ final class WishlistController extends AbstractController
 {
     #[Route('/wishlist', name: 'app_wishlist')]
     public function wishlist(): Response
-    {   
+    {
+        $user = $this->getUser();
+        $products = [];
+
+        // Check if user exists and has a wishlist
+        if ($user && $user->getWishList()) {
+            $products = $user->getWishList()->getProducts();
+        }
+
+        return $this->render('wishlist/index.html.twig', [
+            'controller_name' => 'WishlistController',
+            'products' => $products,
+        ]);
         return $this->render('wishlist/index.html.twig', [
             'controller_name' => 'WishlistController',
             'products' => $this->getUser()->getWishList()->getProducts(),
         ]);
-        
+
     }
     #[Route('/wishlist/toggle/{id}', name: 'app_wishlist_add')]
     public function addToWishlist(Product $product, ManagerRegistry $manager,SessionInterface $session): JsonResponse
-    {   
+    {
         $doctrine = $manager->getManager();
         $user = $this->getUser();
         if ($user){
@@ -47,5 +59,7 @@ final class WishlistController extends AbstractController
             $doctrine->flush();
             return new JsonResponse(['success' => true, 'message' => $message]);
         }
+
+        return new JsonResponse(['success' => false, 'message' => 'User not logged in'], 401);
     }
 }
