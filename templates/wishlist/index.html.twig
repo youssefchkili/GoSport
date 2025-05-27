@@ -16,7 +16,7 @@
     {{ parent() }}
 {% endblock %}
 {% block body %}
-    <h1 class="text-center">Your Wishlist...</h1>
+    <h1 class="text-center pt-3">Your Wishlist...</h1>
     <br>
     {% if products is empty %}
         <h1 class="text-center">
@@ -29,9 +29,9 @@
     {% else %}
 
     <div class="container-fluid m-4 pt-2 d-flex justify-content-center">
-            <table class="table table-striped" style="max-width: 80%;">
+        <table class="table table-striped" id="wishlistTable" style="max-width: 80%;">
             <thead>
-                <tr class="sticky-top">
+                <tr class="sticky-top bg-dark">
                     <th scope="col">Product</th>
                     <th scope="col">Price</th>
                     <th scope="col">Stock Status</th>
@@ -49,10 +49,10 @@
                                 {{ image.imagePath }}
                                 {% endif %}
                              {% endfor %}" 
-                             alt="{{ product.name }}" class="img-fluid" style="max-height: 7em; border-radius: 10%;">
+                             onerror="this.onerror=null;this.src='https://i.imgur.com/EJLFNOw.jpg';" class="img-fluid" style="max-height: 7em; border-radius: 10%;">
                         <div>
                             <h1 style="margin: 0;">{{ product.name|capitalize }}</h1>
-                            <h2 class="text-muted" style="margin: 0;">{{ product.slug }}</h2>
+                            <h2 style="margin: 0; color:RGB(200,200,200);">{{ product.slug }}</h2>
                         </div>
                     </div>
                     </td>
@@ -65,19 +65,19 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% if not product.stockQuantity > 0 %}
-                            <a href="/products/{{ product.id }}" class="btn btn-danger btn-sm" style="font-size: 1.05em;">
+                        {% if product.stockQuantity > 0 %}
+                            <button type="button" class="btn btn-danger btn-sm" id="addToCartBtn{{product.id}}" style="font-size: 1.05em;">
                                 Add to Cart
                                 <i class="bi bi-bag"></i>
-                            </a>
+                            </button>
                         {% else %}
-                            <a href="/products/{{ product.id }}" class="btn btn-dark btn-sm" style="font-size: 1.05em;">View Details</a>
+                            <a href="/products/{{ product.id }}" class="btn btn-secondary btn-sm" style="font-size: 1.05em;">View Details</a>
                         {% endif %}
                     </td>
                     <td>
-                        <a href="/products/{{ product.id }}">
-                            <i class="bi bi-trash text-black" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 5px red)';this.style.color='red'" onmouseout="this.style.filter='none';this.style.color='black'"></i>
-                        </a>
+                        <button id="deleteBtn{{product.id}}">
+                            <i class="bi bi-trash text-white" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 3px red)';this.style.color='red'" onmouseout="this.style.filter='none';this.style.color='black'"></i>
+                        </button>
                     </td>
                 </tr>
                 {% endfor %}
@@ -85,4 +85,83 @@
         </table>
     </div>
     {% endif %}
+<script>
+{% for product in products %}
+    document.getElementById("addToCartBtn{{product.id}}").addEventListener('click', function () {
+        const btn = document.getElementById("addToCartBtn{{product.id}}");
+        btn.classList.add("glitter-effect");
+        setTimeout(() => btn.classList.remove("glitter-effect"), 1000);
+
+        // this glitter effect is AI generated because CSS why not
+        if (!document.getElementById('glitter-effect-style')) {
+            const style = document.createElement('style');
+            style.id = 'glitter-effect-style';
+            style.innerHTML = `
+            .glitter-effect {
+                position: relative;
+                overflow: hidden;
+                animation: glitter 1s linear;
+            }
+            .glitter-effect::after {
+                content: '';
+                position: absolute;
+                left: -75%;
+                top: 0;
+                width: 50%;
+                height: 100%;
+                background: linear-gradient(120deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.2) 100%);
+                transform: skewX(-20deg);
+                animation: glitter-move 1s forwards;
+                pointer-events: none;
+            }
+            @keyframes glitter-move {
+                0% { left: -75%; }
+                100% { left: 125%; }
+            }
+            `;
+            document.head.appendChild(style);
+        }
+        //////
+        fetch('/cart/add/{{ product.id }}/1', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                //alert(data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+    
+
+    document.getElementById("deleteBtn{{ product.id }}").addEventListener('click', function () {
+
+        document.getElementById("deleteBtn{{ product.id }}").closest('tr').remove();
+        if (document.getElementById("wishlistTable").querySelector('tbody').children.length === 0) {
+            location.reload();
+        }
+        fetch('/wishlist/toggle/{{ product.id }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                //alert(data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+{% endfor %}
+</script>
 {% endblock %}

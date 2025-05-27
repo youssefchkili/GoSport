@@ -18,7 +18,8 @@
         }
 
         .navbar {
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: rgb(30,30,30);
+            box-shadow: 0 2px 10px rgba(255,255,255,0.2);
             padding: 0.75rem 1rem;
         }
 
@@ -26,7 +27,7 @@
             display: flex;
             align-items: center;
             font-weight: 700;
-            color: var(--dark-text);
+            color: white;
             transition: all 0.2s ease;
         }
 
@@ -39,9 +40,11 @@
         }
 
         .search-form .form-control {
+            background-color: rgb(20, 20, 20);
             border-radius: 50px 0 0 50px;
-            border: 1px solid #dee2e6;
+            border: 1px solid rgb(50, 50, 50);
             padding-left: 1rem;
+            color: white;
         }
 
         .search-form .btn {
@@ -51,7 +54,6 @@
 
         .nav-icon {
             font-size: 1.5rem;
-            color: var(--dark-text);
             transition: all 0.2s ease;
         }
 
@@ -110,6 +112,14 @@
                 margin: 0 10px;
             }
         }
+        input::placeholder {
+            color: white !important;
+            opacity: 0.5 !important;
+        }
+        .sidebar{
+            background-color: rgb(30,30,30);
+            color: white;
+        }
     </style>
     {% block stylesheets %}
     {% endblock %}
@@ -124,30 +134,30 @@
 <form method="get" action="/products/byFilters" class="search-form d-flex w-100">
 
 <!-- Main Navigation -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top w-100">
+<nav class="navbar navbar-expand-lg sticky-top w-100 text-white">
     <div class="container">
         <!-- Sidebar Toggle Button -->
         <button class="sidebar-toggle d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
             <i class="bi bi-list"></i>
         </button>
 
-        <!-- Logo and Brand -->
-        <a class="navbar-brand me-4" href="/">
-            <img src="{{ asset('images/logo.png') }}" width="40" height="40" alt="GoSport Logo">
-            GoSport
-        </a>
+            <!-- Logo and Brand -->
+            <a class="navbar-brand me-4" href="/">
+                <img src="{{ asset('images/logo.png') }}" width="40" height="40" alt="GoSport Logo">
+                GoSport
+            </a>
 
         {% block sidebarButton %}
         <!-- Sidebar Toggle Button (visible on larger screens) -->
         <button class="sidebar-toggle d-none d-lg-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
-            <i class="bi bi-list"></i>
+            <i class="bi bi-list text-white"></i>
         </button>
         {% endblock %}
 
         <!-- Search Form -->
         <div class="search-container flex-grow-1 mx-lg-4">
-            <div class="input-group">
-                <input class="form-control" type="search" placeholder="Search for sports equipment..." aria-label="Search" name="keyWord" value="{{keyWord is defined ? keyWord}}">
+            <div class="input-group text-white">
+                <input class="form-control text-white" type="search" placeholder="Search for sports equipment..." aria-label="Search" name="keyWord" value="{{keyWord is defined ? keyWord}}">
                 <button class="btn btn-danger" type="submit">
                     <i class="bi bi-search"></i>
                 </button>
@@ -162,7 +172,7 @@
                     <div class="dropdown">
                         <a class="nav-link text-decoration-none" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <div class="nav-icon text-black">
-                                <i class="bi bi-person-circle"></i>
+                                <i class="bi bi-person-circle text-white"></i>
                             </div>
                             <div class="nav-link-text">Account</div>
                         </a>
@@ -175,7 +185,7 @@
                 {% else %}
                     <a class="nav-link text-decoration-none" href="{{ path('app_login') }}">
                         <div class="nav-icon text-black">
-                            <i class="bi bi-person-circle"></i>
+                            <i class="bi bi-person-circle text-white"></i>
                         </div>
                         <div class="nav-link-text">Sign In</div>
                     </a>
@@ -186,7 +196,7 @@
             <div class="nav-item text-center">
                 <a class="nav-link text-decoration-none" href="/products">
                     <div class="nav-icon cart-icon text-black">
-                        <i class="bi bi-bag"></i>
+                        <i class="bi bi-bag text-white"></i>
                         <span class="cart-badge">
                             {% if app.session.get('user') is not null and app.session.get('cartItemsCount') is defined %}
                                 {{ app.session.get('cartItemsCount') }}
@@ -194,39 +204,39 @@
                                 0
                             {% endif %}
                         </span>
-                    </div>
-                    <div class="nav-link-text">Cart</div>
-                </a>
-            </div>
+                        </div>
+                        <div class="nav-link-text">Cart</div>
+                    </a>
+                </div>
 
-            <!-- wishlist -->
-            <div class="pl-4 nav-item text-center">
-                <a class="nav-link text-decoration-none" href="/wishlist">
-                    <div class="nav-icon cart-icon text-danger">
-                        <i class="bi bi-heart-fill" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 5px red)'" onmouseout="this.style.filter='none'"></i>
-                    </div>
-                    <div class="nav-link-text">Wishlist</div>
-                </a>
-            </div>
+                <!-- wishlist -->
+                <div class="pl-4 nav-item text-center">
+                    <a class="nav-link text-decoration-none" href="/wishlist">
+                        <div class="nav-icon cart-icon text-danger">
+                            <i class="bi bi-heart-fill" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 5px red)'" onmouseout="this.style.filter='none'"></i>
+                        </div>
+                        <div class="nav-link-text">Wishlist</div>
+                    </a>
+                </div>
 
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
 <!-- Sidebar Offcanvas -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
+<div class="offcanvas offcanvas-start sidebar" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
     <div class="offcanvas-header">
         {% block sidebarTitle %}
             <h5 class="offcanvas-title" id="sidebarLabel">Filter by</h5>
         {% endblock %}
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <button type="button" class="btn-close text-reset text-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
 
-    <div class="offcanvas-body">
-        {% block sidebarBody %}
-        {% endblock %}
+        <div class="offcanvas-body" style="overflow-x: hidden;">
+            {% block sidebarBody %}
+            {% endblock %}
+        </div>
     </div>
-</div>
 
 </form>
 
