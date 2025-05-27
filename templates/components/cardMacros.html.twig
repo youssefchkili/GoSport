@@ -15,8 +15,8 @@
                 </div>
             {% endif %}
             <div class="card-body">
-                <h3 class="card-title" style="font-size: 1.2em;">{{ product.name }}</h3>
-                <h4 style="color:gray" class="p-2" style="font-size: 1.2em;">{{ product.slug }}</h4>
+                <h3 class="card-title" style="font-size: 1.2em;">{{ product.name }}</h5>
+                    <h4 style="color:gray" class="p-2" style="font-size: 1.2em;">{{ product.slug }}</h6>
             </div>
             <div class="position-absolute bottom-0 end-0 p-3">
                 {% if product.stockQuantity == 0 %}
@@ -44,20 +44,8 @@
             {% block wishlistHeart %}
                 <div class="position-absolute bottom-0 start-0 p-2">
                     <button class="btn text-danger heart" type="button" id="productBtn{{ product.id }}" style="border: 0;font-size: 25px;">
-                        <i class="bi
-                        {% if app.user
-                            and app.user.wishlist is not null
-                            and app.user.wishlist.products is not null
-                            and product in app.user.wishlist.products %}
-                            bi-heart-fill
-                        {% else %}
-                            bi-heart
-                        {% endif %}"
-                           id="heart{{ product.id }}"
-                           style="transition: all 0.2s ease; color: var(--primary-color);"
-                           onmouseover="this.style.filter='drop-shadow(0 0 20px red)';"
-                           onmouseout="this.style.filter='none';">
-                        </i>
+                        {# Fixed: Check if user exists, has wishlist, and then check if product is in wishlist #}
+                        <i class="bi {% if app.user and app.user.wishlist and app.user.wishlist.products and product in app.user.wishlist.products %}bi-heart-fill{% else %}bi-heart{% endif %}" id="heart{{ product.id }}" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 20px red)';" onmouseout="this.style.filter='none';"></i>
                     </button>
                 </div>
             {% endblock %}
