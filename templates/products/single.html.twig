@@ -67,7 +67,7 @@
                         <h1 class="decoration-bold mb-0" style="font-size: 2.5em;">{{ product.name|capitalize }}</h1>
                         <div class="p-3">
                             <button class="btn text-danger heart pl-20" id="productBtn" type="button" style="border: 0; font-size: 2.5em;">
-                                <i class="bi {% if app.user and product in app.user.wishlist.products %}bi-heart-fill{% else %}bi-heart{% endif %}" id="heart" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 5px red)'" onmouseout="this.style.filter='none'"></i>
+                                <i class="bi {% if app.user and app.user.wishlist and app.user.wishlist.products and product in app.user.wishlist.products %}bi-heart-fill{% else %}bi-heart{% endif %}" id="heart" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 5px red)'" onmouseout="this.style.filter='none'"></i>
                             </button>
                         </div>
                     </div>
