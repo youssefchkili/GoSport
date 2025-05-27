@@ -148,7 +148,7 @@
                                     <div class="w-10 h-10 bg-gray-100 rounded-md overflow-hidden">
                                         {% set firstImage = item.product.images|first %}
                                         {% if firstImage %}
-                                            <img src="{{ asset('uploads/products/' ~ firstImage.path) }}" alt="{{ item.product.name }}" class="w-full h-full object-cover" />
+                                            <img src="{{ asset('uploads/products/' ~ firstImage.imagePath) }}" alt="{{ item.product.name }}" class="w-full h-full object-cover" />
                                         {% else %}
                                             <div class="w-full h-full bg-gray-200"></div>
                                         {% endif %}

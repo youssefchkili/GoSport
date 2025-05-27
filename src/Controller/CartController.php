@@ -110,8 +110,15 @@ final class CartController extends AbstractController
             throw $this->createNotFoundException('Product not found.');
         }
 
-        $cart = $this->cartRepository->find(1);
-        $cartItem = $this->entityManager->getRepository(CartItem::class)->findOneBy(['cart_id' => $cart->getId(), 'product_id' => $product->getId()]);
+        $user = $this->getUser();
+
+        if (!$user) {
+            throw $this->createAccessDeniedException('You must be logged in to add items to the cart.');
+        }
+
+        $cart = $this->cartRepository->findOneBy(['user' => $user]);
+
+        $cartItem = $this->entityManager->getRepository(CartItem::class)->findOneBy(['cart' => $cart->getId(), 'product' => $product->getId()]);
         if($cartItem->getQuantity()>1){
             $cartItem->setQuantity($cartItem->getQuantity()-1);
         }else{
@@ -126,7 +133,15 @@ final class CartController extends AbstractController
     #[Route('/clear', name: 'cart_clear')]
     public function clear(): Response
     {
-        $cart = $this->cartRepository->find(1);
+        $user = $this->getUser();
+
+        if (!$user) {
+            throw $this->createAccessDeniedException('You must be logged in to add items to the cart.');
+        }
+
+        $cart = $this->cartRepository->findOneBy(['user' => $user]);
+
+
 
         foreach ($cart->getCartItems() as $item) {
             $this->entityManager->remove($item);
