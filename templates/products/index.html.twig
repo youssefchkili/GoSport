@@ -1,4 +1,5 @@
 {% extends 'coolBase.html.twig' %}
+{% import "components/cardMacros.html.twig" as components %}
 
 {% block title %}GoSport: All Products{% endblock %}
 
@@ -10,27 +11,25 @@
 {% endblock %}
 
     {% block sidebarBody %}
-        <div class="mb-3">
-            <button class="btn btn-outline-danger" type="button" data-bs-toggle="collapse" data-bs-target="#categoriesCollapse" aria-expanded="false" aria-controls="categoriesCollapse">
-                Categories
-            </button>
+        <div class="mb-3 w-80">
+            <button class="btn btn-danger" type="button" onclick="toggleCategories()">Categories</button>
 
-            <div class="collapse mt-2" id="categoriesCollapse">
-                <div class="p-3">
-                    {% if categories is defined %}
-                        {% for category in categories %}
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="categoryCheckbox{{ category.id }}" value="{{ category.id }}" {% if categoriesAllowed is not defined or category.id in categoriesAllowed %} checked {% endif %}>
-                                <label class="form-check-label" for="categoryCheckbox{{ category.id }}">{{ category.name }}</label>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
+            <div class="mt-2 pl-3" id="categoriesBox" style="overflow: hidden; height: 0; transition: height 0.3s ease;">
+                <div id="categoriesContent">
+                    {% for category in categories %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="categoryCheckbox{{ category.id }}" name="categoryCheckbox{{ category.id }}" value="{{ category.id }}"
+                                {% if categoriesAllowed is not defined or category.id in categoriesAllowed %} checked {% endif %}>
+                            <label class="form-check-label" for="categoryCheckbox{{ category.id }}">
+                                {{ category.name }}
+                            </label>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
 
-
-        <div class="container my-4">
+        <div class="container my-4" style="width: 90%;">
             <label for="price-slider" class="form-label">Price Range</label>
             <br>
             <br>
@@ -44,11 +43,9 @@
             </div>
         </div>
         {% block applyFilters %}
-        <a href="/products" style="position: absolute; bottom: 10px; right: 10px;">
-            <button class="btn btn-outline-danger" id="apply-btn" type="submit">
+            <button class="btn btn-danger" id="apply-btn" type="submit" style="float: right; border-radius: 50px 0 0 50px;">
                 Apply
             </button>
-        </a>
         {% endblock %}
 
     {% endblock %}
@@ -69,51 +66,7 @@
         <div class="container pt-20">
             <div class="row">
                 {% for product in products|slice((currentPage-1)*20, 20) %}
-                    <div class="col-md-3">
-                        <a href="/products/{{ product.id }}" class="text-decoration-none">
-                            <div class="card mb-4 p-3 position-relative">
-                                <img src=  "{% for image in product.images %}
-                                                {% if image.isPrimary %}
-                                                    {{ image.imagePath }}
-                                                {% endif %}
-                                            {% endfor %}"
-                                class="card-img-top">
-                                {% if product.discountpercent != 0 %}
-                                    <div class="big-badge">
-                                        {{ product.discountpercent }}% off
-                                    </div>
-                                {% endif %}
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ product.name }}</h5>
-                                    <h6 style="color:gray" class="p-2">{{ product.slug }}</h6>
-                                </div>
-                                <div class="position-absolute bottom-0 end-0 p-3">
-                                    {% if product.discountpercent == 0 %}
-                                        <h4>
-                                            {{ product.price }} DT
-                                        </h4>
-                                    {% else %}
-                                        <h4 style="display: inline-block; margin-right: 10px;">
-                                            {{ ( (product.price * (100 - product.discountpercent) / 100) )|number_format(2, '.', '') }} DT
-                                        </h4>
-                                        <h4 class="text-decoration-line-through" style="display: inline-block;color:RGB(255,102,102);">
-                                            {{ product.price }}DT
-                                        </h4>
-                                    {% endif %}
-                                    {% block crudButtons %}
-                                    {%  endblock %}
-                                </div>
-                                <br>
-                                {% block wishlistHeart %}
-                                <div class="position-absolute bottom-0 start-0 p-3">
-                                    <button class="btn text-danger heart" type="button" style="border: 0;font-size: 25px;">
-                                        <i class="bi bi-heart" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 20px red)';" onmouseout="this.style.filter='none';"></i>
-                                    </button>
-                                </div>
-                                {% endblock %}
-                            </div>
-                        </a>
-                    </div>
+                    {{ components.productCard(product) }}
                 {% endfor %}
             </div>
         </div>
@@ -123,22 +76,22 @@
         <nav aria-label="Page navigation" class="mt-4">
             <ul class="pagination justify-content-center">
                 {% if currentPage > 1 %}
-                    <li class="page-item">
-                        <a class="page-link text-danger" href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': currentPage - 1})) }}" aria-label="Previous">
+                    <li class="page-item p-0.5">
+                        <a class="pagination-knob page-link text-danger bg-dark rounded-circle d-flex align-items-center justify-content-center" href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': currentPage - 1})) }}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
                 {% endif %}
 
                 {% for page in 1..totalPages %}
-                    <li class="page-item">
-                        <a class="page-link text-danger{% if page == currentPage %} bg-danger text-white{% endif %}" href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': page})) }}">{{ page }}</a>
+                    <li class="page-item p-0.5">
+                        <a class="pagination-knob page-link text-danger rounded-circle d-flex align-items-center justify-content-center {% if page == currentPage %} bg-danger text-white{% else %} bg-dark {% endif %}" href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': page})) }}">{{ page }}</a>
                     </li>
                 {% endfor %}
 
                 {% if currentPage < totalPages %}
-                    <li class="page-item">
-                        <a class="page-link text-danger" href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': currentPage + 1})) }}" aria-label="Next">
+                    <li class="page-item p-0.5">
+                        <a class="pagination-knob page-link text-danger bg-dark rounded-circle d-flex align-items-center justify-content-center" href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': currentPage + 1})) }}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
@@ -185,5 +138,33 @@
             minPriceInput.value = values[0];
             maxPriceInput.value = values[1];
         });
+
+        let isExpanded = false;
+
+        function toggleCategories() {
+            const box = document.getElementById('categoriesBox');
+            const content = document.getElementById('categoriesContent');
+
+            if (!isExpanded) {
+                const contentHeight = content.offsetHeight;
+                box.style.height = contentHeight + "px";
+
+                // Once expanded, make height auto after transition
+                box.addEventListener("transitionend", function handler() {
+                    box.style.height = "auto";
+                    box.removeEventListener("transitionend", handler);
+                });
+            } else {
+                // Collapse: fix height first, then animate to 0
+                box.style.height = box.offsetHeight + "px"; // Fix current height
+                requestAnimationFrame(() => {
+                    box.style.height = "0";
+                });
+            }
+
+            isExpanded = !isExpanded;
+        }
+        
+        {{ components.heartsManager(products) }}
     </script>
 {% endblock %}

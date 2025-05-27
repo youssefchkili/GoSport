@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250513230811 extends AbstractMigration
+final class Version20250523224916 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -32,6 +32,15 @@ final class Version20250513230811 extends AbstractMigration
         $this->addSql(<<<'SQL'
             ALTER TABLE product ADD CONSTRAINT FK_D34A04AD9777D11E FOREIGN KEY (category_id_id) REFERENCES category (id)
         SQL);
+        $this->addSql(<<<'SQL'
+            ALTER TABLE user ADD wishlist_id INT DEFAULT NULL
+        SQL);
+        $this->addSql(<<<'SQL'
+            ALTER TABLE user ADD CONSTRAINT FK_8D93D649FB8E54CD FOREIGN KEY (wishlist_id) REFERENCES wish_list (id)
+        SQL);
+        $this->addSql(<<<'SQL'
+            CREATE UNIQUE INDEX UNIQ_8D93D649FB8E54CD ON user (wishlist_id)
+        SQL);
     }
 
     public function down(Schema $schema): void
@@ -48,6 +57,15 @@ final class Version20250513230811 extends AbstractMigration
         SQL);
         $this->addSql(<<<'SQL'
             ALTER TABLE product ADD CONSTRAINT FK_D34A04AD9777D11E FOREIGN KEY (category_id_id) REFERENCES category (id) ON UPDATE NO ACTION ON DELETE SET NULL
+        SQL);
+        $this->addSql(<<<'SQL'
+            ALTER TABLE `user` DROP FOREIGN KEY FK_8D93D649FB8E54CD
+        SQL);
+        $this->addSql(<<<'SQL'
+            DROP INDEX UNIQ_8D93D649FB8E54CD ON `user`
+        SQL);
+        $this->addSql(<<<'SQL'
+            ALTER TABLE `user` DROP wishlist_id
         SQL);
     }
 }

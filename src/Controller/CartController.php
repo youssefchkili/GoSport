@@ -9,6 +9,7 @@ use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 #[Route('/cart')]
@@ -58,8 +59,8 @@ final class CartController extends AbstractController
 
     }
 
-    #[Route('/add/{product_id}', name: 'cart_add')]
-    public function add($product_id, ProductRepository $productRepository): Response
+    #[Route('/add/{product_id}/{quantity}', name: 'cart_add')]
+    public function add($product_id, $quantity, ProductRepository $productRepository): JsonResponse
     {
         $user = $this->getUser();
 
@@ -97,7 +98,8 @@ final class CartController extends AbstractController
 
         $this->entityManager->flush();
 
-        return $this->redirectToRoute('cart_list');
+        //return $this->redirectToRoute('cart_list');
+        return new JsonResponse(['success' => true, 'message' => "success"]);
     }
 
 
