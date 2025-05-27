@@ -43,7 +43,7 @@
                             </div>
 
                             <div class="col-span-3 text-right font-medium">
-                                €{{ (item.product.price * item.quantity)|number_format(2, '.', ',') }}
+                                {{ (item.product.price * item.quantity)|number_format(2, '.', ',') }}DT
                             </div>
 
                             <div class="col-span-1 text-right">
@@ -80,25 +80,25 @@
                         <div class="space-y-4">
                             <div class="flex justify-between pb-4 border-b border-gray-700">
                                 <span>Subtotal</span>
-                                <span>€{{ total|number_format(2, '.', ',') }}</span>
+                                <span>{{ total|number_format(2, '.', ',') }}DT</span>
                             </div>
 
                             <div class="flex justify-between pb-4 border-b border-gray-700">
                                 <span>Tax</span>
-                                <span>€0.00</span>
+                                <span>0.00DT</span>
                             </div>
 
                             <div class="flex justify-between pb-4 border-b border-gray-700">
                                 <div>
-                                    <div>Shipping in EU</div>
+                                    <div>Shipping in DT</div>
                                     <div class="text-sm text-gray-400 mt-1">We only charge shipping over 2kg</div>
                                 </div>
-                                <span>€19.00</span>
+                                <span>19.00DT</span>
                             </div>
 
                             <div class="flex justify-between pt-2 font-bold">
                                 <span>Total</span>
-                                <span>€{{ (total + 19)|number_format(2, '.', ',') }}</span>
+                                <span>{{ (total + 19)|number_format(2, '.', ',') }}DT</span>
                             </div>
                         </div>
 

@@ -86,13 +86,13 @@ final class CartController extends AbstractController
 
         $existingItem = $this->entityManager->getRepository(CartItem::class)->findOneBy(['cart' => $cart, 'product' => $product]);
         if($existingItem) {
-           $existingItem->setQuantity($existingItem->getQuantity() + 1);
+           $existingItem->setQuantity($existingItem->getQuantity() + $quantity);
 
         }else{
             $cartItem = new CartItem();
             $cartItem->setProduct($product);
             $cartItem->setCart($cart);
-            $cartItem->setQuantity(1);
+            $cartItem->setQuantity($quantity);
             $this->entityManager->persist($cartItem);
         }
 
