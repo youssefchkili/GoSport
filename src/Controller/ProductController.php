@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ProductController extends AbstractController
 {
     #[Route(name: 'app_product_index', methods: ['GET'])]
-    public function RawProducts(ManagerRegistry $manager, Request $request): Response
+    public function RawwProduct(ManagerRegistry $manager, Request $request): Response
     {
         $doctrine = $manager->getManager();
         $productRepository = $doctrine->getRepository('App\Entity\Product');
@@ -37,9 +37,12 @@ final class ProductController extends AbstractController
             'currentPage' => $request->get('page') == null ? 1 : $request->get('page'),
         ]);
     }
-    #[Route('/byFilter',name: 'app_product_index_byFilters', methods: ['GET'])]
-    public function ProductsByFilters(ManagerRegistry $manager, Request $request): Response
+    #[Route('/byFilters',name: 'app_product_index_byFilters', methods: ['GET'])]
+    public function ProductByFilters(ManagerRegistry $manager, Request $request): Response
     {
+        if ($request->get('min-price') == null) {
+            return $this->ProductByKeyWord($manager, $request);
+        }
         $doctrine = $manager->getManager();
         $productRepository = $doctrine->getRepository('App\Entity\Product');
         $categoryRepository = $doctrine->getRepository('App\Entity\Category');
@@ -71,7 +74,36 @@ final class ProductController extends AbstractController
             'currentPage' => $request->get('page') == null ? 1 : $request->get('page'),
         ]);
     }
+    #[Route('/byKeyWord', name: 'app_product_index_byKeyWord')]
+    public function ProductByKeyWord(ManagerRegistry $manager, Request $request): Response
+    {
+        $doctrine = $manager->getManager();
+        $productRepository = $doctrine->getRepository('App\Entity\Product');
+        $categoryRepository = $doctrine->getRepository('App\Entity\Category');
 
+        $categories = $categoryRepository->findAll();
+        $categoriesAllowed = [];
+        foreach ($categories as $category) {
+            $categoriesAllowed[] = $category->getId();
+        }
+
+        $priceRange = $productRepository->getPriceRange();
+        $products = $productRepository->findByFilters($request->get('keyWord'), $priceRange[0]['minPrice'], $priceRange[0]['maxPrice'], $categoriesAllowed);
+
+        return $this->render('product/index.html.twig', [
+            'controller_name' => 'ProductController',
+            'products' => $products,
+            'categories' => $categories,
+            'minPrice' => $priceRange[0]['minPrice'],
+            'maxPrice' => $priceRange[0]['maxPrice'],
+            'keyWord' => $request->get('keyWord'),
+            'minPriceInput' => $priceRange[0]['minPrice'],
+            'maxPriceInput' => $priceRange[0]['maxPrice'],
+            'categoriesAllowed' => $categoriesAllowed,
+            'totalPages' => is_countable($products) ? ceil(count($products) / 20) : 0,
+            'currentPage' => $request->get('page') == null ? 1 : $request->get('page'),
+        ]);
+    }
 
 
     #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
@@ -100,7 +132,7 @@ final class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
+    #[Route('/{id<\d+>}', name: 'app_product_show', methods: ['GET'])]
     public function show(Product $product): Response
     {
         return $this->render('product/show.html.twig', [
@@ -108,7 +140,7 @@ final class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id<\d+>}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Product $product, EntityManagerInterface $entityManager, MailerService $mailer): Response
     {
         $oldProduct = clone $product;
@@ -148,7 +180,7 @@ final class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_product_delete', methods: ['POST'])]
+    #[Route('/{id<\d+>}', name: 'app_product_delete', methods: ['POST'])]
     public function delete(Request $request, Product $product, EntityManagerInterface $entityManager, ProductRepository $productRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->getPayload()->getString('_token'))) {

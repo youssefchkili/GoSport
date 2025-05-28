@@ -3,11 +3,17 @@
 {% block title %}Edit ProductImage{% endblock %}
 
 {% block body %}
-    <h1>Edit ProductImage</h1>
+    <div class="d-flex flex-column align-items-center gap-3 mb-4">
+        <h1 class="display-3">Edit Product image</h1>
+    </div>
 
     {{ include('product_image/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_product_image_index', {'product':product.id}) }}">back to list</a>
+<div class="d-flex justify-content-center gap-2">
+    <a href="{{ path('app_product_image_index', {'product': product.id}) }}"
+       class="btn btn-secondary d-flex align-items-center">
+        Back to list
+    </a>
+</div>
 
     {{ include('product_image/_delete_form.html.twig') }}
 {% endblock %}
