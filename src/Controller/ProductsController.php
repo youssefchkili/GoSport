@@ -14,6 +14,8 @@ final class ProductsController extends AbstractController
     #[Route('/products', name: 'app_products')]
     public function RawProducts(ManagerRegistry $manager, Request $request): Response
     {   
+        //dd($this->getUser()->getCart()->getCartItems()->get(0));
+
         $doctrine = $manager->getManager();
         $productRepository = $doctrine->getRepository('App\Entity\Product');
         $categoryRepository = $doctrine->getRepository('App\Entity\Category');

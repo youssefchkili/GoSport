@@ -45,6 +45,7 @@ class Cart
     public function setUser(User $user): static
     {
         $this->user = $user;
+        $user->setCart($this);
 
         return $this;
     }

@@ -198,20 +198,32 @@
 
             <!-- Shopping Cart -->
             <div class="nav-item text-center">
-                <a class="nav-link text-decoration-none" href="/products">
+                <a class="nav-link text-decoration-none" href="/cart/list">
                     <div class="nav-icon cart-icon text-black">
                         <i class="bi bi-bag text-white"></i>
-                        <span class="cart-badge">
-                            {% if app.session.get('user') is not null and app.session.get('cartItemsCount') is defined %}
-                                {{ app.session.get('cartItemsCount') }}
+                        
+                        <span class="cart-badge" id="cart-count">
+                            {% if app.user is not null and app.user.getCart() is defined %}
+                                {{ app.user.getCart().getCartItems()|map(item => item.getQuantity())|reduce((carry, qty) => carry + qty, 0) }}
                             {% else %}
                                 0
                             {% endif %}
                         </span>
-                        </div>
-                        <div class="nav-link-text">Cart</div>
-                    </a>
+                    </div>
+                    <div class="nav-link-text">Cart</div>
+                </a>
+            </div>
+            {% if app.user and app.user.getCart() is defined %}
+                <div class="pl-2" >
+                    <span id="cart-total">
+                        {{ (app.user.getCart().getCartItems()
+                            |map(item => item.getQuantity() * (item.getProduct.getPrice() * (1 - item.getProduct().getDiscountPercent()/100)))
+                            |reduce((carry, qty) => carry + qty, 0)
+                            )|number_format(2, '.', '') }}
+                    </span>
+                    DT
                 </div>
+            {% endif %}
 
                 <!-- wishlist -->
                 <div class="pl-4 nav-item text-center">

@@ -26,6 +26,8 @@ class MailerService
 
         $this->mailer->send($email);
     }
+    //use this command to run the mailer service worker
+    // php bin/console messenger:consume async -vv
 }
 
 ?>

@@ -162,7 +162,7 @@ final class ProductController extends AbstractController
                             <body>
                                 <h2>Good news!</h2>
                                 <p>The product <strong>" . htmlspecialchars($product->getName()) . "</strong> is now on sale.</p>
-                                <a href='" . $this->generateUrl('app_product_single', ['id' => $product->getId()], 0) . "'>You might want to check it out!</a>
+                                <a href='" . $this->generateUrl('app_product_single', ['product' => $product->getId()], 0) . "'>You might want to check it out!</a>
                             </body>
                         </html>"
                     );
