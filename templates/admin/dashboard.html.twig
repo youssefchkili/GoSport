@@ -1,0 +1,184 @@
+{% extends '@EasyAdmin/layout.html.twig' %}
+
+{% block header_logo %}
+    <a class="logo" title="{{ ea.dashboardTitle|striptags }}" href="{{ path(ea.dashboardRouteName) }}">
+        <img src="{{ asset('images/logo.png') }}" alt="GoSport Logo" style="height: 40px; width: auto; margin-right: 10px;">
+        <span class="logo-custom">{{ ea.dashboardTitle|raw }}</span>
+    </a>
+{% endblock %}
+
+{% block head_stylesheets %}
+    {{ parent() }}
+    <style>
+        .logo-custom {
+            font-weight: bold;
+            color: #000;
+            font-size: 1.2rem;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none !important;
+        }
+        .logo:hover {
+            text-decoration: none !important;
+        }
+    </style>
+{% endblock %}
+{% block content_title 'Dashboard' %}
+
+{% block main %}
+    <div class="row">
+        {# Statistics cards #}
+        <div class="col-12 col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body bg-light">
+                    <div class="row align-items-center">
+                        <div class="col-4 text-center">
+                        <span class="text-danger" style="font-size: 2rem;">
+                            <i class="fas fa-box"></i>
+                        </span>
+                        </div>
+                        <div class="col-8">
+                            <h3 class="mb-0">{{ totalProducts }}</h3>
+                            <p class="text-muted mb-0">Total Products</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body bg-light">
+                    <div class="row align-items-center">
+                        <div class="col-4 text-center">
+                        <span class="text-danger" style="font-size: 2rem;">
+                            <i class="fas fa-users"></i>
+                        </span>
+                        </div>
+                        <div class="col-8">
+                            <h3 class="mb-0">{{ totalUsers }}</h3>
+                            <p class="text-muted mb-0">Registered Users</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body bg-light">
+                    <div class="row align-items-center">
+                        <div class="col-4 text-center">
+                        <span class="text-danger" style="font-size: 2rem;">
+                            <i class="fas fa-shopping-cart"></i>
+                        </span>
+                        </div>
+                        <div class="col-8">
+                            <h3 class="mb-0">{{ totalOrders }}</h3>
+                            <p class="text-muted mb-0">Total Orders</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Charts row #}
+    <div class="row mb-4">
+        <div class="col-12 col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Sales Statistics (Last 7 Days)</h5>
+                </div>
+                <div class="card-body">
+                    {% if salesChart %}
+                        {{ render_chart(salesChart) }}
+                    {% else %}
+                        <div class="alert alert-info">
+                            Install symfony/ux-chartjs for sales visualization.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Out of Stock Products</h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% if lowStockProducts|length > 0 %}
+                            {% for product in lowStockProducts %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ product.name }}
+                                    <span class="badge bg-danger rounded-pill">{{ product.stockQuantity }}</span>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="list-group-item">No out of stock products found</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Recent Orders #}
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Recent Orders</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Order #</th>
+                                <th>Date</th>
+                                <th>Customer</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                                
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if recentOrders|length > 0 %}
+                                {% for order in recentOrders %}
+                                    <tr>
+                                        <td>#{{ order.orderNumber }}</td>
+                                        <td>{{ order.createdAt|date('Y-m-d H:i') }}</td>
+                                        <td>{{ order.userId.email }}</td>
+                                        <td>
+                                            <span class="badge {% if order.status == 'completed' %}bg-success{% elseif order.status == 'processing' %}bg-warning{% else %}bg-danger{% endif %}">
+                                                {{ order.status|capitalize }}
+                                            </span>
+                                        </td>
+                                        <td>${{ order.total }}</td>
+                                        
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="6" class="text-center py-3">No recent orders found</td>
+                                </tr>
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    {# Updated to use your existing OrderController #}
+                    <a href="{{ path('app_order_index') }}" class="btn btn-outline-primary">
+                        View All Orders
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

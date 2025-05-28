@@ -87,6 +87,93 @@ class ProductRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+    /**
+     * Find featured products
+     *
+     * @param int $limit The maximum number of products to return
+     * @return Product[]
+     */
+    public function findFeaturedProducts(int $limit = 4): array
+    {
+        // Check if isFeatured property exists in your Product entity
+        // If not, you might need to modify this query
+        $qb = $this->createQueryBuilder('p');
+
+        // If your Product entity has isFeatured property
+        if (property_exists('App\Entity\Product', 'isFeatured')) {
+            $qb->where('p.isFeatured = :featured')
+                ->setParameter('featured', true);
+        }
+
+        // If your Product entity has isActive property
+        if (property_exists('App\Entity\Product', 'isActive')) {
+            $qb->andWhere('p.isActive = :active')
+                ->setParameter('active', true);
+        }
+
+        $qb->orderBy('p.id', 'DESC')
+            ->setMaxResults($limit);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Find latest products
+     *
+     * @param int $limit The maximum number of products to return
+     * @return Product[]
+     */
+    public function findLatestProducts(int $limit = 4): array
+    {
+        $qb = $this->createQueryBuilder('p');
+
+        // If your Product entity has isActive property
+        if (property_exists('App\Entity\Product', 'isActive')) {
+            $qb->where('p.isActive = :active')
+                ->setParameter('active', true);
+        }
+
+        // Use createdAt if it exists, otherwise fall back to id
+        if (property_exists('App\Entity\Product', 'createdAt')) {
+            $qb->orderBy('p.createdAt', 'DESC');
+        } else {
+            $qb->orderBy('p.id', 'DESC');
+        }
+
+        $qb->setMaxResults($limit);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Find products with discount (for best selling simulation)
+     */
+    public function findBestSelling(int $limit = 4): array
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.discount_percent > 0')
+            ->orderBy('p.discount_percent', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Find products by category for filtering
+     */
+    public function findByCategoryId(int $categoryId, int $limit = null): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.category_id = :categoryId')
+            ->setParameter('categoryId', $categoryId)
+            ->orderBy('p.id', 'DESC');
+        
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+        
+        return $qb->getQuery()->getResult();
+    }
 
 
 
