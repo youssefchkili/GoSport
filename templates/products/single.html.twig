@@ -133,9 +133,8 @@
                             <i class="bi bi-bag"></i> Add to Cart
                         </button>
                     </div>
-                    {% if alreadyInCart > 0 %}
-                        <h3 class="text_white pt-2 pl-5" style="color: rgb(180,180,180)">you already have <span id="alreadyInCartSpan">{{ alreadyInCart }}</span> of this product in your cart </h3>
-                    {% endif %}
+
+                    <h3 class="pt-2 pl-5" id="alreadyInCartContainer" style="color: rgb(180,180,180);{% if alreadyInCart == 0 %}visibility:hidden;{% endif %}">you already have <span id="alreadyInCartSpan">{{ alreadyInCart }}</span> of this product in your cart </h3>
                 </div>
             </div>
             <div class="col-12 my-5">
@@ -214,11 +213,15 @@
             {% if app.user %}
                 document.getElementById("cart-count").textContent = parseInt(document.getElementById("cart-count").textContent, 10) + parseInt(document.getElementById("quantity").value, 10);
                 document.getElementById("cart-total").textContent = parseFloat(document.getElementById("cart-total").textContent) + parseFloat(document.getElementById("price").textContent) * parseInt(document.getElementById("quantity").value, 10);
+                document.getElementById("cart-total").textContent = parseFloat(document.getElementById("cart-total").textContent).toFixed(2);
                 document.getElementById("quantity").max = document.getElementById("quantity").max - document.getElementById("quantity").value;
-                document.getElementById("alreadyInCartSpan").textContent = {{ alreadyInCart }} + parseInt(document.getElementById("quantity").value, 10);
+                document.getElementById("alreadyInCartSpan").textContent = parseInt(document.getElementById("alreadyInCartSpan").textContent, 10) + parseInt(document.getElementById("quantity").value, 10);
                 if (document.getElementById("quantity").max == 0){
                     document.getElementById("addToCartBtn").disabled = true;
                     document.getElementById("quantity").disabled = true;
+                }
+                if(document.getElementById("alreadyInCartContainer").style.visibility == "hidden"){
+                    document.getElementById("alreadyInCartContainer").style.visibility = "visible";
                 }
             {% endif %}
             fetch('/cart/add/{{ product.id }}/' + document.getElementById("quantity").value, {
