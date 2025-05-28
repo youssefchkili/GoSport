@@ -15,6 +15,27 @@ class OrderRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Order::class);
     }
+    public function getDailySalesTotal(string $date): ?float
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        
+        $sql = '
+            SELECT SUM(total) as daily_total
+            FROM `order`
+            WHERE DATE(created_at) = :date
+            AND status = :status
+        ';
+        
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'date' => $date,
+            'status' => 'completed'
+        ]);
+        
+        $result = $resultSet->fetchAssociative();
+        
+        return $result['daily_total'] ?? 0;
+    }
 
 //    /**
 //     * @return Order[] Returns an array of Order objects
