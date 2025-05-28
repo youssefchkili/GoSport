@@ -58,6 +58,9 @@
             {% if app.user %}
                 document.getElementById("heart{{ product.id }}").classList.toggle("bi-heart");
                 document.getElementById("heart{{ product.id }}").classList.toggle("bi-heart-fill");
+            {% else %}
+                window.location.href = '/login';
+                return;
             {% endif %}
             fetch('/wishlist/toggle/{{ product.id }}', {
                 method: 'POST',
