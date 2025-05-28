@@ -99,9 +99,9 @@
                     </h1>
                     <div class="d-flex align-items-center pt-3">
                         <h1 class="text-white" style="font-size: 1.5em;">Quantity:</h1>
-                        <input type="number" class="form-control mx-3 bg-dark text-white" id="quantity" name="quantity" value="1" min="1" max="{{ product.stockQuantity }}" style="width: 100px;border:1px solid RGB(100,100,100);">
-
-                        <button class="btn btn-danger" id="addToCartBtn" type="button" style="font-size: 1.5em;">
+                        <input type="number" class="form-control mx-3 bg-dark text-white" id="quantity" name="quantity" value="1" min="1" max="{{ product.stockQuantity }}" style="width: 100px;border:1px solid RGB(100,100,100);" {% if product.stockQuantity == 0 %}disabled{% endif %}>
+    
+                        <button class="btn btn-danger" id="addToCartBtn" type="button" style="font-size: 1.5em;" {% if product.stockQuantity == 0 %}disabled{% endif %}>
                             <i class="bi bi-bag"></i> Add to Cart
                         </button>
                     </div>
@@ -199,29 +199,24 @@
             {% if app.user %}
             document.getElementById("heart").classList.toggle("bi-heart");
             document.getElementById("heart").classList.toggle("bi-heart-fill");
-            {% endif %}
-            fetch('/wishlist/toggle/{{ product.id }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-                body: JSON.stringify({})
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        //alert(data.message);
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        });
-        {{ components.heartsManager(products) }}
-        //TODO: include the card loader from the index page :: DONE
-        //TODO: fix the categories filter :: DONE
-        //TODO: not show the current product in the related product :: DONE
-        //TODO: pull the right stach of products in the whishlist and put it in dark mode :: DONE
-        //TODO: when hovering over a categorie in sidebar a box should show up with description
-
-    </script>
+        {% endif %}
+        fetch('/wishlist/toggle/{{ product.id }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                //alert(data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+    {{ components.heartsManager(products) }}
+    
+</script>
 {% endblock %}

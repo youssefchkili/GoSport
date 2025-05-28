@@ -57,25 +57,28 @@
 {% macro heartsManager(products) %}
     {% for product in products %}
         document.getElementById("productBtn{{ product.id }}").addEventListener('click', function () {
-        {% if app.user %}
-            document.getElementById("heart{{ product.id }}").classList.toggle("bi-heart");
-            document.getElementById("heart{{ product.id }}").classList.toggle("bi-heart-fill");
-        {% endif %}
-        fetch('/wishlist/toggle/{{ product.id }}', {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest',
-        },
-        body: JSON.stringify({})
-        })
-        .then(response => response.json())
-        .then(data => {
-        if (data.success) {
-        //alert(data.message);
-        }
-        })
-        .catch(error => console.error('Error:', error));
+            {% if app.user %}
+                document.getElementById("heart{{ product.id }}").classList.toggle("bi-heart");
+                document.getElementById("heart{{ product.id }}").classList.toggle("bi-heart-fill");
+            {% else %}
+                window.location.href = '/login';
+                return;
+            {% endif %}
+            fetch('/wishlist/toggle/{{ product.id }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    //alert(data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
         });
     {% endfor %}
 {% endmacro %}
