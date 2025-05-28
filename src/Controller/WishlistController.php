@@ -57,11 +57,13 @@ final class WishlistController extends AbstractController
             $doctrine->persist($wishlist);
             $doctrine->flush();
             // Send email notification just for testing mailer service, should not sent notification
+            /*
             $mailer->sendEmail(
                 $user->getEmail(),
                 'Wishlist Update',
                 "" . $message . " for product: " . $product->getName()
             );
+            */
         }
         return new JsonResponse(['success' => true, 'message' => $message]);
     }

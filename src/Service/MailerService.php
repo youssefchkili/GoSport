@@ -11,7 +11,7 @@ class MailerService
     public function sendEmail(
         $to,
         $subject = 'Default Subject',
-        $text = 'Default text content',
+        $html = '<h1>Default HTML Content</h1>',
     ): void
     {
         $email = (new Email())
@@ -22,7 +22,7 @@ class MailerService
             //->replyTo('fabien@example.com')
             //->priority(Email::PRIORITY_HIGH)
             ->subject($subject)
-            ->html('<html><body><h2>' . htmlspecialchars($subject) . '</h2><p>' . nl2br(htmlspecialchars($text)) . '</p></body></html>');
+            ->html($html);
 
         $this->mailer->send($email);
     }

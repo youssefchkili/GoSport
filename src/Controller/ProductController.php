@@ -6,6 +6,7 @@ use App\Entity\Product;
 use App\Form\ProductForm;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
+use App\Service\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
@@ -108,8 +109,9 @@ final class ProductController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Product $product, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Product $product, EntityManagerInterface $entityManager, MailerService $mailer): Response
     {
+        $oldProduct = clone $product;
         $form = $this->createForm(ProductForm::class, $product);
         $form->handleRequest($request);
 
@@ -118,6 +120,21 @@ final class ProductController extends AbstractController
                 $newCategory = $form->get('newCategory')->getData();
                 $entityManager->persist($newCategory);
                 $product->setCategoryId($newCategory);
+            }
+            if ($oldProduct->getDiscountPercent() < $product->getDiscountPercent()) {
+                foreach($product->getWishlist() as $wishlist) { // should've been plural
+                    $mailer->sendEmail(
+                        $wishlist->getUser()->getEmail(),
+                        'Product On Sale',
+                        "<html>
+                            <body>
+                                <h2>Good news!</h2>
+                                <p>The product <strong>" . htmlspecialchars($product->getName()) . "</strong> is now on sale.</p>
+                                <a href='" . $this->generateUrl('app_product_single', ['id' => $product->getId()], 0) . "'>You might want to check it out!</a>
+                            </body>
+                        </html>"
+                    );
+                }
             }
 
             $entityManager->flush();
