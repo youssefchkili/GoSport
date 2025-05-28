@@ -16,6 +16,18 @@ class OrderRepository extends ServiceEntityRepository
         parent::__construct($registry, Order::class);
     }
 
+    public function getLastByUser($user): ?Order
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.user_id = :id')
+            ->setParameter('id', $user->getId())
+            ->orderBy('o.created_at', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleResult()
+            ;
+    }
+
 //    /**
 //     * @return Order[] Returns an array of Order objects
 //     */

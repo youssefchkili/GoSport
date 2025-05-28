@@ -1,0 +1,62 @@
+{% extends 'coolbase.html.twig' %}
+
+{% block body %}
+    <div class="max-w-6xl mx-auto p-4 font-sans">
+        <h1 class="text-2xl font-bold mb-8">Stripe Payment</h1>
+
+        <!-- Form for Stripe -->
+        <form id="payment-form">
+            <label for="card-element" class="block text-lg font-medium mb-2">Carte bancaire</label>
+            <div id="card-element" class="border p-3 rounded-md"></div> <!-- Stripe inserts the card input -->
+
+            <!-- Error Message -->
+            <div id="card-errors" class="text-red-500 mt-2" role="alert"></div>
+
+            <button id="submit-button" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition mt-4">
+                Confirmer et Payer
+            </button>
+        </form>
+    </div>
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        // Étape 1 : Initialisation de Stripe avec la clé publique
+        const stripe = Stripe("pk_test_oKhSR5nslBRnBZpjO6KuzZeX"); // Remplacez par votre propre clé publique
+        const elements = stripe.elements();
+        const cardElement = elements.create('card');
+        cardElement.mount('#card-element'); // Insère l'input Stripe sur la page
+
+        const form = document.getElementById('payment-form');
+        const submitButton = document.getElementById('submit-button');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            // Étape 2 : Appelez votre backend pour obtenir un clientSecret
+            const response = await fetch('/payment/create-intent', { method: 'POST' });
+            const data = await response.json();
+
+            if (!data.clientSecret) {
+                document.getElementById('card-errors').textContent = 'Erreur : Impossible de créer un PaymentIntent.';
+                return;
+            }
+
+            const clientSecret = data.clientSecret;
+
+            // Étape 3 : Soumettez le paiement au backend via Stripe
+            const { error } = await stripe.confirmCardPayment(clientSecret, {
+                payment_method: {
+                    card: cardElement,
+                },
+            });
+
+            if (error) {
+                // Affiche les erreurs si le paiement échoue
+                document.getElementById('card-errors').textContent = error.message;
+            } else {
+                // Redirection en cas de succès
+                window.location.href = /payment/success;
+            }
+        });
+    </script>
+{% endblock %}
