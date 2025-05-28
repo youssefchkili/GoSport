@@ -1,0 +1,208 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Coupon Management{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Coupon Management</h1>
+        <div>
+            <a href="{{ path('app_coupon_admin_new') }}" class="btn btn-success me-2">
+                <i class="fas fa-plus"></i> Create New Coupon
+            </a>
+            <a href="{{ path('admin') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>{{ coupons|length }}</h4>
+                            <p class="mb-0">Total Coupons</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-tags fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>{{ coupons|filter(c => c.isActive)|length }}</h4>
+                            <p class="mb-0">Active Coupons</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>{{ coupons|filter(c => c.validUntil and c.validUntil < date())|length }}</h4>
+                            <p class="mb-0">Expired Coupons</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>{{ products|length }}</h4>
+                            <p class="mb-0">Products with Coupons</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-box fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Coupons Table -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">All Coupons</h5>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-sm btn-outline-light" onclick="filterCoupons('all')">All</button>
+                <button type="button" class="btn btn-sm btn-outline-light" onclick="filterCoupons('active')">Active</button>
+                <button type="button" class="btn btn-sm btn-outline-light" onclick="filterCoupons('expired')">Expired</button>
+                <button type="button" class="btn btn-sm btn-outline-light" onclick="filterCoupons('inactive')">Inactive</button>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0" id="couponsTable">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Code</th>
+                            <th>Product</th>
+                            <th>Discount</th>
+                            <th>Valid Until</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for coupon in coupons %}
+                            {% set isExpired = coupon.validUntil and coupon.validUntil < date() %}
+                            <tr data-status="{% if not coupon.isActive %}inactive{% elseif isExpired %}expired{% else %}active{% endif %}">
+                                <td>
+                                    <code class="bg-light p-1">{{ coupon.code }}</code>
+                                    <button class="btn btn-sm btn-outline-secondary ms-1" onclick="copyToClipboard('{{ coupon.code }}')" title="Copy code">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <a href="{{ path('app_product_show', {'id': coupon.product.id}) }}" class="text-decoration-none">
+                                        {{ coupon.product.name }}
+                                    </a>
+                                </td>
+                                <td>
+                                    {% if coupon.discountType == 'percentage' %}
+                                        <span class="badge bg-info">{{ coupon.discountValue }}%</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">${{ coupon.discountValue|number_format(2) }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if coupon.validUntil %}
+                                        {{ coupon.validUntil|date('Y-m-d H:i') }}
+                                        {% if isExpired %}
+                                            <small class="text-danger">(Expired)</small>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-muted">No expiry</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not coupon.isActive %}
+                                        <span class="badge bg-secondary">Inactive</span>
+                                    {% elseif isExpired %}
+                                        <span class="badge bg-danger">Expired</span>
+                                    {% else %}
+                                        <span class="badge bg-success">Active</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ coupon.createdAt ? coupon.createdAt|date('Y-m-d H:i') : 'N/A' }}</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ path('app_coupon_admin_edit', {'id': coupon.id}) }}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form method="post" action="{{ path('app_coupon_admin_delete', {'id': coupon.id}) }}" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this coupon?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ coupon.id) }}">
+                                            <button class="btn btn-sm btn-outline-danger" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center py-4 text-muted">
+                                    <i class="fas fa-tags fa-3x mb-3"></i>
+                                    <br>
+                                    No coupons found. <a href="{{ path('app_coupon_admin_new') }}">Create your first coupon</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+        // You could add a toast notification here
+        alert('Coupon code copied to clipboard!');
+    });
+}
+
+function filterCoupons(status) {
+    const table = document.getElementById('couponsTable');
+    const rows = table.querySelectorAll('tbody tr');
+    
+    rows.forEach(row => {
+        if (status === 'all') {
+            row.style.display = '';
+        } else {
+            const rowStatus = row.getAttribute('data-status');
+            row.style.display = rowStatus === status ? '' : 'none';
+        }
+    });
+    
+    // Update active button
+    document.querySelectorAll('.btn-group button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+}
+</script>
+{% endblock %}
