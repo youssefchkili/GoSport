@@ -43,7 +43,7 @@
                             </div>
 
                             <div class="col-span-3 text-right font-medium">
-                                €{{ (item.product.price * item.quantity)|number_format(2, '.', ',') }}
+                                {{ (item.product.price * item.quantity)|number_format(2, '.', ',') }}DT
                             </div>
 
                             <div class="col-span-1 text-right">
@@ -62,7 +62,7 @@
                                 <input type="text" name="coupon" placeholder="Enter coupon code"
                                        class="w-full md:w-72 py-3 px-4 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <button type="submit"
-                                        class="mt-2 md:mt-0 md:absolute md:right-0 md:top-0 md:bottom-0 bg-gray-900 text-white rounded-md px-6 py-3 font-medium md:rounded-l-none">
+                                        class="mt-2 md:mt-0 md:absolute md:right-0 md:top-0 md:bottom-0 bg-gray-900 text-white rounded-md px-6 py-3 font-medium md:rounded-l-none" style="background-color: var(--primary-color);">
                                     Apply coupon
                                 </button>
                             </div>
@@ -80,30 +80,30 @@
                         <div class="space-y-4">
                             <div class="flex justify-between pb-4 border-b border-gray-700">
                                 <span>Subtotal</span>
-                                <span>€{{ total|number_format(2, '.', ',') }}</span>
+                                <span>{{ total|number_format(2, '.', ',') }}DT</span>
                             </div>
 
                             <div class="flex justify-between pb-4 border-b border-gray-700">
                                 <span>Tax</span>
-                                <span>€0.00</span>
+                                <span>0.00DT</span>
                             </div>
 
                             <div class="flex justify-between pb-4 border-b border-gray-700">
                                 <div>
-                                    <div>Shipping in EU</div>
+                                    <div>Shipping in DT</div>
                                     <div class="text-sm text-gray-400 mt-1">We only charge shipping over 2kg</div>
                                 </div>
-                                <span>€19.00</span>
+                                <span>19.00DT</span>
                             </div>
 
                             <div class="flex justify-between pt-2 font-bold">
                                 <span>Total</span>
-                                <span>€{{ (total + 19)|number_format(2, '.', ',') }}</span>
+                                <span>{{ (total + 19)|number_format(2, '.', ',') }}DT</span>
                             </div>
                         </div>
 
                         <a href="{{ path('cart_checkout') }}">
-                            <button class="w-full bg-white text-gray-900 rounded-md py-4 font-medium mt-6 hover:bg-gray-100 transition">
+                            <button  class="w-full  text-white rounded-md py-4 font-medium mt-6 hover:bg-gray-100 transition" style="background-color: var(--primary-color);">
                                 Continue to Payment
                             </button>
                         </a>
@@ -112,4 +112,5 @@
             {% endif %}
         </div>
     </div>
+
 {% endblock %}
