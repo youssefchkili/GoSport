@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Coupon{% endblock %}
+
+{% block body %}
+<div class="d-flex flex-column align-items-center gap-3 mb-4">
+    <h1 class="display-4">Create new Coupons</h1>
+</div>
+    {{ include('coupon/_form.html.twig') }}
+<div class="container">
+    <a href="{{ path('app_coupon_index', {'product': product.id}) }}" class="btn btn-secondary">back to list</a>
+</div>
+{% endblock %}

@@ -3,9 +3,12 @@
 {% block title %}New ProductImage{% endblock %}
 
 {% block body %}
-    <h1>Create new ProductImage</h1>
+    <div class="text-center mb-4">
+        <h1 class="display-4">add new product</h1>
+    </div>
 
     {{ include('product_image/_form.html.twig') }}
-
-    <a href="{{ path('app_product_image_index' , {'product':product.id}) }}">back to list</a>
+    <div class="container">
+        <a href="{{ path('app_product_image_index' , {'product':product.id}) }}" class="btn btn-secondary">back to list</a>
+    </div>
 {% endblock %}

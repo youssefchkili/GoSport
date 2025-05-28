@@ -5,12 +5,11 @@
         {{ form_start(form) }}
             <div class="mb-3">
                 {{ form_widget(form) }}
-
             </div>
-                <button class="btn btn-primary">
-                    {{ button_label|default('Save') }}
-                </button>
-            {{ form_end(form) }}
+            <button class="btn btn-primary">
+                {{ button_label|default('Save') }}
+            </button>
+        {{ form_end(form) }}
         </div>
     </div>
 </div>
