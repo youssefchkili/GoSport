@@ -6,6 +6,8 @@
                                 {% if image.isPrimary %}
                                     {{ image.imagePath }}
                                 {% endif %}
+                            {% else %}
+                                {{ asset('images/products/noimage.jpg') }}
                             {% endfor %}"
                      class="card-img-top costum-card-img" onerror="this.onerror=null;this.src='https://i.imgur.com/EJLFNOw.jpg';">
             </a>

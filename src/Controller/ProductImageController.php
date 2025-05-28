@@ -58,7 +58,7 @@ final class ProductImageController extends AbstractController
             }
             else
             {
-                $filename='bestPlayerRightNow.jpg';
+                $filename='noimage.jpg';
                 $productImage->setImagePath($this->getParameter('web_uploads_path').'/'.$filename);
             }
 
