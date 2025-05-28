@@ -144,7 +144,10 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/knplabs/knp-paginator-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-uuid" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/uid" />
+<<<<<<< HEAD
       <excludeFolder url="file://$MODULE_DIR$/vendor/stripe/stripe-php" />
+=======
+>>>>>>> 9f8c9a82076a240ba93e5e16e0f72038325ab273
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

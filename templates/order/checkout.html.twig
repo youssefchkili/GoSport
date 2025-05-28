@@ -78,6 +78,7 @@
                     </div>
                 </div>
 
+<<<<<<< HEAD
             </div>
             <div class="mt-6">
                 <button
@@ -93,6 +94,67 @@
 
 
         <!-- Right side - Order Summary -->
+=======
+                <div class="mb-8">
+                    <h2 class="text-lg font-medium mb-4">Payment</h2>
+
+                    <div class="space-y-4">
+                        <!-- Credit Card Option -->
+                        <div class="border border-gray-200 rounded-md p-4 relative">
+                            <div class="flex items-center">
+                                <input type="radio" id="payment_cc" name="payment_method" value="cc" class="h-4 w-4 text-blue-600" checked>
+                                <label for="payment_cc" class="ml-3 font-medium">Credit Card</label>
+                            </div>
+                            <div class="ml-7 mt-1 text-sm text-gray-500">Visa, Mastercard, American Express</div>
+
+                            <div id="cc_details" class="ml-7 mt-4 space-y-4">
+                                <div>
+                                    <label for="card_number" class="block text-sm text-gray-600 mb-1">Card number</label>
+                                    <input type="text" id="card_number" name="card_number" placeholder="XXXX XXXX XXXX XXXX" class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="card_name" class="block text-sm text-gray-600 mb-1">Name on the card</label>
+                                        <input type="text" id="card_name" name="card_name" placeholder="ex: John Doe" class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="expiry_date" class="block text-sm text-gray-600 mb-1">Expiry date</label>
+                                            <input type="text" id="expiry_date" name="expiry_date" placeholder="MM/YYYY" class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        </div>
+                                        <div>
+                                            <label for="cvv" class="block text-sm text-gray-600 mb-1">CSV</label>
+                                            <input type="text" id="cvv" name="cvv" placeholder="XXX" class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PayPal Option -->
+                        <div class="border border-gray-200 rounded-md p-4 relative">
+                            <div class="flex items-center">
+                                <input type="radio" id="payment_paypal" name="payment_method" value="paypal" class="h-4 w-4 text-blue-600">
+                                <label for="payment_paypal" class="ml-3 font-medium">PayPal</label>
+                            </div>
+                            <div class="ml-7 mt-1 text-sm text-gray-500">One click PayPal payment</div>
+                        </div>
+
+                        <!-- Cryptocurrency Option -->
+                        <div class="border border-gray-200 rounded-md p-4 relative">
+                            <div class="flex items-center">
+                                <input type="radio" id="payment_crypto" name="payment_method" value="crypto" class="h-4 w-4 text-blue-600">
+                                <label for="payment_crypto" class="ml-3 font-medium">Cryptocurrency</label>
+                            </div>
+                            <div class="ml-7 mt-1 text-sm text-gray-500">Bitcoin, Ethereum</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right side - Order Summary -->
+>>>>>>> 9f8c9a82076a240ba93e5e16e0f72038325ab273
             <div class="w-full md:w-1/3">
                 <div class="bg-gray-50 p-6 rounded-lg">
                     <h2 class="text-lg font-medium mb-4">Order details</h2>
@@ -144,8 +206,13 @@
                             <span>€{{ total|number_format(2, '.', ',') }}</span>
                         </div>
                     </div>
+<<<<<<< HEAD
                     <a href="{{ path('payment_success' , {'id' : id}) }}">
                         <button id="confirm-payment-button" type="submit" form="checkout_form" class="w-full bg-gray-900 text-white rounded-md py-4 font-medium mt-6 hover:bg-black transition">
+=======
+                    <a href="{{ path('checkout_success' , {'id' : id}) }}">
+                        <button type="submit" form="checkout_form" class="w-full bg-gray-900 text-white rounded-md py-4 font-medium mt-6 hover:bg-black transition">
+>>>>>>> 9f8c9a82076a240ba93e5e16e0f72038325ab273
                             Confirm payment
                         </button>
                     </a>
@@ -153,6 +220,7 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
     <!-- Stripe.js SDK -->
     <script src="https://js.stripe.com/v3/"></script>
     <script>
@@ -204,4 +272,6 @@
                 });
         });
     </script>
+=======
+>>>>>>> 9f8c9a82076a240ba93e5e16e0f72038325ab273
 {% endblock %}

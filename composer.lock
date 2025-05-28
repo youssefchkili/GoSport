@@ -4,7 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "b510dec65269c1e619f8b6f9a56bd05e",
+=======
+    "content-hash": "a13bb7ffc5f0d706d1e21f237176605b",
+>>>>>>> 9f8c9a82076a240ba93e5e16e0f72038325ab273
     "packages": [
         {
             "name": "brick/math",
@@ -4155,6 +4159,7 @@
             "time": "2025-03-24T12:37:32+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "symfony/google-mailer",
             "version": "v7.2.0",
             "source": {
@@ -4220,6 +4225,8 @@
             "time": "2024-09-28T08:24:38+00:00"
         },
         {
+=======
+>>>>>>> 9f8c9a82076a240ba93e5e16e0f72038325ab273
             "name": "symfony/http-client",
             "version": "v7.2.4",
             "source": {

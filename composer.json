@@ -18,7 +18,10 @@
         "phpdocumentor/reflection-docblock": "^5.6",
         "phpstan/phpdoc-parser": "^2.1",
         "ramsey/uuid": "^4.7",
+<<<<<<< HEAD
         "stripe/stripe-php": "^17.2",
+=======
+>>>>>>> 9f8c9a82076a240ba93e5e16e0f72038325ab273
         "symfony/asset": "7.2.*",
         "symfony/asset-mapper": "7.2.*",
         "symfony/console": "7.2.*",
@@ -28,7 +31,10 @@
         "symfony/flex": "^2",
         "symfony/form": "7.2.*",
         "symfony/framework-bundle": "7.2.*",
+<<<<<<< HEAD
         "symfony/google-mailer": "7.2.*",
+=======
+>>>>>>> 9f8c9a82076a240ba93e5e16e0f72038325ab273
         "symfony/http-client": "7.2.*",
         "symfony/intl": "7.2.*",
         "symfony/mailer": "7.2.*",

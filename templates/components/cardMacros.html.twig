@@ -15,8 +15,13 @@
                 </div>
             {% endif %}
             <div class="card-body">
+<<<<<<< HEAD
                 <h3 class="card-title" style="font-size: 1.2em;">{{ product.name }}</h5>
                     <h4 style="color:gray" class="p-2" style="font-size: 1.2em;">{{ product.slug }}</h6>
+=======
+                <h3 class="card-title" style="font-size: 1.2em;">{{ product.name }}</h3>
+                <h4 style="color:gray" class="p-2" style="font-size: 1.2em;">{{ product.slug }}</h4>
+>>>>>>> 9f8c9a82076a240ba93e5e16e0f72038325ab273
             </div>
             <div class="position-absolute bottom-0 end-0 p-3">
                 {% if product.stockQuantity == 0 %}
@@ -44,8 +49,25 @@
             {% block wishlistHeart %}
                 <div class="position-absolute bottom-0 start-0 p-2">
                     <button class="btn text-danger heart" type="button" id="productBtn{{ product.id }}" style="border: 0;font-size: 25px;">
+<<<<<<< HEAD
                         {# Fixed: Check if user exists, has wishlist, and then check if product is in wishlist #}
                         <i class="bi {% if app.user and app.user.wishlist and app.user.wishlist.products and product in app.user.wishlist.products %}bi-heart-fill{% else %}bi-heart{% endif %}" id="heart{{ product.id }}" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 20px red)';" onmouseout="this.style.filter='none';"></i>
+=======
+                        <i class="bi
+                        {% if app.user
+                            and app.user.wishlist is not null
+                            and app.user.wishlist.products is not null
+                            and product in app.user.wishlist.products %}
+                            bi-heart-fill
+                        {% else %}
+                            bi-heart
+                        {% endif %}"
+                           id="heart{{ product.id }}"
+                           style="transition: all 0.2s ease; color: var(--primary-color);"
+                           onmouseover="this.style.filter='drop-shadow(0 0 20px red)';"
+                           onmouseout="this.style.filter='none';">
+                        </i>
+>>>>>>> 9f8c9a82076a240ba93e5e16e0f72038325ab273
                     </button>
                 </div>
             {% endblock %}
@@ -56,6 +78,7 @@
 {% macro heartsManager(products) %}
     {% for product in products %}
         document.getElementById("productBtn{{ product.id }}").addEventListener('click', function () {
+<<<<<<< HEAD
             {% if app.user %}
                 document.getElementById("heart{{ product.id }}").classList.toggle("bi-heart");
                 document.getElementById("heart{{ product.id }}").classList.toggle("bi-heart-fill");
@@ -78,6 +101,27 @@
                 }
             })
             .catch(error => console.error('Error:', error));
+=======
+        {% if app.user %}
+            document.getElementById("heart{{ product.id }}").classList.toggle("bi-heart");
+            document.getElementById("heart{{ product.id }}").classList.toggle("bi-heart-fill");
+        {% endif %}
+        fetch('/wishlist/toggle/{{ product.id }}', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+        if (data.success) {
+        //alert(data.message);
+        }
+        })
+        .catch(error => console.error('Error:', error));
+>>>>>>> 9f8c9a82076a240ba93e5e16e0f72038325ab273
         });
     {% endfor %}
 {% endmacro %}
