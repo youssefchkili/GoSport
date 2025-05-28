@@ -103,12 +103,38 @@
                     </h1>
                     <div class="d-flex align-items-center pt-3">
                         <h1 class="text-white" style="font-size: 1.5em;">Quantity:</h1>
-                        <input type="number" class="form-control mx-3 bg-dark text-white" id="quantity" name="quantity" value="1" min="1" max="{{ product.stockQuantity }}" style="width: 100px;border:1px solid RGB(100,100,100);" {% if product.stockQuantity == 0 %}disabled{% endif %}>
+                        {% set cartProducts = [] %}
+                        {% set alreadyInCart = 0 %}
+
+                        {% if app.user and app.user.getCart() %}
+                            {% for item in app.user.getCart().getCartItems() %}
+                                {% set cartProducts = cartProducts|merge([item.getProduct()]) %}
+                            {% endfor %}
+                        {% endif %}
+
+                        {% if product in cartProducts %}
+                            {% for item in app.user.getCart().getCartItems() %}
+                                {% if item.getProduct() == product %}
+                                    {% set alreadyInCart = item.getQuantity() %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        <input type="number" class="form-control mx-3 bg-dark text-white" id="quantity" name="quantity" value="1" min="1" max=
+
+                        {% if alreadyInCart > 0 %}
+                            {{ product.stockQuantity - alreadyInCart }}
+                        {% else %}
+                            {{ product.stockQuantity }}
+                        {% endif %}
+
+                        style="width: 100px;border:1px solid RGB(100,100,100);" {% if product.stockQuantity == 0 or product.stockQuantity <= alreadyInCart %}disabled{% endif %}>
     
-                        <button class="btn btn-danger" id="addToCartBtn" type="button" style="font-size: 1.5em;" {% if product.stockQuantity == 0 %}disabled{% endif %}>
+                        <button class="btn btn-danger" id="addToCartBtn" type="button" style="font-size: 1.5em;" {% if product.stockQuantity == 0 or product.stockQuantity <= alreadyInCart %}disabled{% endif %}>
                             <i class="bi bi-bag"></i> Add to Cart
                         </button>
                     </div>
+
+                    <h3 class="pt-2 pl-5" id="alreadyInCartContainer" style="color: rgb(180,180,180);{% if alreadyInCart == 0 %}visibility:hidden;{% endif %}">you already have <span id="alreadyInCartSpan">{{ alreadyInCart }}</span> of this product in your cart </h3>
                 </div>
             </div>
             <div class="col-12 my-5">
@@ -183,9 +209,20 @@
                 document.head.appendChild(style);
             }
             //////
+            
             {% if app.user %}
                 document.getElementById("cart-count").textContent = parseInt(document.getElementById("cart-count").textContent, 10) + parseInt(document.getElementById("quantity").value, 10);
                 document.getElementById("cart-total").textContent = parseFloat(document.getElementById("cart-total").textContent) + parseFloat(document.getElementById("price").textContent) * parseInt(document.getElementById("quantity").value, 10);
+                document.getElementById("cart-total").textContent = parseFloat(document.getElementById("cart-total").textContent).toFixed(2);
+                document.getElementById("quantity").max = document.getElementById("quantity").max - document.getElementById("quantity").value;
+                document.getElementById("alreadyInCartSpan").textContent = parseInt(document.getElementById("alreadyInCartSpan").textContent, 10) + parseInt(document.getElementById("quantity").value, 10);
+                if (document.getElementById("quantity").max == 0){
+                    document.getElementById("addToCartBtn").disabled = true;
+                    document.getElementById("quantity").disabled = true;
+                }
+                if(document.getElementById("alreadyInCartContainer").style.visibility == "hidden"){
+                    document.getElementById("alreadyInCartContainer").style.visibility = "visible";
+                }
             {% endif %}
             fetch('/cart/add/{{ product.id }}/' + document.getElementById("quantity").value, {
                 method: 'POST',
@@ -202,6 +239,7 @@
                     }
                 })
                 .catch(error => console.error('Error:', error));
+            document.getElementById("quantity").value = 1;
         });
 
 
