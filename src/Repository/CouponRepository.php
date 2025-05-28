@@ -15,6 +15,15 @@ class CouponRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Coupon::class);
     }
+    public function findByProduct($product): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.product = :val')
+            ->setParameter('val', $product)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
 //    /**
 //     * @return Coupon[] Returns an array of Coupon objects
