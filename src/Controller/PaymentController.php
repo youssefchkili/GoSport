@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Order;
 use App\Repository\CartRepository;
 use App\Repository\OrderRepository;
+use App\Service\MailerService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -110,7 +111,7 @@ class PaymentController extends AbstractController
 
 
     #[Route('/payment/success', name: 'payment_success')]
-    public function success(CartRepository $cartRepository): Response
+    public function success(CartRepository $cartRepository, MailerService $mailer): Response
     {
         $user = $this->getUser();
 
@@ -127,12 +128,69 @@ class PaymentController extends AbstractController
             return $this->redirectToRoute('cart_checkout');
         }
 
-
         $orderItems = $order->getOrderItems();
 
+        $cart = $cartRepository->findOneBy(['user' => $user]);
+
+        $adress = $user->getAdress();
+        $order->setShippingAddressId($adress);
+
+        $mailer->sendEmail(
+            $this->getUser()->getEmail(),
+            'Payment Confirmation',
+            "<html>
+                <body>
+                    <h2>Thank you for your purchase!</h2>
+                    <p>Here is a summary of your order:</p>
+                    <table border='1' cellpadding='8' cellspacing='0' style='border-collapse:collapse;'>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>"
+                        . implode('', array_map(function($item) {
+                            return "<tr>
+                                <td>" . htmlspecialchars($item->getProduct()->getName()) . "</td>
+                                <td>" . $item->getQuantity() . "</td>
+                                <td>" . number_format($item->getUnitPrice() / 100, 2) . " " . strtoupper($item->getOrder()->getCurrency() ?? 'DT') . "</td>
+                                <td>" . number_format(($item->getUnitPrice() * $item->getQuantity()) / 100, 2) . " " . strtoupper($item->getOrder()->getCurrency() ?? 'DT') . "</td>
+                            </tr>";
+                        }, iterator_to_array($orderItems)))
+                        . "</tbody>
+                    </table>
+                    <p style='margin-top:20px; font-size:16px;'><strong>Total: " . number_format($order->getTotal() / 100, 2) . " " . strtoupper($order->getCurrency() ?? 'DT') . "</strong></p>
+                    <p>
+                        <a href='" . $this->generateUrl('payment_success_view', [], 0) . "' style='display:inline-block;padding:10px 20px;background:#28a745;color:#fff;text-decoration:none;border-radius:5px;'>View confirmation page</a>
+                    </p>
+                </body>
+            </html>"
+        );
+        return $this->redirectToRoute('payment_success_view');
+    }
+
+    #[Route('/payment/success/view', name: 'payment_success_view')]
+    public function successView(CartRepository $cartRepository, MailerService $mailer): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            throw $this->createAccessDeniedException('You must be logged in to add items to the cart.');
+        }
 
 
+        $orderRepository = $this->entityManager->getRepository(Order::class);
 
+        $order = $orderRepository->getLastByUser($user);
+        if (!$order) {
+            $this->addFlash('error', 'Order not found.');
+            return $this->redirectToRoute('cart_checkout');
+        }
+
+        $orderItems = $order->getOrderItems();
 
         $cart = $cartRepository->findOneBy(['user' => $user]);
 
@@ -145,7 +203,6 @@ class PaymentController extends AbstractController
         $adress = $user->getAdress();
         $order->setShippingAddressId($adress);
 
-
         return $this->render('order/success.html.twig', [
             'order' => $order,
             'orderItems' => $orderItems,
@@ -157,7 +214,7 @@ class PaymentController extends AbstractController
         ]);
     }
 
-        #[Route('/payment/failure', name: 'payment_failure')]
+    #[Route('/payment/failure', name: 'payment_failure')]
     public function failure(): JsonResponse
     {
         return new JsonResponse(['status' => 'failure', 'message' => 'Paiement fictif annulé.']);

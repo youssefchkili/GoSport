@@ -203,7 +203,7 @@
                         <i class="bi bi-bag text-white"></i>
                         
                         <span class="cart-badge" id="cart-count">
-                            {% if app.user is not null and app.user.getCart() is defined %}
+                            {% if app.user is not null and app.user.getCart() %}
                                 {{ app.user.getCart().getCartItems()|map(item => item.getQuantity())|reduce((carry, qty) => carry + qty, 0) }}
                             {% else %}
                                 0
@@ -213,7 +213,7 @@
                     <div class="nav-link-text">Cart</div>
                 </a>
             </div>
-            {% if app.user and app.user.getCart() is defined %}
+            {% if app.user and app.user.getCart() %}
                 <div class="pl-2" >
                     <span id="cart-total">
                         {{ (app.user.getCart().getCartItems()
