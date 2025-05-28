@@ -75,11 +75,11 @@
                     <p style="color:RGB(200,200,200)">{{ product.slug }}</p>
                     <div class="d-flex align-items-center pt-3" style="font-size: 2em;">
                         {% if product.discountpercent == 0 %}
-                            <h1>
+                            <h1 id="price">
                                 {{ product.price }} DT
                             </h1>
                         {% else %}
-                            <h1 style="display: inline-block; margin-right: 10px;">
+                            <h1 style="display: inline-block; margin-right: 10px;" id="price">
                                 {{ ( (product.price * (100 - product.discountpercent) / 100) )|number_format(2, '.', '') }} DT
                             </h1>
                             <h1 class="text-decoration-line-through" style="display: inline-block;color:RGB(255,102,102);">
@@ -120,7 +120,9 @@
 
             {% set products = products|filter(p => p.id != product.id) %}
             {% for product in products %}
-                {{ components.productCard(product) }}
+                <div class="col-md-3">
+                    {{ components.productCard(product) }}
+                </div>
             {% endfor %}
 
         </div>
@@ -177,6 +179,10 @@
                 document.head.appendChild(style);
             }
             //////
+            {% if app.user %}
+                document.getElementById("cart-count").textContent = parseInt(document.getElementById("cart-count").textContent, 10) + parseInt(document.getElementById("quantity").value, 10);
+                document.getElementById("cart-total").textContent = parseFloat(document.getElementById("cart-total").textContent) + parseFloat(document.getElementById("price").textContent) * parseInt(document.getElementById("quantity").value, 10);
+            {% endif %}
             fetch('/cart/add/{{ product.id }}/' + document.getElementById("quantity").value, {
                 method: 'POST',
                 headers: {
@@ -197,9 +203,9 @@
 
         document.getElementById("productBtn").addEventListener('click', function () {
             {% if app.user %}
-            document.getElementById("heart").classList.toggle("bi-heart");
-            document.getElementById("heart").classList.toggle("bi-heart-fill");
-        {% endif %}
+                document.getElementById("heart").classList.toggle("bi-heart");
+                document.getElementById("heart").classList.toggle("bi-heart-fill");
+            {% endif %}
         fetch('/wishlist/toggle/{{ product.id }}', {
             method: 'POST',
             headers: {
