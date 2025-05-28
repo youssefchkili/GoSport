@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
     <style>
         .my-swiper .swiper-pagination-bullet-active {
-        background-color: #dc3545 !important;
+            background-color: #dc3545 !important;
         }
     </style>
 
@@ -36,14 +36,14 @@
                                                     {{ image.imagePath }}
                                                 {% endif %}
                                             {% endfor %}"
-                                class="w-full h-full object-fill absolute top-0 left-0 z-0" style="filter: blur(30px);" onerror="this.onerror=null;this.src='https://i.imgur.com/EJLFNOw.jpg';">
-                                
+                                     class="w-full h-full object-fill absolute top-0 left-0 z-0" style="filter: blur(30px);" onerror="this.onerror=null;this.src='https://i.imgur.com/EJLFNOw.jpg';">
+
                                 <img src=  "{% for image in product.images %}
                                                 {% if image.isPrimary %}
                                                     {{ image.imagePath }}
                                                 {% endif %}
                                             {% endfor %}"
-                                class="h-full object-contain relative z-10"  onerror="this.onerror=null;this.src='https://i.imgur.com/EJLFNOw.jpg';">
+                                     class="h-full object-contain relative z-10"  onerror="this.onerror=null;this.src='https://i.imgur.com/EJLFNOw.jpg';">
                             </div>
                         </div>
                         {% for image in product.images %}
@@ -67,24 +67,25 @@
                         <h1 class="decoration-bold mb-0" style="font-size: 2.5em;">{{ product.name|capitalize }}</h1>
                         <div class="p-3">
                             <button class="btn text-danger heart pl-20" id="productBtn" type="button" style="border: 0; font-size: 2.5em;">
-                                <i class="bi {% if app.user and product in app.user.wishlist.products %}bi-heart-fill{% else %}bi-heart{% endif %}" id="heart" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 5px red)'" onmouseout="this.style.filter='none'"></i>
+                                {# Fixed: Added proper null checking for wishlist #}
+                                <i class="bi {% if app.user and app.user.wishlist and app.user.wishlist.products and product in app.user.wishlist.products %}bi-heart-fill{% else %}bi-heart{% endif %}" id="heart" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 5px red)'" onmouseout="this.style.filter='none'"></i>
                             </button>
                         </div>
                     </div>
                     <p style="color:RGB(200,200,200)">{{ product.slug }}</p>
                     <div class="d-flex align-items-center pt-3" style="font-size: 2em;">
-                    {% if product.discountpercent == 0 %}
-                        <h1>
-                            {{ product.price }} DT
-                        </h1>
-                    {% else %}
-                        <h1 style="display: inline-block; margin-right: 10px;">
-                            {{ ( (product.price * (100 - product.discountpercent) / 100) )|number_format(2, '.', '') }} DT
-                        </h1>
-                        <h1 class="text-decoration-line-through" style="display: inline-block;color:RGB(255,102,102);">
-                            {{ product.price }}DT
-                        </h1>
-                    {% endif %}
+                        {% if product.discountpercent == 0 %}
+                            <h1>
+                                {{ product.price }} DT
+                            </h1>
+                        {% else %}
+                            <h1 style="display: inline-block; margin-right: 10px;">
+                                {{ ( (product.price * (100 - product.discountpercent) / 100) )|number_format(2, '.', '') }} DT
+                            </h1>
+                            <h1 class="text-decoration-line-through" style="display: inline-block;color:RGB(255,102,102);">
+                                {{ product.price }}DT
+                            </h1>
+                        {% endif %}
                     </div>
                     <div class="d-flex align-items-center pt-3">
                         <p class="text-white">{{ product.description }}</p>
@@ -116,7 +117,7 @@
 
             <div class="col-12 my-3">
             </div>
-            
+
             {% set products = products|filter(p => p.id != product.id) %}
             {% for product in products %}
                 {{ components.productCard(product) }}
@@ -125,32 +126,32 @@
         </div>
     </div>
 
-<script>
-    var swiper = new Swiper(".vertical-slide-carousel", {
-    loop: true,
-    direction: 'vertical',
-    mousewheelControl: true,
-    mousewheel: {
-    releaseOnEdges: true,
-    },
-    spaceBetween: 30,
-    grabCursor: true,
-    pagination: {
-    el: ".vertical-slide-carousel .swiper-pagination",
-    clickable: true,
-    },
-    });
+    <script>
+        var swiper = new Swiper(".vertical-slide-carousel", {
+            loop: true,
+            direction: 'vertical',
+            mousewheelControl: true,
+            mousewheel: {
+                releaseOnEdges: true,
+            },
+            spaceBetween: 30,
+            grabCursor: true,
+            pagination: {
+                el: ".vertical-slide-carousel .swiper-pagination",
+                clickable: true,
+            },
+        });
 
-    document.getElementById("addToCartBtn").addEventListener('click', function () {
-        const btn = document.getElementById("addToCartBtn");
-        btn.classList.add("glitter-effect");
-        setTimeout(() => btn.classList.remove("glitter-effect"), 1000);
+        document.getElementById("addToCartBtn").addEventListener('click', function () {
+            const btn = document.getElementById("addToCartBtn");
+            btn.classList.add("glitter-effect");
+            setTimeout(() => btn.classList.remove("glitter-effect"), 1000);
 
-        // this glitter effect is AI generated because CSS why not
-        if (!document.getElementById('glitter-effect-style')) {
-            const style = document.createElement('style');
-            style.id = 'glitter-effect-style';
-            style.innerHTML = `
+            // this glitter effect is AI generated because CSS why not
+            if (!document.getElementById('glitter-effect-style')) {
+                const style = document.createElement('style');
+                style.id = 'glitter-effect-style';
+                style.innerHTML = `
             .glitter-effect {
                 position: relative;
                 overflow: hidden;
@@ -173,29 +174,29 @@
                 100% { left: 125%; }
             }
             `;
-            document.head.appendChild(style);
-        }
-        //////
-        fetch('/cart/add/{{ product.id }}/' + document.getElementById("quantity").value, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-            body: JSON.stringify({})
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                //alert(data.message);
+                document.head.appendChild(style);
             }
-        })
-        .catch(error => console.error('Error:', error));
-    });
+            //////
+            fetch('/cart/add/{{ product.id }}/' + document.getElementById("quantity").value, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: JSON.stringify({})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        //alert(data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
 
 
-    document.getElementById("productBtn").addEventListener('click', function () {
-        {% if app.user %}
+        document.getElementById("productBtn").addEventListener('click', function () {
+            {% if app.user %}
             document.getElementById("heart").classList.toggle("bi-heart");
             document.getElementById("heart").classList.toggle("bi-heart-fill");
         {% endif %}
