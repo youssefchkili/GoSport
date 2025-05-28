@@ -79,17 +79,11 @@
                 </div>
 
             </div>
-            <div class="mt-6">
-                <button
-                        onclick="window.location.href='/payment'"
-                        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
-                    Payer avec Stripe
-                </button>
-            </div>
+
 
             <!-- Right side - Order Summary -->
-            <div class="w-full md:w-1/3">
-                <div class="bg-gray-50 p-6 rounded-lg">
+            <div class="w-full md:w-1/3 ">
+                <div class="bg-gray-900 text-white p-6 rounded-lg ">
                     <h2 class="text-lg font-medium mb-4">Order details</h2>
 
                     {% if cartItems is not empty %}
@@ -139,8 +133,8 @@
                             <span>€{{ total|number_format(2, '.', ',') }}</span>
                         </div>
                     </div>
-                    <a href="{{ path('payment_success' , {'id' : id}) }}">
-                        <button id="confirm-payment-button" type="submit" form="checkout_form" class="w-full bg-gray-900 text-white rounded-md py-4 font-medium mt-6 hover:bg-black transition">
+                    <a>
+                        <button onclick="window.location.href='/payment'" id="confirm-payment-button" type="button"  class="w-full bg-gray-900 text-white rounded-md py-4 font-medium mt-6 hover:bg-black transition">
                             Confirm payment
                         </button>
                     </a>
@@ -151,52 +145,12 @@
     <!-- Stripe.js SDK -->
     <script src="https://js.stripe.com/v3/"></script>
     <script>
-        const stripe = Stripe("pk_test_oKhSR5nslBRnBZpjO6KuzZeX"); // Remplacez par votre clé publique de test Stripe si elle est différente
-
-        // Bouton de confirmation de paiement
-        document.getElementById("confirm-payment-button").addEventListener("click", function () {
-            // Étape 1 : Envoyer une requête au backend pour créer un PaymentIntent
-            fetch("/payment/create-intent", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({}) // Ajoutez des données JSON si nécessaire
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(Erreur HTTP : ${response.status});
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log("Réponse du backend :", data); // Vérifiez les données reçues
-                    if (data.clientSecret) {
-                        // Étape 2 : Initialiser Stripe avec la clé publique
-                        const stripe = Stripe("pk_test_12345"); // Clé publique de test
-
-                        // Étape 3 : Confirmer le paiement via Stripe
-                        stripe
-                            .confirmCardPayment(data.clientSecret)
-                            .then(function (result) {
-                                if (result.error) {
-                                    // Afficher les erreurs s'il y en a
-                                    console.error("Erreur lors de la confirmation du paiement :", result.error.message);
-                                    alert("Erreur lors de la confirmation du paiement : " + result.error.message);
-                                } else {
-                                    // Succès ! Le paiement est confirmé
-                                    alert("Paiement réussi !");
-                                    console.log("Paiement réussi :", result.paymentIntent);
-                                }
-                            });
-                    } else {
-                        alert("Erreur : clientSecret introuvable dans la réponse !");
-                    }
-                })
-                .catch(error => {
-                    console.error("Erreur lors de la création du paiement :", error);
-                    alert("Erreur lors de la création de la session de paiement");
-                });
+        document.addEventListener("DOMContentLoaded", function () {
+            const confirmButton = document.getElementById("confirm-payment-button");
+            // Appliquer `--primary-color` au bouton
+            confirmButton.style.backgroundColor = "var(--primary-color)";
         });
     </script>
+
+
 {% endblock %}
