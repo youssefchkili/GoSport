@@ -35,15 +35,19 @@
                                                 {% if image.isPrimary %}
                                                     {{ image.imagePath }}
                                                 {% endif %}
+                                             {% else %}
+                                                  {{ asset('images/products/noimage.jpg') }}
                                             {% endfor %}"
-                                     class="w-full h-full object-fill absolute top-0 left-0 z-0" style="filter: blur(30px);" onerror="this.onerror=null;this.src='https://i.imgur.com/EJLFNOw.jpg';">
+                                     class="w-full h-full object-fill absolute top-0 left-0 z-0" style="filter: blur(30px);" >
 
                                 <img src=  "{% for image in product.images %}
                                                 {% if image.isPrimary %}
                                                     {{ image.imagePath }}
                                                 {% endif %}
+                                             {% else %}
+                                                  {{ asset('images/products/noimage.jpg') }}
                                             {% endfor %}"
-                                     class="h-full object-contain relative z-10"  onerror="this.onerror=null;this.src='https://i.imgur.com/EJLFNOw.jpg';">
+                                     class="h-full object-contain relative z-10">
                             </div>
                         </div>
                         {% for image in product.images %}
