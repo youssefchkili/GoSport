@@ -1,482 +1,176 @@
 {% extends 'coolBase.html.twig' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Home - GoSport{% endblock %}
 {% block stylesheets %}
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .category-icon {
-            width: 40px;
-            height: 40px;
-            margin: 0 auto;
-        }
-        .star-rating {
-            color: #FFD700;
-        }
-        .section-marker {
-            position: relative;
-            padding-left: 20px;
-        }
-        .section-marker::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 6px;
-            background-color: #e53e3e;
-            border-radius: 3px;
-        }
-        /* Animation for the moving banner */
-        @keyframes scrollBanner {
-            0% {
-                transform: translateX(100%);
-            }
-            100% {
-                transform: translateX(-100%);
-            }
+        :root {
+            --dark-bg: rgb(30,30,30);
+            --card-bg: rgb(50,50,50);
+            --accent: #dc3545;
+            --text-primary: #f1f5f9;
         }
 
-        .scroll-banner {
-            white-space: nowrap;
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        .section-header {
+            padding-left: 15px;
+            border-left: 3px solid var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        .product-card, .category-card {
+            background-color: var(--card-bg);
+            border: 1px solid rgb(70,70,70);
+            transition: transform 0.2s ease;
+            border-radius: 8px;
             overflow: hidden;
         }
 
-        .scroll-banner-content {
-            display: inline-block;
-            animation: scrollBanner 20s linear infinite;
+        .product-card:hover, .category-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        .price-tag {
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .btn-main {
+            background: rgb(58, 58, 58);
+            color: #111;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-main:hover {
+            opacity: 0.9;
+        }
+
+        .banner {
+            background: black;
+            padding: 10px 0;
+            text-align: center;
         }
     </style>
 {% endblock %}
 
-
 {% block stickyBanner %}
-
-    <!-- Top Announcement Bar -->
-    <div class="bg-black text-white py-2 px-4 overflow-hidden">
-        <div class="scroll-banner">
-            <div class="scroll-banner-content">
-                Summer Sale For All Sports Equipment And Free Express Delivery - Off 50%! <span class="font-bold">ShopNow</span> &nbsp;&nbsp;&nbsp;&nbsp;
-                Summer Sale For All Sports Equipment And Free Express Delivery - Off 50%! <span class="font-bold">ShopNow</span> &nbsp;&nbsp;&nbsp;&nbsp;
-                Summer Sale For All Sports Equipment And Free Express Delivery - Off 50%! <span class="font-bold">ShopNow</span> &nbsp;&nbsp;&nbsp;&nbsp;
-            </div>
+    <div class="banner">
+        <div class="font-medium">
+            {% if activeBanner %}
+                {{ activeBanner.content|raw }}
+            {% else %}
+                🔥 Summer Sale: 50% Off Sports Equipment + Free Delivery
+            {% endif %}
         </div>
     </div>
 {% endblock %}
 
 {% block sidebarBody %}
     <div class="w-full">
-        <ul class="space-y-4">
-            <li class="py-2 hover:text-red-500 flex justify-between items-center">
-                <span>Team Sports</span>
-                <i class="fas fa-chevron-right"></i>
-            </li>
-            <li class="py-2 hover:text-red-500 flex justify-between items-center">
-                <span>Individual Sports</span>
-                <i class="fas fa-chevron-right"></i>
-            </li>
-            <li class="py-2 hover:text-red-500 flex justify-between items-center">
-                <span>Fitness Equipment</span>
-                <i class="fas fa-chevron-right"></i>
-            </li>
-            <li class="py-2 hover:text-red-500 flex justify-between items-center">
-                <span>Sportswear</span>
-                <i class="fas fa-chevron-right"></i>
-            </li>
-            <li class="py-2 hover:text-red-500 flex justify-between items-center">
-                <span>Nutrition</span>
-                <i class="fas fa-chevron-right"></i>
-            </li>
-            <li class="py-2 hover:text-red-500 flex justify-between items-center">
-                <span>Water Sports</span>
-                <i class="fas fa-chevron-right"></i>
-            </li>
-            <li class="py-2 hover:text-red-500 flex justify-between items-center">
-                <span>Winter Sports</span>
-                <i class="fas fa-chevron-right"></i>
-            </li>
-            <li class="py-2 hover:text-red-500 flex justify-between items-center">
-                <span>Accessories</span>
-                <i class="fas fa-chevron-right"></i>
-            </li>
-            <li class="py-2 hover:text-red-500 flex justify-between items-center">
-                <span>Athletic Footwear</span>
-                <i class="fas fa-chevron-right"></i>
-            </li>
+        <ul class="space-y-3">
+            {% for category in categories %}
+                <li class="py-2 hover:text-cyan-300 transition-colors">
+                    <a href="{{ path('app_products', {'category': category.id}) }}">
+                        {{ category.name }}
+                    </a>
+                </li>
+            {% else %}
+                <li class="py-2 text-gray-500">No categories available</li>
+            {% endfor %}
         </ul>
     </div>
 {% endblock %}
 
 {% block body %}
-    <!-- Hero Banner Section -->
-    <div class="container mx-auto px-4 py-6">
-        <div class="w-full bg-black text-white rounded-lg p-8 flex flex-col md:flex-row items-center">
+<div class="min-h-screen">
+    <!-- Hero Banner -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="bg-[rgb(50,50,50)] rounded-xl p-6 flex flex-col md:flex-row items-center">
             <div class="md:w-1/2 mb-6 md:mb-0">
-                <div class="flex items-center mb-4">
-                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=30&width=30" alt="Nike logo" class="h-8 w-8 mr-2">
-                    <span>Nike Air Zoom Series</span>
-                </div>
-                <h2 class="text-4xl font-bold mb-4">Up to 10% off Voucher</h2>
-                <a href="#" class="inline-flex items-center text-white border-b border-white pb-1">
+                <h2 class="text-3xl font-bold mb-4">
+                    Up to <span class="text-[#dc3545]">50%</span> off<br>
+                    Premium Sports Gear
+                </h2>
+                <p class="mb-4 text-gray-300">Quality equipment for professional athletes</p>
+                <a href="{{ path('app_products') }}" class="inline-block btn-main px-6 py-3">
                     Shop Now <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>
-            <div class="md:w-1/2">
-                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=300&width=300" alt="Nike Running Shoes" class="mx-auto">
+            <div class="md:w-1/2 flex justify-center">
+                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop"
+                     alt="Sports Equipment"
+                     class="rounded-lg max-h-60">
             </div>
         </div>
     </div>
 
-    <!-- Browse By Category Section -->
-    <section class="container mx-auto px-4 py-12">
-        <div class="flex items-center justify-between mb-6">
-            <div>
-                <h3 class="section-marker text-red-600 font-semibold mb-2">Categories</h3>
-                <h2 class="text-2xl font-bold">Browse By Category</h2>
-            </div>
-            <div class="flex space-x-2">
-                <button class="h-10 w-10 rounded-full border flex items-center justify-center">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="h-10 w-10 rounded-full border flex items-center justify-center">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-        </div>
+    <!-- Categories -->
+    <section class="container mx-auto px-4 py-10">
+        <h2 class="section-header text-2xl font-bold">Browse By Category</h2>
 
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            <div class="border rounded-lg p-6 flex flex-col items-center justify-center hover:border-red-500 cursor-pointer">
-                <div class="category-icon mb-4">
-                    <i class="fas fa-running text-2xl"></i>
-                </div>
-                <p>Running</p>
-            </div>
-            <div class="border rounded-lg p-6 flex flex-col items-center justify-center hover:border-red-500 cursor-pointer">
-                <div class="category-icon mb-4">
-                    <i class="fas fa-futbol text-2xl"></i>
-                </div>
-                <p>Football</p>
-            </div>
-            <div class="border rounded-lg p-6 flex flex-col items-center justify-center hover:border-red-500 cursor-pointer">
-                <div class="category-icon mb-4">
-                    <i class="fas fa-dumbbell text-2xl"></i>
-                </div>
-                <p>Fitness</p>
-            </div>
-            <div class="border rounded-lg p-6 flex flex-col items-center justify-center bg-red-500 text-white">
-                <div class="category-icon mb-4">
-                    <i class="fas fa-basketball-ball text-2xl"></i>
-                </div>
-                <p>Basketball</p>
-            </div>
-            <div class="border rounded-lg p-6 flex flex-col items-center justify-center hover:border-red-500 cursor-pointer">
-                <div class="category-icon mb-4">
-                    <i class="fas fa-biking text-2xl"></i>
-                </div>
-                <p>Cycling</p>
-            </div>
-            <div class="border rounded-lg p-6 flex flex-col items-center justify-center hover:border-red-500 cursor-pointer">
-                <div class="category-icon mb-4">
-                    <i class="fas fa-swimmer text-2xl"></i>
-                </div>
-                <p>Swimming</p>
-            </div>
+            {% for category in categories|slice(0, 6) %}
+                <a href="{{ path('app_products', {'category': category.id}) }}" class="category-card p-4 text-center">
+                    <div class="mb-2">
+                        <i class="fas fa-tag text-2xl text-[#dc3545]"></i>
+                    </div>
+                    <p class="font-medium">{{ category.name }}</p>
+                </a>
+            {% endfor %}
         </div>
     </section>
 
-    <!-- Best Selling Products Section -->
-    <section class="container mx-auto px-4 py-12">
-        <div class="flex items-center justify-between mb-6">
-            <div>
-                <h3 class="section-marker text-red-600 font-semibold mb-2">This Month</h3>
-                <h2 class="text-2xl font-bold">Best Selling Products</h2>
-            </div>
-            <a href="#" class="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600">
-                View All
-            </a>
-        </div>
+    <!-- Products Section -->
+    <section class="container mx-auto px-4 py-10">
+        <h2 class="section-header text-2xl font-bold mb-6">Best Selling Products</h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Product 1 -->
-            <div class="bg-gray-100 rounded-lg p-4 relative group">
-                <div class="absolute top-4 right-4 space-y-2 z-10">
-                    <button class="h-8 w-8 rounded-full bg-white flex items-center justify-center hover:bg-red-500 hover:text-white">
-                        <i class="far fa-heart"></i>
-                    </button>
-                    <button class="h-8 w-8 rounded-full bg-white flex items-center justify-center hover:bg-red-500 hover:text-white">
-                        <i class="far fa-eye"></i>
-                    </button>
-                </div>
-                <div class="mb-4 h-48 flex items-center justify-center">
-                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=200&width=200" alt="Adidas Pro Jacket" class="max-h-full">
-                </div>
-                <h3 class="font-semibold mb-1">Adidas Pro Jacket</h3>
-                <div class="flex items-center mb-2">
-                    <span class="text-red-500 font-semibold mr-2">250 DT</span>
-                    <span class="text-gray-500 line-through text-sm">360 DT</span>
-                </div>
-                <div class="flex items-center">
-                    <div class="star-rating flex mr-2">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
+            {% for product in bestSellingProducts %}
+                <div class="product-card p-4">
+                    <div class="mb-4 h-48 flex items-center justify-center bg-[rgb(40,40,40)] rounded-lg">
+                        {% if product.images|length > 0 %}
+                            <img src="{{ asset('uploads/products/' ~ product.images[0].imagePath) }}"
+                                 alt="{{ product.name }}"
+                                 class="max-h-full max-w-full object-contain">
+                        {% else %}
+                            <i class="fas fa-image text-gray-600 text-4xl"></i>
+                        {% endif %}
                     </div>
-                    <span class="text-gray-500 text-sm">(65)</span>
-                </div>
-            </div>
 
-            <!-- Product 2 -->
-            <div class="bg-gray-100 rounded-lg p-4 relative group">
-                <div class="absolute top-4 right-4 space-y-2 z-10">
-                    <button class="h-8 w-8 rounded-full bg-white flex items-center justify-center hover:bg-red-500 hover:text-white">
-                        <i class="far fa-heart"></i>
-                    </button>
-                    <button class="h-8 w-8 rounded-full bg-white flex items-center justify-center hover:bg-red-500 hover:text-white">
-                        <i class="far fa-eye"></i>
-                    </button>
-                </div>
-                <div class="mb-4 h-48 flex items-center justify-center">
-                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=200&width=200" alt="Nike Sports Bag" class="max-h-full">
-                </div>
-                <h3 class="font-semibold mb-1">Nike Sports Bag</h3>
-                <div class="flex items-center mb-2">
-                    <span class="text-red-500 font-semibold mr-2">960 DT</span>
-                    <span class="text-gray-500 line-through text-sm">1160 DT</span>
-                </div>
-                <div class="flex items-center">
-                    <div class="star-rating flex mr-2">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <span class="text-gray-500 text-sm">(65)</span>
-                </div>
-            </div>
+                    <div class="space-y-3">
+                        <h3 class="font-bold line-clamp-2">{{ product.name }}</h3>
 
-            <!-- Product 3 -->
-            <div class="bg-gray-100 rounded-lg p-4 relative group">
-                <div class="absolute top-4 right-4 space-y-2 z-10">
-                    <button class="h-8 w-8 rounded-full bg-white flex items-center justify-center hover:bg-red-500 hover:text-white">
-                        <i class="far fa-heart"></i>
-                    </button>
-                    <button class="h-8 w-8 rounded-full bg-white flex items-center justify-center hover:bg-red-500 hover:text-white">
-                        <i class="far fa-eye"></i>
-                    </button>
-                </div>
-                <div class="mb-4 h-48 flex items-center justify-center">
-                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=200&width=200" alt="Pro Fitness Tracker" class="max-h-full">
-                </div>
-                <h3 class="font-semibold mb-1">Pro Fitness Tracker</h3>
-                <div class="flex items-center mb-2">
-                    <span class="text-red-500 font-semibold mr-2">160 DT</span>
-                    <span class="text-gray-500 line-through text-sm">170 DT</span>
-                </div>
-                <div class="flex items-center">
-                    <div class="star-rating flex mr-2">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <span class="text-gray-500 text-sm">(65)</span>
-                </div>
-            </div>
+                        <div class="flex items-center space-x-2">
+                            {% set finalPrice = product.price * (100 - product.discountPercent) / 100 %}
+                            <span class="price-tag">{{ finalPrice|number_format(2) }} DT</span>
+                            {% if product.discountPercent > 0 %}
+                                <span class="text-gray-400 line-through text-sm">{{ product.price|number_format(2) }} DT</span>
+                            {% endif %}
+                        </div>
 
-            <!-- Product 4 -->
-            <div class="bg-gray-100 rounded-lg p-4 relative group">
-                <div class="absolute top-4 right-4 space-y-2 z-10">
-                    <button class="h-8 w-8 rounded-full bg-white flex items-center justify-center hover:bg-red-500 hover:text-white">
-                        <i class="far fa-heart"></i>
-                    </button>
-                    <button class="h-8 w-8 rounded-full bg-white flex items-center justify-center hover:bg-red-500 hover:text-white">
-                        <i class="far fa-eye"></i>
-                    </button>
-                </div>
-                <div class="mb-4 h-48 flex items-center justify-center">
-                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=200&width=200" alt="Portable Exercise Mat" class="max-h-full">
-                </div>
-                <h3 class="font-semibold mb-1">Portable Exercise Mat</h3>
-                <div class="flex items-center mb-2">
-                    <span class="text-red-500 font-semibold mr-2">360 DT</span>
-                </div>
-                <div class="flex items-center">
-                    <div class="star-rating flex mr-2">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <span class="text-gray-500 text-sm">(65)</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Flash Sale Product 1 -->
-
-            <!-- Flash Sale Product 2 -->
-
-            <!-- Flash Sale Product 3 -->
-
-
-            <!-- Flash Sale Product 4 -->
-
-        </div>
-
-        <div class="flex justify-center mt-8">
-            <a href="{{ path('app_products') }}" class="bg-red-500 text-white px-8 py-3 rounded-md hover:bg-red-600">
-                View All Products
-            </a>
-        </div>
-
-
-    <!-- Explore Our Products Section -->
-
-
-    <!-- Sports Products Section -->
-    <section class="container mx-auto px-4 py-12">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Product 1 -->
-
-            <!-- Product 2 -->
-
-            <!-- Product 3 -->
-
-            <!-- Product 4 -->
-
-        </div>
-
-        <div class="flex justify-center mt-8">
-            <a href="{{ path('app_products') }}" class="bg-red-500 text-white px-8 py-3 rounded-md hover:bg-red-600">
-                View All Products
-            </a>
-        </div>
-    </section>
-
-    <!-- New Arrival Section -->
-    <section class="container mx-auto px-4 py-12">
-        <div class="mb-6">
-            <h3 class="section-marker text-red-600 font-semibold mb-2">Featured</h3>
-            <h2 class="text-2xl font-bold">New Arrival</h2>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Smart Training Bike -->
-            <div class="bg-black text-white rounded-lg overflow-hidden">
-                <div class="p-8 h-full flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-2xl font-bold mb-2">Smart Training Bike</h3>
-                        <p class="mb-4">Pro and Standard versions of our new Smart Bike with built-in coaching.</p>
-                    </div>
-                    <a href="#" class="text-white border-b border-white pb-1 inline-block">
-                        Shop Now
-                    </a>
-                </div>
-                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=400&width=400" alt="Smart Training Bike" class="w-full h-64 object-cover">
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Women's Athletic Collection -->
-                <div class="bg-black text-white rounded-lg overflow-hidden">
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2">Women's Athletic Collection</h3>
-                        <p class="mb-4 text-sm">Performance sportswear for the modern athlete.</p>
-                        <a href="#" class="text-white border-b border-white pb-1 inline-block">
-                            Shop Now
-                        </a>
-                    </div>
-                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=200&width=200" alt="Women's Athletic Collection" class="w-full h-48 object-cover">
-                </div>
-
-                <!-- Wireless Sport Earbuds -->
-                <div class="bg-black text-white rounded-lg overflow-hidden">
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2">Sport Earbuds</h3>
-                        <p class="mb-4 text-sm">Sweatproof wireless earbuds</p>
-                        <a href="#" class="text-white border-b border-white pb-1 inline-block">
-                            Shop Now
-                        </a>
-                    </div>
-                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=200&width=200" alt="Sport Earbuds" class="w-full h-48 object-cover">
-                </div>
-
-                <!-- Sport Recovery Collection -->
-                <div class="bg-black text-white rounded-lg overflow-hidden col-span-1 md:col-span-2">
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2">Recovery Collection</h3>
-                        <p class="mb-4 text-sm">PREMIUM POST-WORKOUT RECOVERY SET</p>
-                        <a href="#" class="text-white border-b border-white pb-1 inline-block">
-                            Shop Now
-                        </a>
-                    </div>
-                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=200&width=400" alt="Recovery Collection" class="w-full h-48 object-cover">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-black text-white py-12">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div>
-                    <h3 class="text-xl font-bold mb-4">GoSport</h3>
-                    <p class="mb-4">Subscribe to our newsletter to get updates on our latest offers!</p>
-                    <div class="flex mb-4">
-                        <input type="email" placeholder="Enter your email" class="px-4 py-2 w-full text-black">
-                        <button class="bg-red-500 text-white px-4 py-2">
-                            <i class="far fa-paper-plane"></i>
+                        <button class="w-full btn-main py-2.5 mt-2">
+                            <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
                         </button>
                     </div>
                 </div>
-
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Account</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="hover:text-red-500">My Account</a></li>
-                        <li><a href="{{ path('app_register') }}" class="hover:text-red-500">Login / Register</a></li>
-                        <li><a href="#" class="hover:text-red-500">Cart</a></li>
-                        <li><a href="#" class="hover:text-red-500">Wishlist</a></li>
-                        <li><a href="#" class="hover:text-red-500">Shop</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="hover:text-red-500">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-red-500">Terms of Use</a></li>
-                        <li><a href="#" class="hover:text-red-500">FAQ</a></li>
-                        <li><a href="#" class="hover:text-red-500">Contact</a></li>
-                    </ul>
-                </div>
-
-                <div>
-
-
-                    <div class="flex space-x-4">
-                        <a href="#" class="hover:text-red-500"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="hover:text-red-500"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="hover:text-red-500"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="hover:text-red-500"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
-                <p>&copy; 2025 GoSport. All rights reserved.</p>
-            </div>
+            {% endfor %}
         </div>
-    </footer>
-    </body>
-{%endblock%}
+        
+        <div class="text-center mt-10">
+            <a href="{{ path('app_products') }}" class="btn-main px-10 py-3.5 inline-block">
+                <i class="fas fa-th-large mr-2"></i>View All Products
+            </a>
+        </div>
+    </section>
+</div>
+{% endblock %}

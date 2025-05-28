@@ -28,14 +28,14 @@
                     </h2>
                 {% else %}
                     {% if product.discountpercent == 0 %}
-                        <h2 style="font-size: 1.2em;">
+                        <h2 >
                             {{ product.price }} DT
                         </h2>
                     {% else %}
-                        <h2 style="display: inline-block; margin-right: 10px;color:RGB(255,102,102);font-size: 1.2em;">
+                        <h2 style="display: inline-block; margin-right: 10px;color:RGB(255,102,102);">
                             {{ ( (product.price * (100 - product.discountpercent) / 100) )|number_format(2, '.', '') }} DT
                         </h2>
-                        <h2 class="text-decoration-line-through" style="display: inline-block;color:RGB(150,150,150);font-size: 1.2em;">
+                        <h2 class="text-decoration-line-through" style="display: inline-block;color:RGB(150,150,150);">
                             {{ product.price }}DT
                         </h2>
                     {% endif %}

@@ -44,6 +44,17 @@ final class OrderController extends AbstractController
         $this->entityManager = $doctrine->getManager();
         $this->orderRepository = $this->entityManager->getRepository(Order::class);
     }
+    #[Route('/', name: 'app_order_index', methods: ['GET'])]
+    public function index(): Response
+    {
+        // Get all orders (you might want to add pagination later)
+        $orders = $this->orderRepository->findBy([], ['created_at' => 'DESC']);
+        
+        return $this->render('order/index.html.twig', [
+            'orders' => $orders,
+            'controller_name' => 'OrderController',
+        ]);
+    }
     #[Route('/checkout', name: 'cart_checkout')]
     public function checkout(CartRepository $cartRepository ): Response
     {
