@@ -130,9 +130,9 @@
 </head>
 <body>
 {% block stickyBanner %} {% endblock %}
-
+{% block lien %}
 <form method="get" action="/products/byFilters" class="search-form d-flex w-100">
-
+{% endblock %}
 <!-- Main Navigation -->
 <nav class="navbar navbar-expand-lg sticky-top w-100 text-white">
     <div class="container">
@@ -163,7 +163,7 @@
                 </button>
             </div>
         </div>
-
+        {% block navigationIcons %}
         <!-- Navigation Icons -->
         <div class="ms-auto d-flex align-items-center">
             <!-- User Account -->
@@ -220,6 +220,7 @@
                 </div>
 
             </div>
+        {% endblock %}
         </div>
     </nav>
 

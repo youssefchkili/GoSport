@@ -42,14 +42,17 @@
                 <input type="hidden" id="max-price-input" name="max-price">
             </div>
         </div>
-        {% block applyFilters %}
+
             <button class="btn btn-danger" id="apply-btn" type="submit" style="float: right; border-radius: 50px 0 0 50px;">
                 Apply
             </button>
-        {% endblock %}
+
 
     {% endblock %}
-{% block wishlistBag %}
+{% block lien %}
+    {{ parent() }}
+{% endblock %}
+{% block navigationIcons %}
     {{ parent() }}
 {% endblock %}
 {% block body %}
@@ -66,9 +69,17 @@
         <div class="container pt-20">
             <div class="row">
                 {% for product in products|slice((currentPage-1)*20, 20) %}
-                    {{ components.productCard(product) }}
+                <div class="col-md-3">
+                    {%block card %}
+
+                            {{ components.productCard(product) }}
+                            {% block lienView %} {% endblock %}
+
+                    {%endblock%}
+                </div>
                 {% endfor %}
             </div>
+
         </div>
     {% endif %}
 
@@ -164,7 +175,8 @@
 
             isExpanded = !isExpanded;
         }
-        
+        {% block heartManager %}
         {{ components.heartsManager(products) }}
+        {% endblock %}
     </script>
 {% endblock %}

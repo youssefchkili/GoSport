@@ -6,7 +6,7 @@
     <div class="container">
         <div class="d-flex flex-column align-items-center gap-3 mb-4">
             <h1 class="display-3">Product Images for product: {{ product.name}}</h1>
-            <a href="{{ path('app_product_index') }}" class="btn btn-secondary">
+            <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-secondary">
                 go back to Product
             </a>
             <a href="{{ path('app_product_image_new', {'product': product.id}) }}" class="btn btn-primary">

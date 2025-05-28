@@ -1,32 +1,34 @@
 {% extends 'products/index.html.twig' %}
 
+{% block lien %}
+<form method="get" action="/product/byFilters" class="search-form d-flex w-100">
+{% endblock %}
 {% block productCrud %}
     <div class="d-flex flex-column align-items-center gap-3 mb-4">
         <h1 class="display-3">Product Index</h1>
         <a href="{{ path('app_product_new') }}" class="btn btn-outline-secondary">Add New</a>
     </div>
 {% endblock %}
-{% block wishlistBag %}
+{% block navigationIcons %}
 {% endblock %}
 
-{% block applyFilters %}
-    <a href="/product" style="position: absolute; bottom: 10px; right: 10px;">
-        <button class="btn btn-outline-danger" id="apply-btn" type="submit">
-            Apply
-        </button>
+{% block card %}
+<div class="card mb-4 p-3 position-relative costum-card" style="width: fit-content; height: fit-content;">
+    {{ parent() }}
+</div>
+{% endblock %}
+{% block lienView %}
+    <a href="{{ path('app_product_show', { id: product.id }) }}"
+       class="stretched-link"
+       style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;">
     </a>
 {% endblock %}
 
-{% block crudButtons %}
-    <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-outline-secondary">show</a>
-    <a href="{{ path('app_product_edit', {'id': product.id}) }}" class="btn btn-outline-secondary">edit</a>
-    <a href="{{ path('app_product_image_index', {'product': product.id}) }}" class="btn btn-outline-secondary">images</a>
-{% endblock %}
-{% block wishlistHeart %}
 
-{% endblock %}
 {% block empty %}
     <a href="/product" class="text-white text-center d-block">No matching results...</a>
+{% endblock %}
+{% block heartManager %}
 {% endblock %}
 
 

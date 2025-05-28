@@ -56,6 +56,8 @@
         <div class="mt-4 d-flex justify-content-start gap-2">
             <a href="{{ path('app_product_index') }}" class="btn btn-secondary d-flex justify-content-center align-items-center">Back to list</a>
             <a href="{{ path('app_product_edit', {'id': product.id}) }}" class="btn btn-primary d-flex justify-content-center align-items-center">Edit</a>
+            <a href="{{ path('app_product_image_index', {'product': product.id}) }}" class="btn btn-primary d-flex justify-content-center align-items-center">images</a>
+
             <a class="btn btn-danger btn-sm">
                 {{ include('product/_delete_form.html.twig') }}
             </a>

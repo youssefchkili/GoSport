@@ -1,5 +1,5 @@
 {% macro productCard(product) %}
-    <div class="col-md-3">
+
         <div class="card mb-4 p-3 position-relative costum-card">
             <a href="/products/{{ product.id }}" class="text-decoration-none">
                 <img src=  "{% for image in product.images %}
@@ -17,6 +17,7 @@
             <div class="card-body">
                 <h3 class="card-title" style="font-size: 1.2em;">{{ product.name }}</h5>
                     <h4 style="color:gray" class="p-2" style="font-size: 1.2em;">{{ product.slug }}</h6>
+
             </div>
             <div class="position-absolute bottom-0 end-0 p-3">
                 {% if product.stockQuantity == 0 %}
@@ -37,8 +38,7 @@
                         </h2>
                     {% endif %}
                 {% endif %}
-                {% block crudButtons %}
-                {%  endblock %}
+
             </div>
             <br>
             {% block wishlistHeart %}
@@ -49,8 +49,9 @@
                     </button>
                 </div>
             {% endblock %}
+
         </div>
-    </div>
+
 {% endmacro %}
 
 {% macro heartsManager(products) %}
