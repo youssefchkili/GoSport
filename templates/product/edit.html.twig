@@ -4,12 +4,14 @@
 {% block titleEmoji %}{% endblock %}
 {% block body %}
     <div class="text-center mb-4">
-        <h1 class="display-4">edit product</h1>
+        <h1 class="display-4 text-light bg-dark py-2 rounded">edit product</h1>
     </div>
 
-    {{ include('product/_form.html.twig', {'button_label': 'Update'}) }}
+    <div class="bg-dark p-4 rounded shadow">
+        {{ include('product/_form.html.twig', {'button_label': 'Update'}) }}
+    </div>
 
-    <div class="container">
+    <div class="container mt-3">
         <a href="{{ path('app_product_index') }}" class="btn btn-secondary">back to list</a>
     </div>
 

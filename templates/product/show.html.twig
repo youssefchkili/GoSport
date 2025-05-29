@@ -2,51 +2,52 @@
 {% block title %}show{% endblock %}
 {% block titleEmoji %}{% endblock %}
 {% block body %}
-    <div class="container my-5">
+    <div class="container my-5 bg-dark text-light rounded">
 
         <div class="text-center mb-4">
-            <h1 class="display-4">Product Details</h1>
+            <h1 class="display-4 text-light">Product Details</h1>
         </div>
 
-        <div class="card shadow-sm">
+        <div class="card shadow-sm bg-secondary text-light border-0">
             <div class="card-body">
-                <table class="table table-bordered mb-0">
+                <table class="table table-bordered mb-0 table-dark">
                     <tbody>
                     <tr>
-                        <th scope="row">ID</th>
+                        <th scope="row" class="bg-dark text-light">ID</th>
                         <td>{{ product.id }}</td>
                     </tr>
                     <tr>
-                        <th scope="row">Name</th>
+                        <th scope="row" class="bg-dark text-light">Name</th>
                         <td>{{ product.name }}</td>
                     </tr>
                     <tr>
-                        <th scope="row">Category</th>
-                        <td>{% if product.getCategoryId() is not null %}
-                            {{ product.getCategoryId().getName()}}
+                        <th scope="row" class="bg-dark text-light">Category</th>
+                        <td>
+                            {% if product.getCategoryId() is not null %}
+                                {{ product.getCategoryId().getName() }}
                             {% else %}
-                                <em>This product has no category</em>
+                                <em class="text-muted">This product has no category</em>
                             {% endif %}
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Slug</th>
+                        <th scope="row" class="bg-dark text-light">Slug</th>
                         <td>{{ product.slug }}</td>
                     </tr>
                     <tr>
-                        <th scope="row">Description</th>
+                        <th scope="row" class="bg-dark text-light">Description</th>
                         <td>{{ product.description }}</td>
                     </tr>
                     <tr>
-                        <th scope="row">Price</th>
+                        <th scope="row" class="bg-dark text-light">Price</th>
                         <td>{{ product.price }} €</td>
                     </tr>
                     <tr>
-                        <th scope="row">Discount</th>
+                        <th scope="row" class="bg-dark text-light">Discount</th>
                         <td>{{ product.discountPercent }}%</td>
                     </tr>
                     <tr>
-                        <th scope="row">Stock</th>
+                        <th scope="row" class="bg-dark text-light">Stock</th>
                         <td>{{ product.stockQuantity }}</td>
                     </tr>
                     </tbody>
@@ -54,7 +55,7 @@
             </div>
         </div>
         <div class="mt-4 d-flex justify-content-start gap-2">
-            <a href="{{ path('app_product_index') }}" class="btn btn-secondary d-flex justify-content-center align-items-center">Back to list</a>
+            <a href="{{ path('app_product_index') }}" class="btn btn-light d-flex justify-content-center align-items-center">Back to list</a>
             <a href="{{ path('app_product_edit', {'id': product.id}) }}" class="btn btn-primary d-flex justify-content-center align-items-center">Edit</a>
             <a href="{{ path('app_product_image_index', {'product': product.id}) }}" class="btn btn-primary d-flex justify-content-center align-items-center">images</a>
             <a href="{{ path('app_coupon_index', {'product': product.id}) }}" class="btn btn-primary d-flex justify-content-center align-items-center">coupons</a>

@@ -12,11 +12,12 @@
 {% block navigationIcons %}
 {% endblock %}
 
-    {%block card %}
+    {% set heartsAllowed = false %}
+    {% block card %}
         <div class="card" style="background-color: transparent; border: none;">
              {{ parent() }}
         </div>
-    {%endblock%}
+    {% endblock %}
 {% block lienView %}
     <a href="{{ path('app_product_show', { id: product.id }) }}"
        class="stretched-link">

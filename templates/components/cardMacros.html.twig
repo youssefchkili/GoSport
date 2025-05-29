@@ -1,4 +1,4 @@
-{% macro productCard(product) %}
+{% macro productCard(product, heartAllowed) %}
 
         <div class="card mb-4 p-3 position-relative costum-card">
             <a href="/products/{{ product.id }}" class="text-decoration-none">
@@ -44,12 +44,14 @@
             </div>
             <br>
             {% block wishlistHeart %}
-                <div class="position-absolute bottom-0 start-0 p-2">
-                    <button class="btn text-danger heart" type="button" id="productBtn{{ product.id }}" style="border: 0;font-size: 25px;">
-                        {# Fixed: Check if user exists, has wishlist, and then check if product is in wishlist #}
-                        <i class="bi {% if app.user and app.user.wishlist and app.user.wishlist.products and product in app.user.wishlist.products %}bi-heart-fill{% else %}bi-heart{% endif %}" id="heart{{ product.id }}" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 20px red)';" onmouseout="this.style.filter='none';"></i>
-                    </button>
-                </div>
+                {% if heartAllowed %}
+                    <div class="position-absolute bottom-0 start-0 p-2">
+                        <button class="btn text-danger heart" type="button" id="productBtn{{ product.id }}" style="border: 0;font-size: 25px;">
+                            {# Fixed: Check if user exists, has wishlist, and then check if product is in wishlist #}
+                            <i class="bi {% if app.user and app.user.wishlist and app.user.wishlist.products and product in app.user.wishlist.products %}bi-heart-fill{% else %}bi-heart{% endif %}" id="heart{{ product.id }}" style="transition: all 0.2s ease; color: var(--primary-color);" onmouseover="this.style.filter='drop-shadow(0 0 20px red)';" onmouseout="this.style.filter='none';"></i>
+                        </button>
+                    </div>
+                {% endif %}
             {% endblock %}
 
         </div>

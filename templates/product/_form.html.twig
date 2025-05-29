@@ -1,43 +1,39 @@
 <div class="container my-3">
-    <div class="card shadow-sm">
+    <div class="card shadow-sm bg-dark text-light">
         <div class="card-body">
             {{ form_start(form) }}
 
-
-            {{ form_row(form.name) }}
-            {{ form_row(form.slug) }}
-            {{ form_row(form.description) }}
-            {{ form_row(form.price) }}
-            {{ form_row(form.discount_percent) }}
-            {{ form_row(form.stock_quantity) }}
+            {{ form_row(form.name, {'attr': {'class': 'form-control bg-secondary text-light'}}) }}
+            {{ form_row(form.slug, {'attr': {'class': 'form-control bg-secondary text-light'}}) }}
+            {{ form_row(form.description, {'attr': {'class': 'form-control bg-secondary text-light'}}) }}
+            {{ form_row(form.price, {'attr': {'class': 'form-control bg-secondary text-light'}}) }}
+            {{ form_row(form.discount_percent, {'attr': {'class': 'form-control bg-secondary text-light'}}) }}
+            {{ form_row(form.stock_quantity, {'attr': {'class': 'form-control bg-secondary text-light'}}) }}
             <div class="mb-3">
-                {{ form_label(form.category_id) }}
-                {{ form_widget(form.category_id, {'attr': {'class': 'form-control'}}) }}
+                {{ form_label(form.category_id, null, {'label_attr': {'class': 'text-light'}}) }}
+                {{ form_widget(form.category_id, {'attr': {'class': 'form-control bg-secondary text-light'}}) }}
             </div>
-
 
             <div class="mb-3 form-check form-switch">
-                {{ form_widget(form.createNewCategory, {'attr': {'class': 'form-check-input'}}) }}
-                {{ form_label(form.createNewCategory, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                {{ form_widget(form.createNewCategory, {'attr': {'class': 'form-check-input bg-secondary'}}) }}
+                {{ form_label(form.createNewCategory, null, {'label_attr': {'class': 'form-check-label text-light'}}) }}
             </div>
 
-
-            <div id="new-category-fields" class="mb-3 p-3 border rounded" style="display: none;">
+            <div id="new-category-fields" class="mb-3 p-3 border rounded bg-secondary text-light" style="display: none;">
                 <h5>New Category Details</h5>
                 <div class="mb-3">
-                    {{ form_label(form.newCategory.name) }}
-                    {{ form_widget(form.newCategory.name, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_label(form.newCategory.name, null, {'label_attr': {'class': 'text-light'}}) }}
+                    {{ form_widget(form.newCategory.name, {'attr': {'class': 'form-control bg-dark text-light'}}) }}
                 </div>
                 <div class="mb-3">
-                    {{ form_label(form.newCategory.slug) }}
-                    {{ form_widget(form.newCategory.slug, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_label(form.newCategory.slug, null, {'label_attr': {'class': 'text-light'}}) }}
+                    {{ form_widget(form.newCategory.slug, {'attr': {'class': 'form-control bg-dark text-light'}}) }}
                 </div>
                 <div class="mb-3">
-                    {{ form_label(form.newCategory.description) }}
-                    {{ form_widget(form.newCategory.description, {'attr': {'class': 'form-control', 'rows': 3}}) }}
+                    {{ form_label(form.newCategory.description, null, {'label_attr': {'class': 'text-light'}}) }}
+                    {{ form_widget(form.newCategory.description, {'attr': {'class': 'form-control bg-dark text-light', 'rows': 3}}) }}
                 </div>
             </div>
-
 
             <button type="submit" class="btn btn-primary">
                 {{ button_label|default('Save') }}
@@ -68,6 +64,28 @@
         checkbox.addEventListener('change', toggleCategoryFields);
 
         // Initialize on page load
-        toggleCategoryFields();});
+        toggleCategoryFields();
+    });
 </script>
+<style>
+    body, .bg-dark { background-color: #181a1b !important; }
+    .bg-secondary { background-color: #23272b !important; }
+    .text-light { color: #f8f9fa !important; }
+    .form-control.bg-secondary, .form-control.bg-dark {
+        border: 1px solid #444;
+        color: #f8f9fa;
+        background-color: inherit;
+    }
+    .form-check-input.bg-secondary {
+        background-color: #23272b;
+        border: 1px solid #444;
+    }
+    .border {
+        border-color: #444 !important;
+    }
+    .card.bg-dark {
+        background-color: #23272b !important;
+        border: 1px solid #444;
+    }
+</style>
 {% endblock %}

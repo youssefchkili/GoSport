@@ -37,8 +37,8 @@
                                 <td>{{ user.email }}</td>
                                 <td>{{ user.firstName ?? 'N/A' }}</td>
                                 <td>{{ user.lastName ?? 'N/A' }}</td>
-                                <td>
-                                    {% for role in user.roles %}
+                                <td class="position-relative">
+                                    {% for role in user.roles|reverse %}
                                         <span class="badge {% if role == 'ROLE_ADMIN' %}bg-danger{% else %}bg-primary{% endif %} me-1">
                                             {{ role|replace({'ROLE_': ''})|title }}
                                         </span>

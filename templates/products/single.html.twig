@@ -151,7 +151,7 @@
             {% set products = products|filter(p => p.id != product.id) %}
             {% for product in products %}
                 <div class="col-md-3">
-                    {{ components.productCard(product) }}
+                    {{ components.productCard(product, true) }}
                 </div>
             {% endfor %}
 

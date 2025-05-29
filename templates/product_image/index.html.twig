@@ -3,9 +3,9 @@
 {% block title %}Product Images Gallery{% endblock %}
 
 {% block body %}
-    <div class="container">
+    <div class="container bg-dark text-light py-4" style="min-height: 100vh;">
         <div class="d-flex flex-column align-items-center gap-3 mb-4">
-            <h1 class="display-3">Product Images for product: {{ product.name}}</h1>
+            <h1 class="display-3 text-light">Product Images for product: {{ product.name}}</h1>
             <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-secondary">
                 go back to Product
             </a>
@@ -18,14 +18,13 @@
             {% for flash in app.flashes('success') %}
                 <div class="alert alert-success alert-dismissible fade show" role="alert">{{ flash }}</div>
             {% endfor %}
-
         </div>
 
         {% if product_images|length > 0 %}
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                 {% for product_image in product_images %}
                     <div class="col">
-                        <div class="card h-100 shadow-sm">
+                        <div class="card h-100 shadow-sm bg-secondary text-light">
                             <div class="position-relative">
                                 <img src="{{ asset(product_image.imagePath) }}"
                                      class="card-img-top img-fluid"
@@ -38,18 +37,15 @@
                                     </span>
                                 {% endif %}
                             </div>
-
-
                             <div class="card-body d-flex flex-column">
-
                                 <div class="mt-auto">
                                     <div class="btn-group w-100">
                                         <a href="{{ path('app_product_image_show', {'id': product_image.id, 'product': product.id}) }}"
-                                           class="btn btn-sm btn-outline-primary">
+                                           class="btn btn-sm btn-outline-light">
                                             <i class="fas fa-eye"></i> View
                                         </a>
                                         <a href="{{ path('app_product_image_edit', {'id': product_image.id, 'product': product.id}) }}"
-                                           class="btn btn-sm btn-outline-secondary">
+                                           class="btn btn-sm btn-outline-light">
                                             <i class="fas fa-edit"></i> Edit
                                         </a>
                                     </div>
@@ -60,10 +56,26 @@
                 {% endfor %}
             </div>
         {% else %}
-            <div class="alert alert-info text-center">
+            <div class="alert alert-info text-center bg-dark text-light border-light">
                 <i class="fas fa-images fa-2x mb-3"></i>
                 <h4>No images found</h4>
             </div>
         {% endif %}
     </div>
+    <style>
+        body {
+            background-color: #181a1b !important;
+        }
+        .card {
+            border: 1px solid #444 !important;
+        }
+        .alert-info {
+            background-color: #222 !important;
+            color: #b8b8b8 !important;
+            border-color: #444 !important;
+        }
+        .alert-warning, .alert-success {
+            color: #fff !important;
+        }
+    </style>
 {% endblock %}

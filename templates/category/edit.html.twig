@@ -4,13 +4,44 @@
 {% block titleEmoji %}{% endblock %}
 {% block body %}
     <div class="text-center mb-4">
-        <h1 class="display-4">edit category</h1>
+        <h1 class="display-4 text-light">edit category</h1>
     </div>
 
-
-    {{ include('category/_form.html.twig', {'button_label': 'Update'}) }}
-    <div class="container">
-        <a href="{{ path('app_category_index') }}" class="btn btn-secondary">back to list</a>
+    <div class="bg-dark p-4 rounded shadow">
+        {{ include('category/_form.html.twig', {'button_label': 'Update'}) }}
+        <div class="container mt-3">
+            <a href="{{ path('app_category_index') }}" class="btn btn-secondary">back to list</a>
+        </div>
     </div>
 
+    <style>
+        body {
+            background-color: #181a1b !important;
+            color: #e0e0e0 !important;
+        }
+        .bg-dark {
+            background-color: #23272b !important;
+        }
+        .form-control, .form-select {
+            background-color: #2c2f33 !important;
+            color: #e0e0e0 !important;
+            border-color: #444950 !important;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: #23272b !important;
+            color: #fff !important;
+        }
+        label {
+            color: #e0e0e0 !important;
+        }
+        .btn-secondary {
+            background-color: #444950 !important;
+            border-color: #444950 !important;
+            color: #e0e0e0 !important;
+        }
+        .btn-secondary:hover {
+            background-color: #5a5f66 !important;
+            border-color: #5a5f66 !important;
+        }
+    </style>
 {% endblock %}

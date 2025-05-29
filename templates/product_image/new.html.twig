@@ -2,6 +2,41 @@
 
 {% block title %}New ProductImage{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            background-color: #181a1b;
+            color: #e0e0e0;
+        }
+        .container, .text-center, .mb-4 {
+            background: #23272b;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        .display-4 {
+            color: #f8f9fa;
+        }
+        .btn-secondary {
+            background-color: #343a40;
+            color: #e0e0e0;
+            border: none;
+        }
+        .btn-secondary:hover {
+            background-color: #495057;
+            color: #fff;
+        }
+        input, select, textarea {
+            background-color: #23272b;
+            color: #e0e0e0;
+            border: 1px solid #343a40;
+        }
+        label {
+            color: #e0e0e0;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
     <div class="text-center mb-4">
         <h1 class="display-4">add new product</h1>

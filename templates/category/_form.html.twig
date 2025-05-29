@@ -1,11 +1,10 @@
-<div class="container my-3">
-    <div class="card shadow-sm">
+<div class="container my-3 bg-dark text-light">
+    <div class="card shadow-sm bg-secondary text-light">
         <div class="card-body">
 
-        {{ form_start(form) }}
+        {{ form_start(form, {'attr': {'class': 'text-light'}}) }}
             <div class="mb-3">
-                {{ form_widget(form) }}
-
+                {{ form_widget(form, {'attr': {'class': 'form-control bg-dark text-light'}}) }}
             </div>
                 <button class="btn btn-primary">
                     {{ button_label|default('Save') }}

@@ -4,13 +4,13 @@
 
 {% block body %}
     <div class="d-flex flex-column align-items-center gap-3 mb-4">
-        <h1 class="display-4">Category index:{{ category.name }} </h1>
+        <h1 class="display-4 text-light">Category index:{{ category.name }} </h1>
     </div>
 
     <div class="container my-5">
-    <div class="card shadow-sm">
+    <div class="card shadow-sm bg-dark text-light">
         <div class="card-body">
-        <table class="table table-bordered mb-0">
+        <table class="table table-bordered mb-0 table-dark">
         <tbody>
             <tr>
                 <th>Id</th>
@@ -32,7 +32,6 @@
     </table>
             <div class="mt-4 d-flex justify-content-start gap-2">
                 <a href="{{ path('app_category_index') }}" class="btn btn-secondary d-flex justify-content-center align-items-center">back to list</a>
-
                 <a href="{{ path('app_category_edit', {'id': category.id}) }}" class="btn btn-primary d-flex justify-content-center align-items-center">edit</a>
                 <a class="btn btn-danger btn-sm">
                     {{ include('category/_delete_form.html.twig') }}

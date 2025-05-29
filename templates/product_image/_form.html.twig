@@ -1,9 +1,9 @@
-<div class="container my-3">
-    <div class="card shadow-sm">
+<div class="container my-3 bg-dark text-light">
+    <div class="card shadow-sm bg-dark text-light border-secondary">
         <div class="card-body">
-            {{ form_start(form) }}
-                {{ form_widget(form) }}
-                <button class="btn btn-outline-success">{{ button_label|default('Save') }}</button>
+            {{ form_start(form, {'attr': {'class': 'text-light'}}) }}
+                {{ form_widget(form, {'attr': {'class': 'bg-dark text-light border-secondary'}}) }}
+                <button class="btn btn-outline-light border-secondary">{{ button_label|default('Save') }}</button>
             {{ form_end(form) }}
         </div>
     </div>
