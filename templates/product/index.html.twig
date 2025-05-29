@@ -12,11 +12,7 @@
 {% block navigationIcons %}
 {% endblock %}
 
-{% block card %}
-<div class="card mb-4 p-3 position-relative costum-card" >
-    {{ parent() }}
-</div>
-{% endblock %}
+
 {% block lienView %}
     <a href="{{ path('app_product_show', { id: product.id }) }}"
        class="stretched-link"
