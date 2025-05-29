@@ -168,6 +168,21 @@ final class ProductController extends AbstractController
                     );
                 }
             }
+            if ($oldProduct->getStockQuantity() == 0 && $product->getStockQuantity() != 0) {
+                foreach($product->getWishlist() as $wishlist) { // should've been plural
+                    $mailer->sendEmail(
+                        $wishlist->getUser()->getEmail(),
+                        'Product On Sale',
+                        "<html>
+                            <body>
+                                <h2>Good news!</h2>
+                                <p>The product <strong>" . htmlspecialchars($product->getName()) . "</strong> is no longer out of stock.</p>
+                                <a href='" . $this->generateUrl('app_product_single', ['product' => $product->getId()], 0) . "'>Hurry before it goes out again, click here!</a>
+                            </body>
+                        </html>"
+                    );
+                }
+            }
 
             $entityManager->flush();
 

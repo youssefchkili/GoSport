@@ -32,7 +32,7 @@ final class CartController extends AbstractController
             throw $this->createAccessDeniedException('You must be logged in to add items to the cart.');
         }
 
-        $cart = $this->cartRepository->findOneBy(['user' => $user]);
+        $cart = $this->getUser()->getCart();
 
         if (!$cart) {
             $this->addFlash('info', 'Your cart is empty.');
@@ -45,9 +45,8 @@ final class CartController extends AbstractController
         $cartItems = $cart->getCartItems();
         $total = 0;
         foreach ($cartItems as $item) {
-            $product = $item->getProduct();
-            if ($product) {
-                $total += $product->getPrice() * $item->getQuantity();
+            if ($item->getProduct()) {
+                $total += $item->getProduct()->getPrice()*(1 - $item->getProduct()->getDiscountPercent()/ 100 ) * $item->getQuantity();
             }
 
 
@@ -112,14 +111,16 @@ final class CartController extends AbstractController
             throw $this->createNotFoundException('Product not found.');
         }
 
-        $cart = $this->cartRepository->find(1);
-        $cartItem = $this->entityManager->getRepository(CartItem::class)->findOneBy(['cart_id' => $cart->getId(), 'product_id' => $product->getId()]);
+        $cart = $this->getUser()->getCart();
+        $cartItem = $this->entityManager->getRepository(CartItem::class)->findOneBy(['cart' => $cart->getId(), 'product' => $product->getId()]);
         if($cartItem->getQuantity()>1){
             $cartItem->setQuantity($cartItem->getQuantity()-1);
         }else{
+            $cart->removeCartItem($cartItem);
             $this->entityManager->remove($cartItem);
         }
 
+        $this->entityManager->persist($cart);
         $this->entityManager->flush();
         return $this->redirectToRoute('cart_list');
 

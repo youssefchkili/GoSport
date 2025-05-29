@@ -22,14 +22,14 @@
                             <div class="col-span-6 flex items-center gap-4">
                                 <div class="w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
 
-                                    {% set firstImage = item.product.images|first %}
-                                    {% if firstImage %}
-                                        <img src="{{ asset('uploads/products/' ~ firstImage.imagePath) }}" alt="{{ item.product.name }}" class="w-full h-full object-cover" />
-                                    {% else %}
-                                        <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm">
-                                            No image
-                                        </div>
-                                    {% endif %}
+                                    <a href="/products/{{ item.product.id }}" class="text-decoration-none">
+                                        <img src="{% for image in item.product.images %}
+                                                {% if image.isPrimary %}
+                                                {{ image.imagePath }}
+                                                {% endif %}
+                                            {% endfor %}" 
+                                            onerror="this.onerror=null;this.src='https://i.imgur.com/EJLFNOw.jpg';" class="img-fluid" style="max-height: 7em; border-radius: 10%;">
+                                    </a>
 
                                 </div>
                                 <div>
@@ -43,7 +43,7 @@
                             </div>
 
                             <div class="col-span-3 text-right font-medium">
-                                {{ (item.product.price * item.quantity)|number_format(2, '.', ',') }}DT
+                                {{ (item.product.price * (1 - item.product.discountPercent/100) * item.quantity)|number_format(2, '.', ',') }}DT
                             </div>
 
                             <div class="col-span-1 text-right">
@@ -60,7 +60,7 @@
                         <form method="post" action="#">
                             <div class="relative">
                                 <input type="text" name="coupon" placeholder="Enter coupon code"
-                                       class="w-full md:w-72 py-3 px-4 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                       class="w-full md:w-72 py-3 px-4 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-dark text-white placeholder-gray-400">
                                 <button type="submit"
                                         class="mt-2 md:mt-0 md:absolute md:right-0 md:top-0 md:bottom-0 bg-gray-900 text-white rounded-md px-6 py-3 font-medium md:rounded-l-none" style="background-color: var(--primary-color);">
                                     Apply coupon
@@ -84,14 +84,8 @@
                             </div>
 
                             <div class="flex justify-between pb-4 border-b border-gray-700">
-                                <span>Tax</span>
-                                <span>0.00DT</span>
-                            </div>
-
-                            <div class="flex justify-between pb-4 border-b border-gray-700">
                                 <div>
-                                    <div>Shipping in DT</div>
-                                    <div class="text-sm text-gray-400 mt-1">We only charge shipping over 2kg</div>
+                                    <div>Shipping Costs</div>
                                 </div>
                                 <span>19.00DT</span>
                             </div>
