@@ -71,26 +71,42 @@ final class OrderController extends AbstractController
             return $this->redirectToRoute('cart_list');
         }
 
-        $subtotal = 0;
         $cartItems = $cart->getCartItems();
+        $total = 0;
         foreach ($cartItems as $item) {
-            $subtotal += $item->getProduct()->getPrice()*(1 - $item->getProduct()->getDiscountPercent()/ 100 ) * $item->getQuantity();
+            if ($item->getProduct()) {
+                $price = $item->getProduct()->getPrice()*(1 - $item->getProduct()->getDiscountPercent() / 100);
+                $discount = 0;
+
+                $order = $this->entityManager->getRepository(Order::class)->getLastByUser($user);
+                $coupon = $order ? $order->getCouponId() : null;
+                if ($coupon && $coupon->getProduct() && $coupon->getProduct() == $item->getProduct()) {
+                    $discount = $coupon->getDiscountValue();
+                }
+
+                $total += $price * (1 - $discount / 100) * $item->getQuantity();
+            }
+
+
         }
 
         $discount = 0;
         $tax = 0.00;  
         $shipping = 19.00;
-        $total = $subtotal - $discount + $tax + $shipping;
+        
 
-        $order = new Order();
+        $order = $this->orderRepository->getLastByUser($user);
+        if (!$order) {
+            $order = new Order();
+        }
         $order->setUserId($this->getUser());
         $order->setOrderNumber(random_int(100000, 999999));
         $order->setStatus('pending');
-        $order->setSubtotal($subtotal);
+        $order->setSubtotal($total);
         $order->setDiscount($discount);
         $order->setTax($tax);
         $order->setShipping($shipping);
-        $order->setTotal($total);
+        $order->setTotal($total+19.00);
         $order->setCreatedAt(new \DateTimeImmutable());
 
         $this->entityManager->persist($order);
@@ -116,11 +132,11 @@ final class OrderController extends AbstractController
             'id' => $order->getId(),
             'cartItems' => $cartItems,
             'countries' => $this->countries,
-            'subtotal' => $subtotal,
+            'subtotal' => $total,
             'discount' => $discount,
             'tax' => $tax,
             'shipping' => $shipping,
-            'total' => $total,
+            'total' => $total + 19.00,
 
         ]);
 

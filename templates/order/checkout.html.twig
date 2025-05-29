@@ -101,7 +101,13 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <span class="font-medium">{{ ( item.product.price*(1 - item.product.discountPercent/100) )|number_format(2, '.', ',') }}DT x {{ item.quantity }}</span>
+                                    <span class="font-medium">
+                                        {% set price = item.product.price * (1 - item.product.discountPercent/100) %}
+                                        {% if order is defined and order.couponId is defined and order.couponId.product is defined and order.couponId.product == item.product %}
+                                            {% set price = price * (1 - order.couponId.discountValue/100) %}
+                                        {% endif %}
+                                        {{ price|number_format(2, '.', ',') }}DT x {{ item.quantity }}
+                                    </span>
                                 </div>
                             </div>
                         {% endfor %}

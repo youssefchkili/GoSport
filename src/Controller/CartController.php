@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Cart;
 use App\Entity\CartItem;
+use App\Entity\Coupon;
+use App\Entity\Order;
 use App\Repository\CartRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManager;
@@ -46,7 +48,16 @@ final class CartController extends AbstractController
         $total = 0;
         foreach ($cartItems as $item) {
             if ($item->getProduct()) {
-                $total += $item->getProduct()->getPrice()*(1 - $item->getProduct()->getDiscountPercent()/ 100 ) * $item->getQuantity();
+                $price = $item->getProduct()->getPrice()*(1 - $item->getProduct()->getDiscountPercent() / 100);
+                $discount = 0;
+
+                $order = $this->entityManager->getRepository(Order::class)->getLastByUser($user);
+                $coupon = $order ? $order->getCouponId() : null;
+                if ($coupon && $coupon->getProduct() && $coupon->getProduct() == $item->getProduct()) {
+                    $discount = $coupon->getDiscountValue();
+                }
+
+                $total += $price * (1 - $discount / 100) * $item->getQuantity();
             }
 
 
@@ -54,15 +65,15 @@ final class CartController extends AbstractController
         return $this->render('cart/list.html.twig', [
             'cartItems' => $cartItems,
             'total' => $total,
+            'order' => $this->entityManager->getRepository(Order::class)->getLastByUser($user),
         ]);
 
     }
 
     #[Route('/add/{product_id}/{quantity}', name: 'cart_add')]
     public function add($product_id, $quantity, ProductRepository $productRepository): JsonResponse
-    {
+    {   
         $user = $this->getUser();
-
         if (!$user) {
             throw $this->createAccessDeniedException('You must be logged in to add items to the cart.');
         }
@@ -73,6 +84,19 @@ final class CartController extends AbstractController
         if (!$cart) {
             $cart = new Cart();
             $cart->setUser($user);
+            $order = new Order();
+            $order->setUserId($user);
+            $order->setStatus('pending');
+            $order->setOrderNumber(rand(100000, 999999));
+            $order->setSubtotal(0);
+            $order->setDiscount(0);
+            $order->setTax(0);
+            $order->setShippingAddressId($user->getAdress());
+            $order->setBillingAddressId($user->getAdress()->getId());
+            $order->setCreatedAt(new \DateTimeImmutable());
+            $order->setTotal(0);
+            $order->setShipping(19);
+            $this->entityManager->persist($order);
             $this->entityManager->persist($cart);
             $this->entityManager->flush();
         }
@@ -98,6 +122,45 @@ final class CartController extends AbstractController
         $this->entityManager->flush();
 
         //return $this->redirectToRoute('cart_list');
+        return new JsonResponse(['success' => true, 'message' => "success"]);
+    }
+
+    #[Route('/apply/{couponCode}', name: 'cart_apply_coupon', methods: ['POST'])]
+    public function apply($couponCode, ProductRepository $productRepository): JsonResponse
+    {   
+        $orderRepository = $this->entityManager->getRepository(Order::class);
+        $user = $this->getUser();
+        $order = $orderRepository->getLastByUser($user);
+
+        $couponRepository = $this->entityManager->getRepository(Coupon::class);
+        $coupon = $couponRepository->findOneBy(['code' => $couponCode]);
+        if (!$coupon) {
+            return new JsonResponse(['success' => true, 'message' => 'Invalid coupon code.']);
+        }
+        $couponProduct = $coupon->getProduct();
+        $cart = $user->getCart();
+
+        if (!$cart) {
+            return new JsonResponse(['success' => true, 'message' => 'Your cart is empty.']);
+        }
+
+        $cartItems = $cart->getCartItems();
+        $productInCart = false;
+
+        foreach ($cartItems as $item) {
+            if ($item->getProduct() && $item->getProduct() === $couponProduct) {
+                $productInCart = true;
+                break;
+            }
+        }
+
+        if (!$productInCart) {
+            return new JsonResponse(['success' => true, 'message' => 'Coupon product is not in your cart.']);
+        }
+        $order->setCouponId($coupon);
+        $this->entityManager->persist($order);
+        $this->entityManager->flush();
+
         return new JsonResponse(['success' => true, 'message' => "success"]);
     }
 
@@ -140,8 +203,4 @@ final class CartController extends AbstractController
         $this->addFlash('success', 'Cart has been cleared.');
         return $this->redirectToRoute('cart_list');
     }
-
-
-
-
 }

@@ -93,7 +93,11 @@
                                 <h3 class="font-medium text-white">{{ item.getProductId().getName() }}</h3>
                                 <p class="text-white text-sm">Quantity: {{ item.quantity }}</p>
                             </div>
-                            <div class="font-medium text-white">{{ item.unitPrice|number_format(2, '.', ',') }}DT</div>
+                            <div class="font-medium text-white">{% set price = item.getProductId().price * (1 - item.getProductId().discountPercent/100) %}
+                                        {% if order.couponId is defined and order.couponId.product is defined and order.couponId.product == item.getProductId() %}
+                                            {% set price = price * (1 - order.couponId.discountValue/100) %}
+                                        {% endif %}
+                                        {{ (price * item.quantity)|number_format(2, '.', ',') }}DT</div>
                         </div>
                     </div>
                 {% endfor %}

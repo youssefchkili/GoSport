@@ -43,7 +43,11 @@
                             </div>
 
                             <div class="col-span-3 text-right font-medium">
-                                {{ (item.product.price * (1 - item.product.discountPercent/100) * item.quantity)|number_format(2, '.', ',') }}DT
+                                {% set price = item.product.price * (1 - item.product.discountPercent/100) %}
+                                {% if order.couponId is defined and order.couponId.product is defined and order.couponId.product == item.product %}
+                                    {% set price = price * (1 - order.couponId.discountValue/100) %}
+                                {% endif %}
+                                {{ (price * item.quantity)|number_format(2, '.', ',') }}DT
                             </div>
 
                             <div class="col-span-1 text-right">
@@ -57,16 +61,14 @@
 
                 {% if cartItems is not empty %}
                     <div class="mt-8">
-                        <form method="post" action="#">
-                            <div class="relative">
-                                <input type="text" name="coupon" placeholder="Enter coupon code"
-                                       class="w-full md:w-72 py-3 px-4 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-dark text-white placeholder-gray-400">
-                                <button type="submit"
-                                        class="mt-2 md:mt-0 md:absolute md:right-0 md:top-0 md:bottom-0 bg-gray-900 text-white rounded-md px-6 py-3 font-medium md:rounded-l-none" style="background-color: var(--primary-color);">
-                                    Apply coupon
-                                </button>
-                            </div>
-                        </form>
+                        <div class="relative">
+                            <input type="text" name="coupon" id="coupon" placeholder="Enter coupon code"
+                                    class="w-full md:w-72 py-3 px-4 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-dark text-white placeholder-gray-400">
+                            <button id="couponButton"
+                                    class="btn btn-danger float-right" style="background-color: var(--primary-color);">
+                                Apply coupon
+                            </button>
+                        </div>
                     </div>
                 {% endif %}
             </div>
@@ -106,5 +108,59 @@
             {% endif %}
         </div>
     </div>
+
+<script>
+    document.getElementById("couponButton").addEventListener('click', function () {
+        const btn = document.getElementById("couponButton");
+        btn.classList.add("glitter-effect");
+        setTimeout(() => btn.classList.remove("glitter-effect"), 1000);
+
+        // this glitter effect is AI generated because CSS why not
+        if (!document.getElementById('glitter-effect-style')) {
+            const style = document.createElement('style');
+            style.id = 'glitter-effect-style';
+            style.innerHTML = `
+        .glitter-effect {
+            position: relative;
+            overflow: hidden;
+            animation: glitter 1s linear;
+        }
+        .glitter-effect::after {
+            content: '';
+            position: absolute;
+            left: -75%;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(120deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.2) 100%);
+            transform: skewX(-20deg);
+            animation: glitter-move 1s forwards;
+            pointer-events: none;
+        }
+        @keyframes glitter-move {
+            0% { left: -75%; }
+            100% { left: 125%; }
+        }
+        `;
+            document.head.appendChild(style);
+        }
+        //////
+        fetch('/cart/apply/' + document.getElementById("coupon").value, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({})
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message == "success") {
+                    //
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    });
+</script>
 
 {% endblock %}

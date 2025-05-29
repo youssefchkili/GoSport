@@ -193,9 +193,10 @@ class PaymentController extends AbstractController
         $cart = $cartRepository->findOneBy(['user' => $user]);
 
         if ($cart) {
-            foreach ($cart->getCartItems() as $cartItem) {
-                $this->entityManager->remove($cartItem);
-            }
+            $user->setCart(null);
+            $cart->setUser(null);
+            $this->entityManager->persist($user);
+            $this->entityManager->persist($cart);
             $this->entityManager->flush();
         }
         $adress = $user->getAdress();

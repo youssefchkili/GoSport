@@ -212,8 +212,10 @@
             
             {% if app.user %}
                 document.getElementById("cart-count").textContent = parseInt(document.getElementById("cart-count").textContent, 10) + parseInt(document.getElementById("quantity").value, 10);
-                document.getElementById("cart-total").textContent = parseFloat(document.getElementById("cart-total").textContent) + parseFloat(document.getElementById("price").textContent) * parseInt(document.getElementById("quantity").value, 10);
-                document.getElementById("cart-total").textContent = parseFloat(document.getElementById("cart-total").textContent).toFixed(2);
+                {% if app.user.getCart() %}
+                    document.getElementById("cart-total").textContent = parseFloat(document.getElementById("cart-total").textContent) + parseFloat(document.getElementById("price").textContent) * parseInt(document.getElementById("quantity").value, 10);
+                    document.getElementById("cart-total").textContent = parseFloat(document.getElementById("cart-total").textContent).toFixed(2);
+                {% endif %}
                 document.getElementById("quantity").max = document.getElementById("quantity").max - document.getElementById("quantity").value;
                 document.getElementById("alreadyInCartSpan").textContent = parseInt(document.getElementById("alreadyInCartSpan").textContent, 10) + parseInt(document.getElementById("quantity").value, 10);
                 if (document.getElementById("quantity").max == 0){
