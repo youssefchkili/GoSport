@@ -170,6 +170,17 @@
         {% block navigationIcons %}
         <!-- Navigation Icons -->
         <div class="ms-auto d-flex align-items-center">
+            <!-- Admin Dashboard (only for admins) -->
+            {% if app.user and is_granted('ROLE_ADMIN') %}
+                <div class="nav-item me-3 text-center">
+                    <a class="nav-link text-decoration-none" href="{{ path('admin') }}">
+                        <div class="nav-icon text-white">
+                            <i class="bi bi-person-vcard"></i>
+                        </div>
+                        <div class="nav-link-text">Admin</div>
+                    </a>
+                </div>
+            {% endif %}
             <!-- User Account -->
             <div class="nav-item me-3 text-center">
                 {% if app.user %}
