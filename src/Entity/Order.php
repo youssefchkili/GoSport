@@ -23,7 +23,7 @@ class Order
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 14, scale: 2)]
     private ?string $subtotal = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
@@ -35,7 +35,7 @@ class Order
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $shipping = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 14, scale: 2)]
     private ?string $total = null;
 
     #[ORM\Column]
