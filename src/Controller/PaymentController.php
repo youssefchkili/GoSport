@@ -128,9 +128,7 @@ class PaymentController extends AbstractController
             return $this->redirectToRoute('cart_checkout');
         }
 
-        $orderItems = $order->getOrderItems();
-
-        $cart = $cartRepository->findOneBy(['user' => $user]);
+        $orderItems = $user->getCart()->getCartItems();
 
         $adress = $user->getAdress();
         $order->setShippingAddressId($adress);
@@ -156,13 +154,13 @@ class PaymentController extends AbstractController
                             return "<tr>
                                 <td>" . htmlspecialchars($item->getProduct()->getName()) . "</td>
                                 <td>" . $item->getQuantity() . "</td>
-                                <td>" . number_format($item->getUnitPrice() / 100, 2) . " " . strtoupper($item->getOrder()->getCurrency() ?? 'DT') . "</td>
-                                <td>" . number_format(($item->getUnitPrice() * $item->getQuantity()) / 100, 2) . " " . strtoupper($item->getOrder()->getCurrency() ?? 'DT') . "</td>
+                                <td>" . number_format($item->getProduct()->getPrice()*(1 - $item->getProduct()->getDiscountPercent()/ 100 ), 2) . " DT</td>
+                                <td>" . number_format(($item->getProduct()->getPrice()*(1 - $item->getProduct()->getDiscountPercent()/ 100 ) * $item->getQuantity()), 2) . " DT</td>
                             </tr>";
                         }, iterator_to_array($orderItems)))
                         . "</tbody>
                     </table>
-                    <p style='margin-top:20px; font-size:16px;'><strong>Total: " . number_format($order->getTotal() / 100, 2) . " " . strtoupper($order->getCurrency() ?? 'DT') . "</strong></p>
+                    <p style='margin-top:20px; font-size:16px;'><strong>Total: " . number_format($order->getTotal(), 2) . " DT</strong></p>
                     <p>
                         <a href='" . $this->generateUrl('payment_success_view', [], 0) . "' style='display:inline-block;padding:10px 20px;background:#28a745;color:#fff;text-decoration:none;border-radius:5px;'>View confirmation page</a>
                     </p>

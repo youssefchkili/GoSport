@@ -41,14 +41,14 @@ class OrderItem
         return $this->id;
     }
 
-    public function getOrderId(): ?Order
+    public function getOrderId(): Order
     {
         return $this->order_id;
     }
 
-    public function setOrderId(?Order $order_id): static
+    public function setOrderId(Order $order): static
     {
-        $this->order_id = $order_id;
+        $this->order_id = $order;
 
         return $this;
     }

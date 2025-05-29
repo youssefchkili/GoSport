@@ -71,21 +71,20 @@ final class OrderController extends AbstractController
             return $this->redirectToRoute('cart_list');
         }
 
-        // Compute totals
         $subtotal = 0;
         $cartItems = $cart->getCartItems();
         foreach ($cartItems as $item) {
-            $subtotal += $item->getProduct()->getPrice() * $item->getQuantity();
+            $subtotal += $item->getProduct()->getPrice()*(1 - $item->getProduct()->getDiscountPercent()/ 100 ) * $item->getQuantity();
         }
 
-        $discount = 0; // apply logic later if coupons exist
-        $tax = 0.00;   // apply logic if tax rules exist
+        $discount = 0;
+        $tax = 0.00;  
         $shipping = 19.00;
         $total = $subtotal - $discount + $tax + $shipping;
 
         $order = new Order();
         $order->setUserId($this->getUser());
-        $order->setOrderNumber(random_int(100000, 999999)); // or a better strategy
+        $order->setOrderNumber(random_int(100000, 999999));
         $order->setStatus('pending');
         $order->setSubtotal($subtotal);
         $order->setDiscount($discount);
@@ -94,10 +93,7 @@ final class OrderController extends AbstractController
         $order->setTotal($total);
         $order->setCreatedAt(new \DateTimeImmutable());
 
-
-
         $this->entityManager->persist($order);
-        $this->entityManager->flush();
 
 
         foreach ($cartItems as $cartItem) {
@@ -105,10 +101,14 @@ final class OrderController extends AbstractController
             $orderItem->setOrderId($order);
             $orderItem->setProductId($cartItem->getProduct());
             $orderItem->setQuantity($cartItem->getQuantity());
-            $orderItem->setUnitPrice($cartItem->getProduct()->getPrice());
+            $orderItem->setUnitPrice($cartItem->getProduct()->getPrice()*(1 - $cartItem->getProduct()->getDiscountPercent()/ 100 ));
+            $orderItem->setSubtotal($cartItem->getProduct()->getPrice()*(1 - $cartItem->getProduct()->getDiscountPercent()/ 100 ) * $cartItem->getQuantity());
 
             $this->entityManager->persist($orderItem);
+            $order->addOrderItem($orderItem);
         }
+        $this->entityManager->persist($order);
+        $this->entityManager->flush();
         $this->addFlash("success", "Order placed successfully");
 
         return $this->render('order/checkout.html.twig' , [
