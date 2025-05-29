@@ -12,15 +12,14 @@
 {% block navigationIcons %}
 {% endblock %}
 
-{% block card %}
-<div class="card mb-4 p-3 position-relative costum-card" >
-    {{ parent() }}
-</div>
-{% endblock %}
+    {%block card %}
+        <div class="card" style="background-color: transparent; border: none;">
+             {{ parent() }}
+        </div>
+    {%endblock%}
 {% block lienView %}
     <a href="{{ path('app_product_show', { id: product.id }) }}"
-       class="stretched-link"
-       style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;">
+       class="stretched-link">
     </a>
 {% endblock %}
 
