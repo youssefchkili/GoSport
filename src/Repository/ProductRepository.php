@@ -22,13 +22,14 @@ class ProductRepository extends ServiceEntityRepository
     public function findByKeyWord($keyWord): array
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.name like :val or p.slug like :val or p.description like :val')
-            ->setParameter('val', '%'.$keyWord.'%')
+            ->leftJoin('p.category', 'c')
+            ->andWhere('p.name LIKE :val OR p.slug LIKE :val OR p.description LIKE :val OR c.name = :value')
+            ->setParameter('val', '%' . $keyWord . '%')
+            ->setParameter('value', $keyWord)
             ->orderBy('p.price', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
-    }
+            ->getResult();
+        }
 
     /**
      * @return Float[]
@@ -60,7 +61,8 @@ class ProductRepository extends ServiceEntityRepository
     public function findByFilters($keyWord, $minPrice, $maxPrice, $categoriesAllowed): array
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.name like :val or p.slug like :val or p.description like :val')
+            ->leftJoin('p.category_id', 'c')
+            ->andWhere('p.name like :val or p.slug like :val or p.description like :val OR c.name LIKE :val')
             ->andWhere('p.price*(100-p.discount_percent)/100 >= :minPrice')
             ->andWhere('p.price*(100-p.discount_percent)/100 <= :maxPrice')
             ->andWhere('p.category_id IN (:categoriesAllowed)')

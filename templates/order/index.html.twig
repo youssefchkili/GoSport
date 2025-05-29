@@ -34,12 +34,12 @@
                                 <td><strong>#{{ order.orderNumber }}</strong></td>
                                 <td>{{ order.createdAt|date('Y-m-d H:i') }}</td>
                                 <td>{{ order.userId.email }}</td>
-                                <td>
+                                <td class="position-relative">
                                     <span class="badge {% if order.status == 'completed' %}bg-success{% elseif order.status == 'processing' %}bg-warning text-dark{% elseif order.status == 'pending' %}bg-info{% else %}bg-danger{% endif %}">
                                         {{ order.status|capitalize }}
                                     </span>
                                 </td>
-                                <td><strong>${{ order.total|number_format(2) }}</strong></td>
+                                <td><strong>{{ order.total|number_format(2) }} DT</strong></td>
                                 <td>
                                     <div class="btn-group" role="group">
                                         <a href="{{ path('checkout_success', {'id': order.id}) }}" class="btn btn-sm btn-outline-primary">

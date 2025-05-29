@@ -1,4 +1,5 @@
 {% extends 'coolBase.html.twig' %}
+{% import "components/cardMacros.html.twig" as components %}
 
 {% block title %}Home - GoSport{% endblock %}
 {% block stylesheets %}
@@ -80,7 +81,7 @@
         <ul class="space-y-3">
             {% for category in categories %}
                 <li class="py-2 hover:text-cyan-300 transition-colors">
-                    <a href="{{ path('app_products', {'category': category.id}) }}">
+                    <a href="{{ path('app_products_byKeyWord') }}?keyWord={{ category.name|url_encode }}">
                         {{ category.name }}
                     </a>
                 </li>
@@ -102,7 +103,7 @@
                     Premium Sports Gear
                 </h2>
                 <p class="mb-4 text-gray-300">Quality equipment for professional athletes</p>
-                <a href="{{ path('app_products') }}" class="inline-block btn-main px-6 py-3">
+                <a href="{{ path('app_products') }}" class="inline-block btn btn-danger px-6 py-3">
                     Shop Now <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>
@@ -120,7 +121,7 @@
 
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {% for category in categories|slice(0, 6) %}
-                <a href="{{ path('app_products', {'category': category.id}) }}" class="category-card p-4 text-center">
+                <a href="{{ path('app_products_byKeyWord') }}?keyWord={{ category.name|url_encode }}" class="category-card p-4 text-center">
                     <div class="mb-2">
                         <i class="fas fa-tag text-2xl text-[#dc3545]"></i>
                     </div>
@@ -136,38 +137,12 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {% for product in bestSellingProducts %}
-                <div class="product-card p-4">
-                    <div class="mb-4 h-48 flex items-center justify-center bg-[rgb(40,40,40)] rounded-lg">
-                        {% if product.images|length > 0 %}
-                            <img src="{{ asset('uploads/products/' ~ product.images[0].imagePath) }}"
-                                 alt="{{ product.name }}"
-                                 class="max-h-full max-w-full object-contain">
-                        {% else %}
-                            <i class="fas fa-image text-gray-600 text-4xl"></i>
-                        {% endif %}
-                    </div>
-
-                    <div class="space-y-3">
-                        <h3 class="font-bold line-clamp-2">{{ product.name }}</h3>
-
-                        <div class="flex items-center space-x-2">
-                            {% set finalPrice = product.price * (100 - product.discountPercent) / 100 %}
-                            <span class="price-tag">{{ finalPrice|number_format(2) }} DT</span>
-                            {% if product.discountPercent > 0 %}
-                                <span class="text-gray-400 line-through text-sm">{{ product.price|number_format(2) }} DT</span>
-                            {% endif %}
-                        </div>
-
-                        <button class="w-full btn-main py-2.5 mt-2">
-                            <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
-                        </button>
-                    </div>
-                </div>
+                {{ components.productCard(product, false) }}
             {% endfor %}
         </div>
         
         <div class="text-center mt-10">
-            <a href="{{ path('app_products') }}" class="btn-main px-10 py-3.5 inline-block">
+            <a href="{{ path('app_products') }}" class="btn btn-danger px-10 py-3.5 inline-block">
                 <i class="fas fa-th-large mr-2"></i>View All Products
             </a>
         </div>

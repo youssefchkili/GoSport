@@ -4,13 +4,13 @@
 
 {% block body %}
     <div class="d-flex flex-column align-items-center gap-3 mb-4">
-        <h1 class="display-4">Category index</h1>
-        <a href="{{ path('app_category_new') }}" class="btn btn-outline-secondary">add new</a>
+        <h1 class="display-4 text-light">Category index</h1>
+        <a href="{{ path('app_category_new') }}" class="btn btn-outline-light">add new</a>
     </div>
     <div class="container my-5">
-    <div class="card shadow-sm">
+    <div class="card shadow-sm bg-dark text-light">
     <div class="card-body">
-    <table class="table table-bordered mb-0">
+    <table class="table table-bordered table-dark mb-0">
         <thead>
             <tr>
                 <th>Id</th>
@@ -28,8 +28,8 @@
                 <td>{{ category.slug }}</td>
                 <td>{{ category.description }}</td>
                 <td>
-                    <a href="{{ path('app_category_show', {'id': category.id}) }}" class="btn btn-outline-secondary">show</a>
-                    <a href="{{ path('app_category_edit', {'id': category.id}) }}" class="btn btn-outline-secondary">edit</a>
+                    <a href="{{ path('app_category_show', {'id': category.id}) }}" class="btn btn-outline-light">show</a>
+                    <a href="{{ path('app_category_edit', {'id': category.id}) }}" class="btn btn-outline-light">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -43,4 +43,18 @@
     </div>
     </div>
 
+    <style>
+        body {
+            background-color: #181a1b !important;
+        }
+        .table-dark th, .table-dark td {
+            color: #f8f9fa;
+        }
+        .table-dark {
+            background-color: #23272b;
+        }
+        .card.bg-dark {
+            background-color: #23272b !important;
+        }
+    </style>
 {% endblock %}
